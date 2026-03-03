@@ -105,31 +105,32 @@
                   Registrat</h1>
               </div>
               <div class="space-y-4">
-                <label class="flex flex-col gap-2">
-                  <span
-                    class="text-slate-700 dark:text-slate-300 text-xs font-bold uppercase tracking-widest">USUARI</span>
-                  <div class="relative">
+                <form id="register-form" onsubmit="register(event)">
+                  <label class="flex flex-col gap-2">
                     <span
-                      class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">person</span>
-                    <input
-                      class="w-full bg-slate-200 dark:bg-slate-800 border-4 border-slate-300 dark:border-slate-700 focus:border-primary px-10 py-3 text-slate-900 dark:text-slate-100 font-bold placeholder:text-slate-500 outline-none"
-                      placeholder="pepito" type="text" id="username" name="username" />
-                  </div>
-                </label>
-                <label class="flex flex-col gap-2">
-                  <span
-                    class="text-slate-700 dark:text-slate-300 text-xs font-bold uppercase tracking-widest">CONTRASENYA</span>
-                  <div class="relative">
+                      class="text-slate-700 dark:text-slate-300 text-xs font-bold uppercase tracking-widest">USUARI</span>
+                    <div class="relative">
+                      <span
+                        class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">person</span>
+                      <input
+                        class="w-full bg-slate-200 dark:bg-slate-800 border-4 border-slate-300 dark:border-slate-700 focus:border-primary px-10 py-3 text-slate-900 dark:text-slate-100 font-bold placeholder:text-slate-500 outline-none"
+                        placeholder="pepito" type="text" id="username" name="username" />
+                    </div>
+                  </label>
+                  <label class="flex flex-col gap-2">
                     <span
-                      class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">lock</span>
-                    <input
-                      class="w-full bg-slate-200 dark:bg-slate-800 border-4 border-slate-300 dark:border-slate-700 focus:border-primary px-10 py-3 text-slate-900 dark:text-slate-100 font-bold placeholder:text-slate-500 outline-none"
-                      placeholder="**********" type="password" id="password" name="password" />
-                  </div>
-                </label>
+                      class="text-slate-700 dark:text-slate-300 text-xs font-bold uppercase tracking-widest">CONTRASENYA</span>
+                    <div class="relative">
+                      <span
+                        class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">lock</span>
+                      <input
+                        class="w-full bg-slate-200 dark:bg-slate-800 border-4 border-slate-300 dark:border-slate-700 focus:border-primary px-10 py-3 text-slate-900 dark:text-slate-100 font-bold placeholder:text-slate-500 outline-none"
+                        placeholder="**********" type="password" id="password" />
+                    </div>
+                  </label>
               </div>
               <div class="flex items-center gap-4 pt-4">
-                <button onclick="register()" id="register-button"
+                <button type="submit"
                   class="flex-1 bg-retro-green hover:bg-green-500 text-slate-900 font-black py-4 px-6 flex items-center justify-center gap-3 border-b-4 border-green-800 active:border-b-0 active:translate-y-1 transition-all">
                   <span class="material-symbols-outlined">keyboard_return</span>
                   REGISTRAR-SE
@@ -139,6 +140,7 @@
                   YA TINC COMPTE
                 </a>
               </div>
+              </form>
             </div>
           </div>
           <div

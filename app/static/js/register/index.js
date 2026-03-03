@@ -1,10 +1,5 @@
-document.addEventListener("DOMContentLoaded", () => {
-	document
-		.getElementById("register-button")
-		.addEventListener("click", register);
-});
-
-function register() {
+function register(event) {
+	event.preventDefault();
 	const username = document.getElementById("username").value;
 	const password = document.getElementById("password").value;
 	fetch("/auth/api/register", {
@@ -16,12 +11,13 @@ function register() {
 	})
 		.then((response) => response.json())
 		.then((data) => {
-			console.log(data);
+			handleResponse(data);
 		});
 }
 
 function handleResponse(response) {
 	if (response.success) {
+		alert(response.message);
 		window.location.href = "/auth/login";
 	} else {
 		alert(response.message);

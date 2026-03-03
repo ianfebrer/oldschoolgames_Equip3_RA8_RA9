@@ -20,5 +20,8 @@ def api_register():
 		return jsonify({'success': False, 'message': 'Usuari o contranya requerits'})
 
 	user = User(username, password)
-	user.register()
-	return jsonify({'success': True, 'message': 'Usuari registrat correctament'})
+	success, message = user.register()
+	if success:
+		return jsonify({'success': True, 'message': message})
+	else:
+		return jsonify({'success': False, 'message': message})

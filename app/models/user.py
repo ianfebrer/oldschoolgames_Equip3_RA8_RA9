@@ -23,9 +23,13 @@ class User:
 
 	def register(self):
 		users = self.obtenirtots()
+		for user in users:
+			if user['username'] == self.username:
+				return False, 'Usuari ja existeix'
 		users.append(self.to_dict())
 		with open(f'{data_dir}/users.json', 'w', encoding='utf-8') as f:
 			json.dump(users, f, ensure_ascii=False, indent=4)
+		return True, 'Usuari registrat correctament'
 
 	def login(self):
 		users = self.obtenirtots()
