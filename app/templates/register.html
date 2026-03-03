@@ -34,6 +34,7 @@
       },
     }
   </script>
+  <script src="/static/js/register/index.js"></script>
   <style>
     .retro-window {
       border: 4px solid #3b4354;
@@ -101,94 +102,42 @@
               <div class="space-y-2">
                 <h1
                   class="text-slate-900 dark:text-slate-100 text-3xl font-black leading-tight tracking-tight uppercase">
-                  Initialize Session</h1>
-                <p class="text-slate-600 dark:text-slate-400 text-sm">Input identity credentials to access the central
-                  gaming mainframe.</p>
+                  Registrat</h1>
               </div>
               <div class="space-y-4">
                 <label class="flex flex-col gap-2">
-                  <span class="text-slate-700 dark:text-slate-300 text-xs font-bold uppercase tracking-widest">Login
-                    Username</span>
+                  <span
+                    class="text-slate-700 dark:text-slate-300 text-xs font-bold uppercase tracking-widest">USUARI</span>
                   <div class="relative">
                     <span
                       class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">person</span>
                     <input
                       class="w-full bg-slate-200 dark:bg-slate-800 border-4 border-slate-300 dark:border-slate-700 focus:border-primary px-10 py-3 text-slate-900 dark:text-slate-100 font-bold placeholder:text-slate-500 outline-none"
-                      placeholder="USER_ID_" type="text" />
+                      placeholder="pepito" type="text" id="username" name="username" />
                   </div>
                 </label>
                 <label class="flex flex-col gap-2">
-                  <span class="text-slate-700 dark:text-slate-300 text-xs font-bold uppercase tracking-widest">Access
-                    Password</span>
+                  <span
+                    class="text-slate-700 dark:text-slate-300 text-xs font-bold uppercase tracking-widest">CONTRASENYA</span>
                   <div class="relative">
                     <span
                       class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">lock</span>
                     <input
                       class="w-full bg-slate-200 dark:bg-slate-800 border-4 border-slate-300 dark:border-slate-700 focus:border-primary px-10 py-3 text-slate-900 dark:text-slate-100 font-bold placeholder:text-slate-500 outline-none"
-                      placeholder="**********" type="password" />
+                      placeholder="**********" type="password" id="password" name="password" />
                   </div>
                 </label>
               </div>
               <div class="flex items-center gap-4 pt-4">
-                <button
+                <button onclick="register()" id="register-button"
                   class="flex-1 bg-retro-green hover:bg-green-500 text-slate-900 font-black py-4 px-6 flex items-center justify-center gap-3 border-b-4 border-green-800 active:border-b-0 active:translate-y-1 transition-all">
                   <span class="material-symbols-outlined">keyboard_return</span>
-                  ENTER SYSTEM
+                  REGISTRAR-SE
                 </button>
-                <button
+                <a href="/auth/login"
                   class="bg-slate-300 dark:bg-slate-700 hover:bg-slate-400 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 font-bold py-4 px-6 border-b-4 border-slate-500 active:border-b-0 active:translate-y-1 transition-all">
-                  NEW USER
-                </button>
-              </div>
-            </div>
-            <div class="w-full md:w-64 flex flex-col gap-4">
-              <h3 class="text-slate-700 dark:text-slate-300 text-xs font-bold uppercase tracking-widest">Select Avatar
-              </h3>
-              <div
-                class="grid grid-cols-3 gap-2 p-2 bg-slate-200 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700">
-                <div
-                  class="aspect-square bg-slate-300 dark:bg-slate-700 border-2 border-primary cursor-pointer hover:opacity-80 transition-opacity flex items-center justify-center overflow-hidden">
-                  <img alt="Pixel art avatar male" class="pixel-border w-full h-full object-cover"
-                    data-alt="8-bit pixel art male character avatar"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCg5Df3X20eZ7rQUYIjUDP5-GLfRBIny85GdCprR6JW-2qgHqTfNeYdjPv7mw35AYhjOX9A1WaLrxBImlrj6U38VSakLuHLF_2jToIeg2ZO8k77mpD6ZZc5TghKsuWhCB1qTbzNQhwHigfW-krHidR8toUB3x05v_w-zecfNdQaXDg-b4i_-pr8uTGvGUyJ9ZxnJGMYXv6U2VVZRCe-phHa2CSpwZJ2X3lx6WYnuFAVz6tsBovubWVVMgNgP3zUHgAeI5idloWLRdk" />
-                </div>
-                <div
-                  class="aspect-square bg-slate-300 dark:bg-slate-700 border-2 border-transparent cursor-pointer hover:border-primary/50 transition-all flex items-center justify-center overflow-hidden">
-                  <img alt="Pixel art avatar female" class="pixel-border w-full h-full object-cover"
-                    data-alt="8-bit pixel art female character avatar"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEGtvdKGyYO5mCs1V-1S6chPMNyW6PUSShPrgJmMEVUXceJj0_i4bQ0jUSxfBkKgzReWrFe8Ldw3Jt7Z4mqj-ZAawvhhcW3Btf_rzNgRe80s7Vmw3mcFqRL-X5m3qkTeRl23jbmgXFey90SdSxZK4OdRc886rBXdPCrBpTX4UrnWbpxU7PJaF92oNYLkwNcVR0ypcNBHv2-ODzXNe8eFjRkIOMQkjSwLirY06dqxlROch5_kU31XEfcuowlNHQ56jgaNYXWwwLDYY" />
-                </div>
-                <div
-                  class="aspect-square bg-slate-300 dark:bg-slate-700 border-2 border-transparent cursor-pointer hover:border-primary/50 transition-all flex items-center justify-center overflow-hidden">
-                  <img alt="Pixel art avatar pet" class="pixel-border w-full h-full object-cover"
-                    data-alt="8-bit pixel art animal character avatar"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEHzfac8VvTiJhq9S2pF3ZWCLeiyg-lSI5Ty6TGMZrvSieScETqUWIUGUxd8QRnYXnz6mopX2d5uHqMVH3atJvsJ2wPA0WlddZTpn7s9b9gJ2-HELLcqAdam3kLRhnQNmpcUO_zHAriKZ5aW1PMFsezvo5-DOpieFDXjZify7f7pk8avtCyuvrfVttRS2orYva2Q_mg8Fc1zKH0-yH5zu4Iz_PTlhI7Kr6f_1STwXu2DCkGZpotBkcIBaEDEUgKlfjZr8InIZ4Bj0" />
-                </div>
-                <div
-                  class="aspect-square bg-slate-300 dark:bg-slate-700 border-2 border-transparent cursor-pointer hover:border-primary/50 transition-all flex items-center justify-center overflow-hidden">
-                  <img alt="Pixel art avatar beard" class="pixel-border w-full h-full object-cover"
-                    data-alt="8-bit pixel art bearded character avatar"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKoU_nb8ssLbyLiPp8VZBxqIneL8Uw8e2zSi7W9IenZO8U8qvUxnCJIQk-FqXL1jRNpODo94oDeMiOO27E3YGb_5ad7aLj3rOezC7TNj6Dy9atTMP2ihGmJM58URHTKZLR6huFfOsRAPmxyhK33bM05zHXadvTP4-lYIlF42LNPnH1mhYE18PsqCTZkdqndQbJ8ntAwVPkjLSxfQfYygZdQBd2sSe0BL84Foo2aEQmvMzYVLblmls4DO5OU1uI-3PGbkBqfEUhT_U" />
-                </div>
-                <div
-                  class="aspect-square bg-slate-300 dark:bg-slate-700 border-2 border-transparent cursor-pointer hover:border-primary/50 transition-all flex items-center justify-center overflow-hidden">
-                  <img alt="Pixel art avatar girl" class="pixel-border w-full h-full object-cover"
-                    data-alt="8-bit pixel art girl character avatar"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-Mtu96czurcaWeZUy_T2fUqmSjED9Uv19ufTo0cr1WFlj633pbxmjSThsctDRWJEIBDW_GbfpdcUt80Jwh924V8dGfx5PbVQt9X8O46dkpfdanLgUKSi9EEdZLZcNLLl7fRn_HUq1nuxBnIiZgLjRoXMLXiIGhTSDSVHKxx3NhJSJMhIGp1377hahWCMBxO55XIJcKIg5uCB2dA2129DQD7vw8ZU-kHMBcO-wYb1NEyO7D5gIwljezet7B-GeNk7Na0UkJQh0OA0" />
-                </div>
-                <div
-                  class="aspect-square bg-slate-300 dark:bg-slate-700 border-2 border-transparent cursor-pointer hover:border-primary/50 transition-all flex items-center justify-center overflow-hidden">
-                  <img alt="Pixel art avatar wizard" class="pixel-border w-full h-full object-cover"
-                    data-alt="8-bit pixel art wizard character avatar"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWF8FEMrI2X2IVUzV821HhHtq4CKIgA3151hQmok59JIrbr280o0BciHQqf1XJ5Gr8v1KOST8rNsbQS6C8vO3Lxo5rmzCBoe9zGatMg6twDGaOByfyfagPQ7Jqempoh7aQBzrttntGrfPi6MbSwy0OH6FDhpjj2UDYGgLPU9S4t5j5y5WiwxG5vzruRzyiX6eCfee_CsPNwOQkdMBiNgNEy2dZ3ZJ7dy5Kh3G5XkDewCg86IQygHDmXnI867EFTRDID3HHGEujHEk" />
-                </div>
-              </div>
-              <div class="mt-2 p-3 bg-primary/10 border-l-4 border-primary">
-                <p class="text-[10px] leading-tight text-primary dark:text-primary uppercase font-bold">System Status:
-                  Awaiting Input...</p>
-                <div class="w-full h-1 bg-slate-300 dark:bg-slate-700 mt-2 overflow-hidden">
-                  <div class="h-full bg-primary w-1/3"></div>
-                </div>
+                  YA TINC COMPTE
+                </a>
               </div>
             </div>
           </div>
