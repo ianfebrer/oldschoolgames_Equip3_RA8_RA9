@@ -47,7 +47,7 @@ Hacer una web con Flask donde un usuario se registra, juega a 3 juegos retro y s
 ## Qué tenéis que aprender (mínimo) antes de empezar
 
 - Flask básico: rutas, plantillas y formularios.
-- SQLAlchemy básico: modelos y guardar datos.
+- JSON y archivos: leer/escribir con `json` de la stdlib.
 - Sesiones/login en Flask (`Flask-Login`).
 - JavaScript básico para teclado/ratón.
 - Peticiones `fetch` (enviar datos del juego al backend).
@@ -56,17 +56,28 @@ Hacer una web con Flask donde un usuario se registra, juega a 3 juegos retro y s
 
 - [run.py](run.py) -> arranca la app
 - [app/**init**.py](app/__init__.py) -> crea la app Flask
-- [app/models/](app/models/) -> clases de base de datos
+- [app/data/](app/data/) -> archivos JSON (`users.json`, `scores.json`, etc.)
+- [app/models/](app/models/) -> clases OO que leen/escriben en JSON (sin base de datos)
 - [app/routes/](app/routes/) -> endpoints y páginas
 - [app/templates/](app/templates/) -> HTML
 - [app/static/js/games/](app/static/js/games/) -> lógica JS de los 3 juegos
 
+## Persistencia: archivos JSON (sin base de datos)
+
+Usamos JSON porque es simple, legible y no requiere dependencias. Un archivo por entidad:
+
+- `users.json` -> lista de usuarios (username, password_hash)
+- `games.json` -> lista de juegos (id, name, description) — se crea al inicio
+- `scores.json` -> lista de resultados (user_id, game_id, points, time, date)
+
+Regla fácil: cada clase tiene métodos para cargar/guardar desde su archivo JSON.
+
 ## Clases OO obligatorias (muy simple)
 
-- `User` -> usuario y contraseña
-- `Game` -> información del juego (`name`, `description`)
+- `User` -> usuario y contraseña (lee/escribe `users.json`)
+- `Game` -> información del juego (`name`, `description`) (lee `games.json`)
 - `GameSession` -> una partida concreta (inicio, fin, estado)
-- `Score` -> resultado final (puntos, tiempo, fecha)
+- `Score` -> resultado final (puntos, tiempo, fecha) (lee/escribe `scores.json`)
 
 Regla fácil: si algo representa “una cosa del dominio”, haced una clase.
 
@@ -75,16 +86,16 @@ Regla fácil: si algo representa “una cosa del dominio”, haced una clase.
 ### Semana 1 - Base + Login
 
 1. Crear proyecto Flask mínimo.
-2. Configurar base de datos SQLite.
-3. Crear modelo `User`.
+2. Crear carpeta `app/data/` y archivo `users.json` vacío `[]`.
+3. Crear modelo `User` con métodos para leer/escribir en JSON.
 4. Hacer páginas: registro y login.
 5. Proteger ruta `/lobby` para usuarios logueados.
 6. Probar manualmente: registrar usuario, cerrar sesión, volver a entrar.
 
 ### Semana 2 - Modelos de juego y menú
 
-1. Crear modelos `Game`, `GameSession`, `Score`.
-2. Insertar 3 juegos iniciales en DB (`Pong`, `Trexpres`, `AtencioFlash`).
+1. Crear modelos `Game`, `GameSession`, `Score` con métodos JSON.
+2. Crear `games.json` con los 3 juegos iniciales (`Pong`, `Trexpres`, `AtencioFlash`).
 3. Crear página `/lobby` con botones a los 3 juegos.
 4. Crear plantillas vacías de cada juego.
 5. Probar manualmente: entrar al lobby y ver que los 3 juegos aparecen.
@@ -94,9 +105,9 @@ Regla fácil: si algo representa “una cosa del dominio”, haced una clase.
 1. JS de Pong con teclado.
 2. Endpoint para recibir resultado (`POST /api/scores`).
 3. Validar datos en backend (usuario logueado, juego válido, puntos válidos).
-4. Guardar score y tiempo en DB.
+4. Guardar score y tiempo en `scores.json`.
 5. Mostrar mensaje final de partida.
-6. Probar manualmente: jugar una partida, terminar y comprobar que el score aparece en la base de datos.
+6. Probar manualmente: jugar una partida, terminar y comprobar que el score aparece en `scores.json`.
 
 ### Semana 4 - Juegos 2 y 3 completos
 
@@ -123,7 +134,7 @@ No hay especialistas. Todos rotan cada semana.
   - Persona B: HTML login/register
   - Persona C: CSS base + probar flujo de registro/login
 - Semana 2:
-  - A: modelos DB
+  - A: modelos JSON
   - B: rutas y lobby
   - C: estilos del lobby + probar navegación
 - Semana 3:
@@ -146,7 +157,7 @@ Regla de rotación: la siguiente semana cada persona cambia de tipo de tarea.
 - Funciona en local sin errores.
 - Se ha probado manualmente en el navegador.
 - Se ve bien en pantalla.
-- Se guarda en base de datos (si aplica).
+- Se guarda en archivos JSON (si aplica).
 - Otro compañero lo ha revisado.
 
 ## Entrega final
