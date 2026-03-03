@@ -1,4 +1,4 @@
-from flask import render_template, Blueprint, request, jsonify
+from flask import render_template, Blueprint, request, jsonify, session, redirect
 from app.models.user import User
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
@@ -16,8 +16,6 @@ def api_register():
 	data = request.get_json()
 	username = data.get('username')
 	password = data.get('password')
-	if not username or not password:
-		return jsonify({'success': False, 'message': 'Usuari o contranya requerits'})
 
 	user = User(username, password)
 	success, message = user.register()
@@ -25,3 +23,22 @@ def api_register():
 		return jsonify({'success': True, 'message': message})
 	else:
 		return jsonify({'success': False, 'message': message})
+
+@auth_bp.route('/api/login', methods=['POST'])
+def api_login():
+	data = request.get_json()
+	username = data.get('username')
+	password = data.get('password')
+
+	user = User(username, password)
+	success, message = user.login()
+	if success:
+		session['username'] = username
+		return jsonify({'success': True, 'message': message})
+	else:
+		return jsonify({'success': False, 'message': message})
+
+@auth_bp.route('/logout')
+def logout():
+	session.pop('username', None)
+	return redirect('/auth/login')

@@ -35,5 +35,5 @@ class User:
 		users = self.obtenirtots()
 		for user in users:
 			if user['username'] == self.username and user['password'] == self.password:
-				return True
-		return False
+				return True, 'Login correcte'
+		return False, 'Usuari o contranya incorrectes'
