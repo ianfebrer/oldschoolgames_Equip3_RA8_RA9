@@ -4,33 +4,28 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Old School Games - Retro Gaming Hub</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 <link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "primary": "#0d59f2",
-                        "accent-cyan": "#00f3ff",
-                        "accent-magenta": "#ff00ff",
-                        "background-light": "#f5f6f8",
-                        "background-dark": "#101622",
-                    },
-                    fontFamily: {
-                        "display": ["Spline Sans", "sans-serif"]
-                    },
-                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
-                },
-            },
+<style type="text/tailwindcss">
+        @custom-variant dark (&:where(.dark, .dark *));
+
+        @theme {
+            --color-primary: #0d59f2;
+            --color-accent-cyan: #00f3ff;
+            --color-accent-magenta: #ff00ff;
+            --color-background-light: #f5f6f8;
+            --color-background-dark: #101622;
+            --font-display: "Spline Sans", sans-serif;
+            --radius: 0.25rem;
+            --radius-lg: 0.5rem;
+            --radius-xl: 0.75rem;
+            --radius-full: 9999px;
         }
-    </script>
-<style>
+
         .pixel-border {
-            box-shadow: 
+            box-shadow:
                 0 4px 0 0 #000,
                 0 -4px 0 0 #000,
                 4px 0 0 0 #000,
