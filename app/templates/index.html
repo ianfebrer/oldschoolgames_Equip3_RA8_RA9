@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Old School Games - Retro Gaming Hub</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0d59f2",
+                        "accent-cyan": "#00f3ff",
+                        "accent-magenta": "#ff00ff",
+                        "background-light": "#f5f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .pixel-border {
+            box-shadow: 
+                0 4px 0 0 #000,
+                0 -4px 0 0 #000,
+                4px 0 0 0 #000,
+                -4px 0 0 0 #000;
+        }
+        .retro-gradient {
+            background: linear-gradient(135deg, #101622 0%, #1a1f2e 100%);
+        }
+        .neon-glow-cyan {
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+        }
+        .neon-glow-magenta {
+            text-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased selection:bg-primary/30">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-slate-200 dark:border-slate-800 px-6 md:px-20 py-4 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md sticky top-0 z-50">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3 text-primary">
+<div class="size-8 flex items-center justify-center bg-primary rounded-lg shadow-[0_0_15px_rgba(13,89,242,0.4)]">
+<span class="material-symbols-outlined text-white text-2xl">joystick</span>
+</div>
+<h2 class="text-slate-900 dark:text-white text-xl font-black leading-tight tracking-tight uppercase italic">
+                            Old School <span class="text-accent-cyan">Games</span>
+</h2>
+</div>
+<nav class="hidden lg:flex items-center gap-8">
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-accent-cyan text-sm font-bold uppercase tracking-widest transition-colors" href="#">Home</a>
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-accent-cyan text-sm font-bold uppercase tracking-widest transition-colors" href="#">Games</a>
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-accent-cyan text-sm font-bold uppercase tracking-widest transition-colors" href="#">Leaderboard</a>
+</nav>
+</div>
+<div class="flex flex-1 justify-end gap-6 items-center">
+<label class="hidden md:flex flex-col min-w-40 !h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full overflow-hidden border border-slate-200 dark:border-slate-700">
+<div class="text-slate-400 flex bg-slate-100 dark:bg-slate-800 items-center justify-center pl-4">
+<span class="material-symbols-outlined text-xl">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 border-none bg-slate-100 dark:bg-slate-800 focus:ring-0 placeholder:text-slate-500 text-sm font-medium px-3" placeholder="Search games..." value=""/>
+</div>
+</label>
+<div class="flex gap-3">
+<button class="text-slate-600 dark:text-slate-300 text-sm font-bold uppercase tracking-widest px-4">Login</button>
+<button class="flex min-w-[100px] cursor-pointer items-center justify-center rounded-lg h-10 px-5 bg-primary hover:bg-primary/90 text-white text-xs font-black uppercase tracking-widest transition-all shadow-[0_4px_0_0_#063bb3] active:translate-y-1 active:shadow-none">
+                            Sign Up
+                        </button>
+</div>
+</div>
+</header>
+<main class="flex-1 flex flex-col md:flex-row max-w-[1440px] mx-auto w-full px-6 md:px-10 py-8 gap-8">
+<aside class="w-full md:w-72 flex flex-col gap-6 order-2 md:order-1">
+<div class="bg-slate-100 dark:bg-slate-900/50 p-6 rounded-xl border border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-accent-magenta">military_tech</span>
+<div class="flex flex-col">
+<h3 class="text-slate-900 dark:text-white text-sm font-black uppercase tracking-tighter italic">Leaderboard</h3>
+<p class="text-slate-500 text-xs uppercase font-bold tracking-widest">Global Top 5</p>
+</div>
+</div>
+<div class="flex flex-col gap-4">
+<div class="flex items-center justify-between p-3 rounded-lg bg-primary/10 border border-primary/20">
+<div class="flex items-center gap-3">
+<span class="text-primary font-black italic">01</span>
+<div class="size-8 rounded bg-primary/20 flex items-center justify-center border border-primary/30">
+<span class="material-symbols-outlined text-sm">person</span>
+</div>
+<span class="text-xs font-black uppercase">PixelKing</span>
+</div>
+<span class="text-xs font-mono text-accent-cyan">99,999</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded-lg bg-slate-200 dark:bg-slate-800 border border-transparent">
+<div class="flex items-center gap-3">
+<span class="text-slate-400 font-black italic">02</span>
+<div class="size-8 rounded bg-slate-300 dark:bg-slate-700"></div>
+<span class="text-xs font-bold uppercase">RetroGal</span>
+</div>
+<span class="text-xs font-mono">84,200</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded-lg bg-slate-200 dark:bg-slate-800 border border-transparent">
+<div class="flex items-center gap-3">
+<span class="text-slate-400 font-black italic">03</span>
+<div class="size-8 rounded bg-slate-300 dark:bg-slate-700"></div>
+<span class="text-xs font-bold uppercase">8BitGhost</span>
+</div>
+<span class="text-xs font-mono">76,550</span>
+</div>
+</div>
+<button class="w-full mt-6 py-2 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-primary transition-colors">View All Scores</button>
+</div>
+<div class="bg-primary/5 p-6 rounded-xl border border-primary/20">
+<h4 class="text-xs font-black uppercase tracking-widest mb-4 text-primary">Active Tournaments</h4>
+<div class="flex flex-col gap-3">
+<div class="flex gap-3 items-center">
+<div class="size-2 rounded-full bg-accent-magenta animate-pulse"></div>
+<span class="text-xs font-bold">Pong Masters Cup</span>
+</div>
+<div class="flex gap-3 items-center opacity-60">
+<div class="size-2 rounded-full bg-slate-400"></div>
+<span class="text-xs font-bold">Memory Marathon</span>
+</div>
+</div>
+</div>
+</aside>
+<div class="flex-1 flex flex-col gap-10 order-1 md:order-2">
+<section class="relative overflow-hidden rounded-2xl bg-slate-900 aspect-[21/9] flex items-center p-8 md:p-12 border-2 border-primary/30 group">
+<div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 pointer-events-none"></div>
+<div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/60 to-transparent z-10"></div>
+<div class="absolute top-0 right-0 w-1/2 h-full z-0 overflow-hidden">
+<div class="w-full h-full bg-center bg-cover transform scale-110 group-hover:scale-100 transition-transform duration-700" data-alt="Retro gaming console with controllers and neon lighting" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAHakADM7fscjFfCSl1yZ2doencKdDLncpwFeHePZz244Ou2EsX40ul-LD308s0ccONppYKsK046SAxXuLTL5-sS9kBMYTPPYEcKbbDJJWX_6iXXTEZdRSi7giz7MaIHlskAGtmHGQpF3zTyRLlVtFu7dCcFfjZ2_7os4TpT_KsooC1H8Nz5jwxxtiuT4Ws9Bj4rA65jo5VtJlGLf0RU1PN9-8f3MYEjSAxNNtTtEJR0hFGbWtotLlaeasEnoh5bb7D78RKAg9hdBc');"></div>
+</div>
+<div class="relative z-20 max-w-lg flex flex-col gap-6">
+<div class="flex flex-col gap-2">
+<span class="text-accent-cyan font-black tracking-[0.2em] uppercase text-xs neon-glow-cyan">System Ready</span>
+<h1 class="text-white text-4xl md:text-6xl font-black leading-none tracking-tighter uppercase italic">
+                                    PLAY THE <br/><span class="text-primary italic">CLASSICS</span> AGAIN
+                                </h1>
+<p class="text-slate-300 text-sm md:text-lg max-w-sm leading-relaxed font-medium">
+                                    Experience the golden age of gaming in your browser. Pixel-perfect action awaits your command.
+                                </p>
+</div>
+<div class="flex gap-4">
+<button class="flex min-w-[160px] cursor-pointer items-center justify-center rounded-lg h-14 px-8 bg-primary hover:bg-primary/90 text-white text-sm font-black uppercase tracking-widest transition-all shadow-[0_6px_0_0_#063bb3] active:translate-y-1 active:shadow-none">
+                                    Press Start
+                                </button>
+<button class="flex items-center justify-center rounded-lg h-14 px-8 border-2 border-white/20 hover:border-white/40 text-white text-sm font-black uppercase tracking-widest transition-all">
+                                    Browse All
+                                </button>
+</div>
+</div>
+</section>
+<section class="flex flex-col gap-6">
+<div class="flex items-center justify-between border-b-2 border-slate-200 dark:border-slate-800 pb-4">
+<h2 class="text-slate-900 dark:text-white text-2xl font-black uppercase tracking-tighter italic">Featured Games</h2>
+<div class="flex gap-2">
+<button class="size-10 rounded border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="size-10 rounded border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+<div class="group flex flex-col bg-white dark:bg-slate-900 rounded-xl overflow-hidden border-2 border-transparent hover:border-primary transition-all shadow-sm hover:shadow-xl">
+<div class="aspect-square relative overflow-hidden">
+<div class="w-full h-full bg-center bg-cover transition-transform duration-500 group-hover:scale-110" data-alt="Abstract minimalist digital paddle game art" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB_8s3muSh7ox6SRjHS4VmtUmyoTTFsyU0QEVXrtDm2zwqr-cRYBPsFedKNGbM75sheVm1rYLch_f38Az90hxpX5oZh8uQx3tOwKt7870PabOF76YKwHSmA9-NPFfzMcKEPEDb69PsHa4VRno61vZX0cEI7AI37uj2fkugjCUsS4MtRY696xGX4yLavbp-1-K0j8I274vVVAgGXu-hSO7lE3C2eSMPxWvFz5lPj5GNDEDkgnlacUTIDqsFhgZBRzEHzj_gupJ4V9dY');"></div>
+<div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="bg-white text-primary rounded-full size-12 flex items-center justify-center shadow-lg">
+<span class="material-symbols-outlined fill-1">play_arrow</span>
+</button>
+</div>
+</div>
+<div class="p-5 flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<h3 class="text-slate-900 dark:text-white text-lg font-black uppercase tracking-tighter italic">Pong</h3>
+<span class="bg-accent-cyan/10 text-accent-cyan text-[10px] font-black uppercase px-2 py-0.5 rounded">Multiplayer</span>
+</div>
+<p class="text-slate-500 text-xs font-bold leading-normal uppercase">The original digital classic that started it all.</p>
+<div class="flex items-center gap-2 mt-2 pt-4 border-t border-slate-100 dark:border-slate-800">
+<span class="material-symbols-outlined text-sm text-slate-400">trending_up</span>
+<p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Active Players: 1.2k</p>
+</div>
+</div>
+</div>
+<div class="group flex flex-col bg-white dark:bg-slate-900 rounded-xl overflow-hidden border-2 border-transparent hover:border-primary transition-all shadow-sm hover:shadow-xl">
+<div class="aspect-square relative overflow-hidden">
+<div class="w-full h-full bg-center bg-cover transition-transform duration-500 group-hover:scale-110" data-alt="Digital grid pattern neon blue background" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBQOZVAsr3aBYUBzvo8CaipT3-ZVPdk2WYK23hX6p4hvLwlabjZdAM-u59O_q92DDf-VkIj5gfsxhwohzY9vAE0iZUSFrOOkizk12OJZupRg4cqPArSOrYiCh3e_PHkc784hWWcSnBt2KoLpPZ0-H10AV306_xeMdwTaq3dJmEg8CKtkN2GIt3MOF-h5v4d4XPolslgkObYMHu7mHqR7C4FE8ovAl1XYuFTl1ReRhy0pqgWTafo4MXs7umYmTxNzFwJ-lj9W96I61I');"></div>
+<div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="bg-white text-primary rounded-full size-12 flex items-center justify-center shadow-lg">
+<span class="material-symbols-outlined fill-1">play_arrow</span>
+</button>
+</div>
+</div>
+<div class="p-5 flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<h3 class="text-slate-900 dark:text-white text-lg font-black uppercase tracking-tighter italic">Mental Agility</h3>
+<span class="bg-accent-magenta/10 text-accent-magenta text-[10px] font-black uppercase px-2 py-0.5 rounded">Fast-Paced</span>
+</div>
+<p class="text-slate-500 text-xs font-bold leading-normal uppercase">Test your reflexes against the clock.</p>
+<div class="flex items-center gap-2 mt-2 pt-4 border-t border-slate-100 dark:border-slate-800">
+<span class="material-symbols-outlined text-sm text-slate-400">trophy</span>
+<p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">High Score: 9,999</p>
+</div>
+</div>
+</div>
+<div class="group flex flex-col bg-white dark:bg-slate-900 rounded-xl overflow-hidden border-2 border-transparent hover:border-primary transition-all shadow-sm hover:shadow-xl">
+<div class="aspect-square relative overflow-hidden">
+<div class="w-full h-full bg-center bg-cover transition-transform duration-500 group-hover:scale-110" data-alt="Close up of retro arcade game cabinet buttons" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBDnpPusT02dEF7PxSqk85LNRhe7jR05jFoVDT0CEjsPkmfdRwOJSVnKQbaFlikjVAMWOIcWcGiiCACTOr4seuxkhi1eC22LZUpUJKnu-4UMpoPKm_9iJuoMuC7097QoQZ84j9CDMhQLjL1rDzs4i8cSFT7SxTRDRHaWF_oaRaW6cdslK3RSLSW7K6jvtoazVL69_MSKAnA_Gp2xxstLQEUNtRuqZ-oPm0h6scrRodFd5K0TmO29ZNQPv-fn_4Dvp3ig4xJ0eEeKh0');"></div>
+<div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="bg-white text-primary rounded-full size-12 flex items-center justify-center shadow-lg">
+<span class="material-symbols-outlined fill-1">play_arrow</span>
+</button>
+</div>
+</div>
+<div class="p-5 flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<h3 class="text-slate-900 dark:text-white text-lg font-black uppercase tracking-tighter italic">Memory</h3>
+<span class="bg-slate-100 dark:bg-slate-800 text-slate-500 text-[10px] font-black uppercase px-2 py-0.5 rounded">Puzzle</span>
+</div>
+<p class="text-slate-500 text-xs font-bold leading-normal uppercase">A mental workout to sharpen your focus.</p>
+<div class="flex items-center gap-2 mt-2 pt-4 border-t border-slate-100 dark:border-slate-800">
+<span class="material-symbols-outlined text-sm text-slate-400">layers</span>
+<p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Levels: 1-100</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<footer class="mt-20 border-t border-slate-200 dark:border-slate-800 py-10 px-10 bg-slate-50 dark:bg-slate-900/30">
+<div class="max-w-[1440px] mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="flex items-center gap-3">
+<div class="size-6 bg-slate-400 rounded-sm"></div>
+<span class="text-slate-500 font-black uppercase tracking-widest text-xs italic">Old School Games © 2024</span>
+</div>
+<div class="flex gap-8">
+<a class="text-slate-400 hover:text-primary text-xs font-black uppercase tracking-widest transition-colors" href="#">Privacy</a>
+<a class="text-slate-400 hover:text-primary text-xs font-black uppercase tracking-widest transition-colors" href="#">Terms</a>
+<a class="text-slate-400 hover:text-primary text-xs font-black uppercase tracking-widest transition-colors" href="#">Support</a>
+</div>
+<div class="flex gap-4">
+<div class="size-10 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-400 hover:text-accent-cyan transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-xl">chat</span>
+</div>
+<div class="size-10 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-400 hover:text-accent-magenta transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-xl">share</span>
+</div>
+</div>
+</div>
+</footer>
+</div>
+</div>
+</body></html>
