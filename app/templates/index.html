@@ -1,270 +1,438 @@
 <!DOCTYPE html>
-
-<html class="dark" lang="en">
+<html lang="en" class="scroll-smooth">
 
 <head>
     <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Old School Games - Retro Gaming Hub</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700;800&amp;display=swap"
-        rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SYS.ARCADE // OLD SCHOOL GAMES</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Teko for massive, condensed, brutalist headers; Space Mono for technical/data text -->
     <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-        rel="stylesheet" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-        rel="stylesheet" />
-    <style type="text/tailwindcss">
-        @custom-variant dark (&:where(.dark, .dark *));
+        href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Teko:wght@500;600;700&display=swap"
+        rel="stylesheet">
 
-        @theme {
-            --color-primary: #0d59f2;
-            --color-accent-cyan: #00f3ff;
-            --color-accent-magenta: #ff00ff;
-            --color-background-light: #f5f6f8;
-            --color-background-dark: #101622;
-            --font-display: "Spline Sans", sans-serif;
-            --radius: 0.25rem;
-            --radius-lg: 0.5rem;
-            --radius-xl: 0.75rem;
-            --radius-full: 9999px;
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Teko', 'sans-serif'],
+                        mono: ['Space Mono', 'monospace'],
+                    },
+                    colors: {
+                        arcade: {
+                            black: '#0a0a0a',
+                            dark: '#121212',
+                            gray: '#2a2a2a',
+                            lime: '#CCFF00',
+                            red: '#FF2A2A',
+                            cyan: '#00F0FF',
+                            white: '#EAEAEA'
+                        }
+                    },
+                    boxShadow: {
+                        'brutal-lime': '6px 6px 0px 0px #CCFF00',
+                        'brutal-red': '6px 6px 0px 0px #FF2A2A',
+                        'brutal-cyan': '6px 6px 0px 0px #00F0FF',
+                        'brutal-white': '4px 4px 0px 0px #EAEAEA',
+                        'brutal-active': '2px 2px 0px 0px #CCFF00',
+                    },
+                    backgroundImage: {
+                        'noise': "url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')",
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* CSS Scanline Effect for CRT feel */
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(to bottom,
+                    rgba(18, 16, 16, 0) 50%,
+                    rgba(0, 0, 0, 0.25) 50%);
+            background-size: 100% 4px;
+            z-index: 9999;
+            pointer-events: none;
         }
 
-        .pixel-border {
-            box-shadow:
-                0 4px 0 0 #000,
-                0 -4px 0 0 #000,
-                4px 0 0 0 #000,
-                -4px 0 0 0 #000;
+        /* Custom selection */
+        ::selection {
+            background-color: #CCFF00;
+            color: #0a0a0a;
         }
-        .retro-gradient {
-            background: linear-gradient(135deg, #101622 0%, #1a1f2e 100%);
+
+        /* Glitch text effect on hover */
+        .glitch-hover:hover {
+            animation: glitch-skew 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+            color: #CCFF00;
         }
-        .neon-glow-cyan {
-            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+
+        @keyframes glitch-skew {
+            0% {
+                transform: skew(0deg);
+            }
+
+            20% {
+                transform: skew(-10deg);
+            }
+
+            40% {
+                transform: skew(10deg);
+            }
+
+            60% {
+                transform: skew(-5deg);
+            }
+
+            80% {
+                transform: skew(5deg);
+            }
+
+            100% {
+                transform: skew(0deg);
+            }
         }
-        .neon-glow-magenta {
-            text-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+
+        /* Blinking cursor */
+        .cursor-blink {
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+        }
+
+        /* Marquee Animation */
+        .marquee-content {
+            display: inline-block;
+            white-space: nowrap;
+            animation: marquee 20s linear infinite;
+        }
+
+        @keyframes marquee {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* Game Card Image Filter */
+        .game-img {
+            filter: grayscale(100%) contrast(120%) brightness(80%);
+            transition: all 0.3s ease;
+        }
+
+        .group:hover .game-img {
+            filter: grayscale(0%) contrast(110%) brightness(100%);
+        }
+
+        /* Hide scrollbar but keep functionality */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+            border-left: 1px solid #2a2a2a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #CCFF00;
         }
     </style>
-    <script src="/static/js/index/index.js"></script>
 </head>
 
 <body
-    class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased selection:bg-primary/30">
-    <div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
-        <div class="layout-container flex h-full grow flex-col">
-            <header
-                class="flex items-center justify-between whitespace-nowrap border-b border-slate-200 dark:border-slate-800 px-6 md:px-20 py-4 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md sticky top-0 z-50">
-                <div class="flex items-center gap-8">
-                    <div class="flex items-center gap-3 text-primary">
-                        <div
-                            class="size-8 flex items-center justify-center bg-primary rounded-lg shadow-[0_0_15px_rgba(13,89,242,0.4)]">
-                            <span class="material-symbols-outlined text-white text-2xl">joystick</span>
-                        </div>
-                        <h2
-                            class="text-slate-900 dark:text-white text-xl font-black leading-tight tracking-tight uppercase italic">
-                            Old School <span class="text-accent-cyan">Games</span>
-                        </h2>
-                    </div>
+    class="bg-arcade-black text-arcade-white font-mono antialiased relative min-h-screen flex flex-col selection:bg-arcade-lime selection:text-arcade-black">
+
+    <!-- Subtle noise texture overlay -->
+    <div class="fixed inset-0 opacity-[0.03] pointer-events-none z-0 bg-noise"></div>
+
+    <!-- Header / Navigation -->
+    <header class="relative z-10 border-b-2 border-arcade-gray bg-arcade-dark/90 backdrop-blur-sm">
+        <div
+            class="max-w-[1600px] mx-auto px-4 sm:px-8 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+
+            <!-- Logo Section -->
+            <div class="flex items-center gap-4">
+                <div
+                    class="w-12 h-12 bg-arcade-lime text-arcade-black flex items-center justify-center font-display text-4xl leading-none mt-1 shadow-brutal-white">
+                    JS
                 </div>
-                <div class="flex flex-1 justify-end gap-6 items-center">
-                    <div class="flex items-center gap-3">
-                        {% if username %}
-                        <a href="/auth/profile"
-                            class="text-slate-600 dark:text-slate-300 text-sm font-bold uppercase tracking-widest px-4 hover:opacity-80 transition-opacity"><span
-                                class="material-symbols-outlined">person</span>{{ username }}
-                        </a>
-                        <a href="/auth/logout"
-                            class="text-slate-600 dark:text-slate-300 text-sm font-bold uppercase tracking-widest px-4 hover:opacity-80 transition-opacity">
-                            logout
-                        </a>
-                        {% else %}
-                        <a href="/auth/login"
-                            class="flex min-w-[100px] cursor-pointer items-center justify-center rounded-lg h-10 px-5 bg-primary hover:bg-primary/90 text-white text-xs font-black uppercase tracking-widest transition-all shadow-[0_4px_0_0_#063bb3] active:translate-y-1 active:shadow-none decoration-none">
-                            Inicia Sessió
-                        </a>
-                        <a href="/auth/register"
-                            class="flex min-w-[100px] cursor-pointer items-center justify-center rounded-lg h-10 px-5 bg-primary hover:bg-primary/90 text-white text-xs font-black uppercase tracking-widest transition-all shadow-[0_4px_0_0_#063bb3] active:translate-y-1 active:shadow-none decoration-none">
-                            Registrar-se
-                        </a>
-                        {% endif %}
-                    </div>
+                <div class="flex flex-col leading-none">
+                    <h1
+                        class="font-display text-4xl sm:text-5xl uppercase tracking-widest text-arcade-white m-0 p-0 leading-[0.85]">
+                        Old School <span class="text-arcade-lime">Games</span>
+                    </h1>
+                    <span class="text-xs text-arcade-cyan font-bold tracking-widest uppercase mt-1">SYS.VER.2.0.26 //
+                        ONLINE</span>
                 </div>
-            </header>
-            <main class="flex-1 flex flex-col md:flex-row max-w-[1440px] mx-auto w-full px-6 md:px-10 py-8 gap-8">
-                <aside class="w-full md:w-72 flex flex-col gap-6 order-2 md:order-1">
-                    <div
-                        class="bg-slate-100 dark:bg-slate-900/50 p-6 rounded-xl border border-slate-200 dark:border-slate-800">
-                        <div class="flex items-center gap-3 mb-6">
-                            <span class="material-symbols-outlined text-accent-magenta">military_tech</span>
-                            <div class="flex flex-col">
-                                <h3
-                                    class="text-slate-900 dark:text-white text-sm font-black uppercase tracking-tighter italic">
-                                    Leaderboard</h3>
-                                <p class="text-slate-500 text-xs uppercase font-bold tracking-widest">Global Top 5</p>
-                            </div>
-                        </div>
-                        <div class="flex flex-col gap-4">
-                            <div
-                                class="flex items-center justify-between p-3 rounded-lg bg-primary/10 border border-primary/20">
-                                <div class="flex items-center gap-3">
-                                    <span class="text-primary font-black italic">01</span>
-                                    <div
-                                        class="size-8 rounded bg-primary/20 flex items-center justify-center border border-primary/30">
-                                        <span class="material-symbols-outlined text-sm">person</span>
-                                    </div>
-                                    <span class="text-xs font-black uppercase">PixelKing</span>
-                                </div>
-                                <span class="text-xs font-mono text-accent-cyan">99,999</span>
-                            </div>
-                            <div
-                                class="flex items-center justify-between p-3 rounded-lg bg-slate-200 dark:bg-slate-800 border border-transparent">
-                                <div class="flex items-center gap-3">
-                                    <span class="text-slate-400 font-black italic">02</span>
-                                    <div class="size-8 rounded bg-slate-300 dark:bg-slate-700"></div>
-                                    <span class="text-xs font-bold uppercase">RetroGal</span>
-                                </div>
-                                <span class="text-xs font-mono">84,200</span>
-                            </div>
-                            <div
-                                class="flex items-center justify-between p-3 rounded-lg bg-slate-200 dark:bg-slate-800 border border-transparent">
-                                <div class="flex items-center gap-3">
-                                    <span class="text-slate-400 font-black italic">03</span>
-                                    <div class="size-8 rounded bg-slate-300 dark:bg-slate-700"></div>
-                                    <span class="text-xs font-bold uppercase">8BitGhost</span>
-                                </div>
-                                <span class="text-xs font-mono">76,550</span>
-                            </div>
-                        </div>
-                        <button
-                            class="w-full mt-6 py-2 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-primary transition-colors">View
-                            All Scores</button>
-                    </div>
-                </aside>
-                <div class="flex-1 flex flex-col gap-10 order-1 md:order-2">
-                    <section class="flex flex-col gap-6">
-                        <div
-                            class="flex items-center justify-between border-b-2 border-slate-200 dark:border-slate-800 pb-4">
-                            <h2
-                                class="text-slate-900 dark:text-white text-2xl font-black uppercase tracking-tighter italic">
-                                Old School Games</h2>
-                        </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <div
-                                class="group flex flex-col bg-white dark:bg-slate-900 rounded-xl overflow-hidden border-2 border-transparent hover:border-primary transition-all shadow-sm hover:shadow-xl">
-                                <div class="aspect-square relative overflow-hidden">
-                                    <div class="w-full h-full bg-center bg-cover transition-transform duration-500 group-hover:scale-110"
-                                        data-alt="Abstract minimalist digital paddle game art"
-                                        style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB_8s3muSh7ox6SRjHS4VmtUmyoTTFsyU0QEVXrtDm2zwqr-cRYBPsFedKNGbM75sheVm1rYLch_f38Az90hxpX5oZh8uQx3tOwKt7870PabOF76YKwHSmA9-NPFfzMcKEPEDb69PsHa4VRno61vZX0cEI7AI37uj2fkugjCUsS4MtRY696xGX4yLavbp-1-K0j8I274vVVAgGXu-hSO7lE3C2eSMPxWvFz5lPj5GNDEDkgnlacUTIDqsFhgZBRzEHzj_gupJ4V9dY');">
-                                    </div>
-                                    <div
-                                        class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                        <button
-                                            class="bg-white text-primary rounded-full size-12 flex items-center justify-center shadow-lg">
-                                            <span class="material-symbols-outlined fill-1">play_arrow</span>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="p-5 flex flex-col gap-2">
-                                    <div class="flex items-center justify-between">
-                                        <h3
-                                            class="text-slate-900 dark:text-white text-lg font-black uppercase tracking-tighter italic">
-                                            Pong</h3>
-                                        <span
-                                            class="bg-accent-cyan/10 text-accent-cyan text-[10px] font-black uppercase px-2 py-0.5 rounded">Multiplayer</span>
-                                    </div>
-                                    <p class="text-slate-500 text-xs font-bold leading-normal uppercase">The original
-                                        digital classic that started it all.</p>
-                                    <div
-                                        class="flex items-center gap-2 mt-2 pt-4 border-t border-slate-100 dark:border-slate-800">
-                                        <span
-                                            class="material-symbols-outlined text-sm text-slate-400">trending_up</span>
-                                        <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Active
-                                            Players: 1.2k</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div
-                                class="group flex flex-col bg-white dark:bg-slate-900 rounded-xl overflow-hidden border-2 border-transparent hover:border-primary transition-all shadow-sm hover:shadow-xl">
-                                <div class="aspect-square relative overflow-hidden">
-                                    <div class="w-full h-full bg-center bg-cover transition-transform duration-500 group-hover:scale-110"
-                                        data-alt="Digital grid pattern neon blue background"
-                                        style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBQOZVAsr3aBYUBzvo8CaipT3-ZVPdk2WYK23hX6p4hvLwlabjZdAM-u59O_q92DDf-VkIj5gfsxhwohzY9vAE0iZUSFrOOkizk12OJZupRg4cqPArSOrYiCh3e_PHkc784hWWcSnBt2KoLpPZ0-H10AV306_xeMdwTaq3dJmEg8CKtkN2GIt3MOF-h5v4d4XPolslgkObYMHu7mHqR7C4FE8ovAl1XYuFTl1ReRhy0pqgWTafo4MXs7umYmTxNzFwJ-lj9W96I61I');">
-                                    </div>
-                                    <div
-                                        class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                        <a href="/games/trexpres">
-                                            <div
-                                                class="bg-white text-primary rounded-full size-12 flex items-center justify-center shadow-lg">
-                                                <span class="material-symbols-outlined fill-1">play_arrow</span>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="p-5 flex flex-col gap-2">
-                                    <div class="flex items-center justify-between">
-                                        <h3
-                                            class="text-slate-900 dark:text-white text-lg font-black uppercase tracking-tighter italic">
-                                            Trexpres</h3>
-                                        <span
-                                            class="bg-accent-magenta/10 text-accent-magenta text-[10px] font-black uppercase px-2 py-0.5 rounded">Reflexes</span>
-                                    </div>
-                                    <p class="text-slate-500 text-xs font-bold leading-normal uppercase">El típic joc
-                                        del dinosaurio</p>
-                                </div>
-                            </div>
-                            <div
-                                class="group flex flex-col bg-white dark:bg-slate-900 rounded-xl overflow-hidden border-2 border-transparent hover:border-primary transition-all shadow-sm hover:shadow-xl">
-                                <div class="aspect-square relative overflow-hidden">
-                                    <div class="w-full h-full bg-center bg-cover transition-transform duration-500 group-hover:scale-110"
-                                        data-alt="Close up of retro arcade game cabinet buttons"
-                                        style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBDnpPusT02dEF7PxSqk85LNRhe7jR05jFoVDT0CEjsPkmfdRwOJSVnKQbaFlikjVAMWOIcWcGiiCACTOr4seuxkhi1eC22LZUpUJKnu-4UMpoPKm_9iJuoMuC7097QoQZ84j9CDMhQLjL1rDzs4i8cSFT7SxTRDRHaWF_oaRaW6cdslK3RSLSW7K6jvtoazVL69_MSKAnA_Gp2xxstLQEUNtRuqZ-oPm0h6scrRodFd5K0TmO29ZNQPv-fn_4Dvp3ig4xJ0eEeKh0');">
-                                    </div>
-                                    <div
-                                        class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                        <button
-                                            class="bg-white text-primary rounded-full size-12 flex items-center justify-center shadow-lg">
-                                            <span class="material-symbols-outlined fill-1">play_arrow</span>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="p-5 flex flex-col gap-2">
-                                    <div class="flex items-center justify-between">
-                                        <h3
-                                            class="text-slate-900 dark:text-white text-lg font-black uppercase tracking-tighter italic">
-                                            Memory</h3>
-                                        <span
-                                            class="bg-slate-100 dark:bg-slate-800 text-slate-500 text-[10px] font-black uppercase px-2 py-0.5 rounded">Puzzle</span>
-                                    </div>
-                                    <p class="text-slate-500 text-xs font-bold leading-normal uppercase">A mental
-                                        workout to sharpen your focus.</p>
-                                    <div
-                                        class="flex items-center gap-2 mt-2 pt-4 border-t border-slate-100 dark:border-slate-800">
-                                        <span class="material-symbols-outlined text-sm text-slate-400">layers</span>
-                                        <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">
-                                            Levels: 1-100</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-            </main>
-            <footer
-                class="mt-20 border-t border-slate-200 dark:border-slate-800 py-10 px-10 bg-slate-50 dark:bg-slate-900/30">
-                <div class="max-w-[1440px] mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
-                    <div class="flex items-center gap-3">
-                        <div class="size-6 bg-slate-400 rounded-sm"></div>
-                        <span class="text-slate-500 font-black uppercase tracking-widest text-xs italic">Old School
-                            Games © 2026</span>
-                    </div>
-                    <p class="text-slate-500 text-xs font-black uppercase tracking-widest">Roy<br>Miguel<br>Derek</p>
-                </div>
-            </footer>
+            </div>
+
+            <!-- Auth Controls -->
+            <div class="flex items-center gap-4 w-full sm:w-auto mt-2 sm:mt-0">
+                {% if username %}
+                <a href="/auth/logout"
+                    class="flex-1 sm:flex-none px-6 py-2 border-2 border-arcade-white text-arcade-white font-bold uppercase tracking-wider text-sm hover:bg-arcade-white hover:text-arcade-black transition-colors text-center">
+                    [ LOGOUT ]
+                </a>
+                {% else %}
+                <a href="/auth/login"
+                    class="flex-1 sm:flex-none px-6 py-2 border-2 border-arcade-white text-arcade-white font-bold uppercase tracking-wider text-sm hover:bg-arcade-white hover:text-arcade-black transition-colors text-center">
+                    [ LOGIN ]
+                </a>
+                <a href="/auth/register"
+                    class="flex-1 sm:flex-none px-6 py-2 bg-arcade-lime border-2 border-arcade-lime text-arcade-black font-bold uppercase tracking-wider text-sm shadow-brutal-white hover:shadow-brutal-active hover:translate-y-[2px] hover:translate-x-[2px] transition-all text-center">
+                    REGISTER_
+                </a>
+                {% endif %}
+            </div>
         </div>
-    </div>
+    </header>
+
+    <!-- Main Layout Grid -->
+    <main
+        class="relative z-10 flex-1 w-full max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 border-x-0 sm:border-x-2 border-arcade-gray">
+
+        <!-- LEADERBOARD (Sidebar) -->
+        <aside
+            class="lg:col-span-3 border-b-2 lg:border-b-0 lg:border-r-2 border-arcade-gray bg-arcade-black flex flex-col">
+            <div class="p-6 border-b-2 border-arcade-gray bg-arcade-dark">
+                <h2 class="font-display text-4xl uppercase text-arcade-cyan flex items-center gap-2">
+                    <span class="text-arcade-red">>></span> High Scores<span class="cursor-blink">_</span>
+                </h2>
+                <p class="text-xs text-arcade-gray font-bold tracking-widest mt-1">GLOBAL RANKING // TOP 5</p>
+            </div>
+
+            <div class="flex-1 p-6 flex flex-col gap-4">
+                <!-- Table Header -->
+                <div
+                    class="flex items-center justify-between text-xs text-arcade-gray border-b border-arcade-gray pb-2 mb-2">
+                    <span>RANK // USER</span>
+                    <span>SCORE</span>
+                </div>
+
+                <!-- Leaderboard Item 1 -->
+                <div class="group flex items-center justify-between font-bold text-sm">
+                    <div class="flex items-center gap-3">
+                        <span class="text-arcade-lime w-6">01.</span>
+                        <span
+                            class="uppercase text-arcade-white group-hover:text-arcade-lime transition-colors">PixelKing</span>
+                    </div>
+                    <span class="text-arcade-lime">99,999</span>
+                </div>
+
+                <!-- Leaderboard Item 2 -->
+                <div class="group flex items-center justify-between text-sm">
+                    <div class="flex items-center gap-3">
+                        <span class="text-arcade-gray w-6">02.</span>
+                        <span
+                            class="uppercase text-arcade-gray group-hover:text-arcade-white transition-colors">RetroGal</span>
+                    </div>
+                    <span class="text-arcade-white">84,200</span>
+                </div>
+
+                <!-- Leaderboard Item 3 -->
+                <div class="group flex items-center justify-between text-sm">
+                    <div class="flex items-center gap-3">
+                        <span class="text-arcade-gray w-6">03.</span>
+                        <span
+                            class="uppercase text-arcade-gray group-hover:text-arcade-white transition-colors">8BitGhost</span>
+                    </div>
+                    <span class="text-arcade-white">76,550</span>
+                </div>
+                <!-- Leaderboard Item 4 -->
+                <div class="group flex items-center justify-between text-sm">
+                    <div class="flex items-center gap-3">
+                        <span class="text-arcade-gray w-6">04.</span>
+                        <span
+                            class="uppercase text-arcade-gray group-hover:text-arcade-white transition-colors">CyberPunk</span>
+                    </div>
+                    <span class="text-arcade-white">62,100</span>
+                </div>
+                <!-- Leaderboard Item 5 -->
+                <div class="group flex items-center justify-between text-sm">
+                    <div class="flex items-center gap-3">
+                        <span class="text-arcade-gray w-6">05.</span>
+                        <span
+                            class="uppercase text-arcade-gray group-hover:text-arcade-white transition-colors">NullByte</span>
+                    </div>
+                    <span class="text-arcade-white">58,050</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- GAMES GRID (Main Content) -->
+        <section class="lg:col-span-9 bg-arcade-black p-4 sm:p-8">
+            <div class="flex items-end justify-between mb-8 border-b-2 border-arcade-gray pb-4">
+                <div>
+                    <h2 class="font-display text-5xl sm:text-6xl uppercase tracking-wide m-0 leading-none">Select <span
+                            class="text-arcade-red">Game</span></h2>
+                    <p class="text-arcade-gray text-sm mt-2">AVAILABLE MODULES: 3</p>
+                </div>
+                <div class="hidden sm:block text-right">
+                    <div class="text-xs text-arcade-cyan">STATUS: READY</div>
+                    <div class="text-xs text-arcade-gray">INSERT COIN</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <!-- Game Card 1 -->
+                <article
+                    class="group relative bg-arcade-dark border-2 border-arcade-gray hover:border-arcade-lime transition-colors duration-300 flex flex-col h-full hover:-translate-y-2 hover:shadow-brutal-lime">
+                    <div
+                        class="absolute top-0 right-0 bg-arcade-gray text-arcade-black px-2 py-1 text-xs font-bold z-10 group-hover:bg-arcade-lime transition-colors">
+                        ID: P0N6</div>
+
+                    <div class="w-full aspect-[4/3] border-b-2 border-arcade-gray overflow-hidden relative">
+                        <div class="absolute inset-0 bg-cover bg-center game-img scale-105 group-hover:scale-100 duration-500"
+                            style="background-image: url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=800&auto=format&fit=crop');">
+                        </div>
+                        <!-- Play Button Overlay -->
+                        <div
+                            class="absolute inset-0 bg-arcade-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
+                            <span
+                                class="bg-arcade-lime text-arcade-black px-6 py-3 font-bold uppercase tracking-widest border-2 border-arcade-lime shadow-brutal-white transform -skew-x-12 group-hover:skew-x-0 transition-transform cursor-pointer">
+                                START GAME
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="p-5 flex-1 flex flex-col">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3
+                                class="font-display text-4xl uppercase leading-none m-0 group-hover:text-arcade-lime transition-colors">
+                                PONG</h3>
+                            <span
+                                class="text-[10px] bg-arcade-white text-arcade-black px-1.5 py-0.5 mt-1 font-bold">MULTIPLAYER</span>
+                        </div>
+                        <p class="text-xs text-arcade-gray mb-4 flex-1">The original digital anomaly. Two paddles, one
+                            point of data. Do not miss.</p>
+
+                        <div
+                            class="border-t-2 border-dashed border-arcade-gray pt-3 flex justify-between items-center text-xs">
+                            <span class="text-arcade-white"><span class="text-arcade-cyan">>></span> ACTV: 1.2K</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Game Card 2 -->
+                <article
+                    class="group relative bg-arcade-dark border-2 border-arcade-gray hover:border-arcade-red transition-colors duration-300 flex flex-col h-full hover:-translate-y-2 hover:shadow-brutal-red">
+                    <div
+                        class="absolute top-0 right-0 bg-arcade-gray text-arcade-black px-2 py-1 text-xs font-bold z-10 group-hover:bg-arcade-red transition-colors">
+                        ID: TR3X</div>
+
+                    <div class="w-full aspect-[4/3] border-b-2 border-arcade-gray overflow-hidden relative">
+                        <div class="absolute inset-0 bg-cover bg-center game-img scale-105 group-hover:scale-100 duration-500"
+                            style="background-image: url('https://images.unsplash.com/photo-1518546305927-5a555bb7020d?q=80&w=800&auto=format&fit=crop');">
+                        </div>
+                        <div
+                            class="absolute inset-0 bg-arcade-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
+                            <span
+                                class="bg-arcade-red text-arcade-white px-6 py-3 font-bold uppercase tracking-widest border-2 border-arcade-red shadow-brutal-white transform skew-x-12 group-hover:skew-x-0 transition-transform cursor-pointer">
+                                START GAME
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="p-5 flex-1 flex flex-col">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3
+                                class="font-display text-4xl uppercase leading-none m-0 group-hover:text-arcade-red transition-colors">
+                                TREXPRES</h3>
+                            <span
+                                class="text-[10px] bg-arcade-white text-arcade-black px-1.5 py-0.5 mt-1 font-bold">REFLEX</span>
+                        </div>
+                        <p class="text-xs text-arcade-gray mb-4 flex-1">Prehistoric evasion simulation. Network
+                            disconnected. Jump to survive.</p>
+
+                        <div
+                            class="border-t-2 border-dashed border-arcade-gray pt-3 flex justify-between items-center text-xs">
+                            <span class="text-arcade-white"><span class="text-arcade-cyan">>></span> ACTV: 840</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Game Card 3 -->
+                <article
+                    class="group relative bg-arcade-dark border-2 border-arcade-gray hover:border-arcade-cyan transition-colors duration-300 flex flex-col h-full hover:-translate-y-2 hover:shadow-brutal-cyan">
+                    <div
+                        class="absolute top-0 right-0 bg-arcade-gray text-arcade-black px-2 py-1 text-xs font-bold z-10 group-hover:bg-arcade-cyan transition-colors">
+                        ID: M3M0</div>
+
+                    <div class="w-full aspect-[4/3] border-b-2 border-arcade-gray overflow-hidden relative">
+                        <div class="absolute inset-0 bg-cover bg-center game-img scale-105 group-hover:scale-100 duration-500"
+                            style="background-image: url('https://images.unsplash.com/photo-1614294149010-950b698f72c0?q=80&w=800&auto=format&fit=crop');">
+                        </div>
+                        <div
+                            class="absolute inset-0 bg-arcade-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
+                            <span
+                                class="bg-arcade-cyan text-arcade-black px-6 py-3 font-bold uppercase tracking-widest border-2 border-arcade-cyan shadow-brutal-white transform -skew-x-6 group-hover:skew-x-0 transition-transform">
+                                START GAME
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="p-5 flex-1 flex flex-col">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3
+                                class="font-display text-4xl uppercase leading-none m-0 group-hover:text-arcade-cyan transition-colors">
+                                MEMORY</h3>
+                            <span
+                                class="text-[10px] bg-arcade-white text-arcade-black px-1.5 py-0.5 mt-1 font-bold">PUZZLE</span>
+                        </div>
+                        <p class="text-xs text-arcade-gray mb-4 flex-1">Neural pathway reconstruction. Match data blocks
+                            to clear the buffer.</p>
+
+                        <div
+                            class="border-t-2 border-dashed border-arcade-gray pt-3 flex justify-between items-center text-xs">
+                            <span class="text-arcade-white"><span class="text-arcade-cyan">>></span> LVLS: 1-100</span>
+                            <span class="text-arcade-gray hover:text-arcade-white cursor-pointer uppercase">[ INFO
+                                ]</span>
+                        </div>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- Marquee Footer -->
+    <footer
+        class="relative z-10 w-full bg-arcade-lime text-arcade-black py-3 border-y-2 border-arcade-black overflow-hidden flex items-center font-bold text-sm tracking-widest mt-auto shadow-[0_-4px_20px_rgba(204,255,0,0.1)]">
+        <div class="marquee-content uppercase flex">
+            <!-- Repeated content for continuous scroll -->
+            <span>*** INSERT COIN TO CONTINUE *** OLD SCHOOL GAMES 2026 *** DEVELOPERS: ROY // MIGUEL // DEREK *** END
+                OF LINE ***</span>
+            <span class="ml-8">*** INSERT COIN TO CONTINUE *** OLD SCHOOL GAMES 2026 *** DEVELOPERS: ROY // MIGUEL //
+                DEREK *** END OF LINE ***</span>
+            <span class="ml-8">*** INSERT COIN TO CONTINUE *** OLD SCHOOL GAMES 2026 *** DEVELOPERS: ROY // MIGUEL //
+                DEREK *** END OF LINE ***</span>
+        </div>
+    </footer>
+
 </body>
 
 </html>
