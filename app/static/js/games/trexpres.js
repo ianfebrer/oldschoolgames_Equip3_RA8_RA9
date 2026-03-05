@@ -2,134 +2,104 @@ class Trexpres {
 	constructor() {
 		this.canvas = document.getElementById("simulation-canvas");
 		this.ctx = this.canvas.getContext("2d");
+		this.cellSize = 80;
+		this.boardOffset = { x: 50, y: 50 };
 
-		this.player = {
-			x: 50,
-			y: 200,
-			width: 30,
-			height: 30,
-			vy: 0,
-			onGround: true,
-		};
-
-		this.groundY = 250;
-
-		this.playing = false;
+		this.phase = "idle";
+		this.board = [];
+		this.pieceToPlace = null;
+		this.correctCell = { row: 0, col: 0 };
+		this.phaseStartTime = 0;
+		this.memorizeDuration = 500;
 		this.score = 0;
+		this.round = 0;
 		this.startTime = null;
 
-		this.obstacles = [];
-		this.obstacleSpeed = 5;
-		this.spawnCounter = 0;
+		this.puzzles = this.generatePuzzles();
 	}
 
-	jump() {
-		if (this.player.onGround && this.playing) {
-			this.player.vy = -12;
-			this.player.onGround = false;
-		}
-	}
-
-	update() {
-		if (!this.playing) return;
-
-		this.player.vy += 0.8;
-		this.player.y += this.player.vy;
-
-		// si el jugador ha arribat o passat el nivell del terra, el col·loquem anterra i parem la caiguda
-		if (this.player.y >= this.groundY - this.player.height) {
-			this.player.y = this.groundY - this.player.height;
-			this.player.vy = 0;
-			this.player.onGround = true;
-		}
-
-		this.spawnCounter++;
-		if (this.spawnCounter > 80) {
-			this.spawnCounter = 0;
-			this.obstacles.push({
-				x: this.canvas.width,
-				y: this.groundY - 30,
-				width: 20,
-				height: 40,
-			});
-		}
-
-		for (let i = this.obstacles.length - 1; i >= 0; i--) {
-			this.obstacles[i].x -= this.obstacleSpeed;
-			if (this.obstacles[i].x + this.obstacles[i].width < 0) {
-				this.obstacles.splice(i, 1);
-			}
-		}
-
-		for (const obs of this.obstacles) {
-			if (this.collides(this.player, obs)) {
-				this.stop();
-				return;
-			}
-		}
-		this.score = Math.floor((Date.now() - this.startTime) / 500);
-	}
-
-	collides(a, b) {
-		return (
-			a.x < b.x + b.width &&
-			a.x + a.width > b.x &&
-			a.y < b.y + b.height &&
-			a.y + a.height > b.y
-		);
-	}
-
-	draw() {
-		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-		this.ctx.fillStyle = "#333";
-		this.ctx.fillRect(
-			0,
-			this.groundY,
-			this.canvas.width,
-			this.canvas.height - this.groundY,
-		);
-
-		this.ctx.fillStyle = "#ff4444";
-		for (const obs of this.obstacles) {
-			this.ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
-		}
-
-		this.ctx.fillStyle = "#33ff33";
-		this.ctx.fillRect(
-			this.player.x,
-			this.player.y,
-			this.player.width,
-			this.player.height,
-		);
-
-		const elapsedMs = this.startTime ? Date.now() - this.startTime : 0;
-		const seconds = Math.floor(elapsedMs / 1000) % 60;
-		const minutes = Math.floor(elapsedMs / 60000);
-		const timeString = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-
-		this.ctx.fillStyle = "#00000";
-		this.ctx.font = "20px monospace";
-		this.ctx.fillText("Score: " + this.score, 10, 30);
-		this.ctx.fillText("Time: " + timeString, 10, 55);
-	}
-
-	gameLoop() {
-		this.update();
-		this.draw();
-		if (this.playing) {
-			requestAnimationFrame(() => this.gameLoop());
-		}
+	generatePuzzles() {
+		return [
+			{
+				board: [
+					["X", "O", null],
+					[null, "X", null],
+					["O", "O", null],
+				],
+				piece: "X",
+				win: [2, 2],
+			},
+			{
+				board: [
+					["X", "O", null],
+					["X", null, null],
+					[null, "O", null],
+				],
+				piece: "X",
+				win: [2, 0],
+			},
+			{
+				board: [
+					[null, null, "X"],
+					["O", "O", null],
+					["X", null, null],
+				],
+				piece: "O",
+				win: [1, 2],
+			},
+		];
 	}
 
 	start() {
-		this.playing = true;
+		this.score = 0;
+		this.round = 0;
 		this.startTime = Date.now();
+		this.nextRound();
+	}
+
+	nextRound() {
+		this.round++;
+		const p = this.puzzles[(this.round - 1) % this.puzzles.length];
+		this.board = p.board.map((row) => [...row]);
+		this.pieceToPlace = p.piece;
+		this.correctCell = { row: p.win[0], col: p.win[1] };
+		this.phase = "memorize";
+		this.phaseStartTime = Date.now();
 		this.gameLoop();
 	}
 
+	update() {
+		if (
+			this.phase === "memorize" &&
+			Date.now() - this.phaseStartTime > this.memorizeDuration
+		) {
+			this.phase = "place";
+			this.phaseStartTime = Date.now();
+		}
+	}
+
+	handleClick(canvasX, canvasY) {
+		if (this.phase !== "place") return;
+
+		const col = Math.floor((canvasX - this.boardOffset.x) / this.cellSize);
+		const row = Math.floor((canvasY - this.boardOffset.y) / this.cellSize);
+		if (row < 0 || row > 2 || col < 0 || col > 2) return;
+
+		const correct =
+			row === this.correctCell.row && col === this.correctCell.col;
+		const timeBonus = Math.max(0, 500 - (Date.now() - this.phaseStartTime));
+		this.score += correct ? 100 + Math.floor(timeBonus / 100) : 0;
+
+		if (correct) {
+			this.phase = "result";
+			setTimeout(() => this.nextRound(), 1000);
+		} else {
+			this.stop();
+		}
+	}
+
 	stop() {
-		this.playing = false;
+		this.phase = "idle";
 		console.log("Game over! Score: " + this.score);
 		fetch("/api/sessions", {
 			method: "POST",
@@ -145,6 +115,75 @@ class Trexpres {
 			},
 		});
 	}
+
+	draw() {
+		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+		if (this.phase === "idle") return;
+
+		const { x: ox, y: oy } = this.boardOffset;
+		const size = this.cellSize;
+
+		// grid de 3 per 3
+		this.ctx.strokeStyle = "#666";
+		this.ctx.lineWidth = 2;
+		for (let i = 0; i <= 3; i++) {
+			this.ctx.beginPath();
+			this.ctx.moveTo(ox, oy + i * size);
+			this.ctx.lineTo(ox + 3 * size, oy + i * size);
+			this.ctx.stroke();
+
+			this.ctx.beginPath();
+			this.ctx.moveTo(ox + i * size, oy);
+			this.ctx.lineTo(ox + i * size, oy + 3 * size);
+			this.ctx.stroke();
+		}
+
+		// fase memorize: dibuixar peçes al grid
+		if (this.phase === "memorize") {
+			for (let r = 0; r < 3; r++) {
+				for (let c = 0; c < 3; c++) {
+					const piece = this.board[r][c];
+					if (piece) {
+						const cx = ox + c * size + size / 2;
+						const cy = oy + r * size + size / 2;
+						this.ctx.font = "bold 36px sans-serif";
+						this.ctx.textAlign = "center";
+						this.ctx.textBaseline = "middle";
+						this.ctx.fillStyle =
+							piece === "X" ? "#e74c3c" : "#3498db";
+						this.ctx.fillText(piece, cx, cy);
+					}
+				}
+			}
+		}
+
+		// fase place: dibuixar peça a la posició seleccionada
+		if (this.phase === "place") {
+			this.ctx.font = "bold 32px sans-serif";
+			this.ctx.textAlign = "center";
+			this.ctx.textBaseline = "middle";
+			this.ctx.fillStyle =
+				this.pieceToPlace === "X" ? "#e74c3c" : "#3498db";
+			this.ctx.fillText(this.pieceToPlace, ox + 3 * size + 30, oy + 15);
+		}
+
+		// score y ronda
+		this.ctx.fillStyle = "#fff";
+		this.ctx.font = "16px monospace";
+		this.ctx.textAlign = "left";
+		this.ctx.textBaseline = "top";
+		this.ctx.fillText(`Score: ${this.score}`, 10, 10);
+		this.ctx.fillText(`Ronda: ${this.round}`, 10, 30);
+	}
+
+	gameLoop() {
+		this.update();
+		this.draw();
+		if (this.phase !== "idle") {
+			requestAnimationFrame(() => this.gameLoop());
+		}
+	}
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -156,12 +195,10 @@ document.addEventListener("DOMContentLoaded", () => {
 			game.start();
 		});
 
-	document.addEventListener("keydown", (event) => {
-		if (event.code === "Space") {
-			event.preventDefault();
-			game.jump();
-		}
+	game.canvas.addEventListener("click", (e) => {
+		const rect = game.canvas.getBoundingClientRect();
+		const x = e.clientX - rect.left;
+		const y = e.clientY - rect.top;
+		game.handleClick(x, y);
 	});
-
-	document.addEventListener("click", () => game.jump());
 });
