@@ -21,8 +21,15 @@ def index():
 		if s.get('game_id') == selected_game
 	]
 
+	millors_per_jugador = {}
+	for s in sessions_filtrades:
+		user = s.get('username')
+		score = s.get('score', 0)
+		if user not in millors_per_jugador or score > millors_per_jugador[user]['score']:
+			millors_per_jugador[user] = s
+
 	leaderboard = sorted(
-		sessions_filtrades,
+		millors_per_jugador.values(),
 		key=lambda s: s.get('score', 0),
 		reverse=True
 		)[:5]
