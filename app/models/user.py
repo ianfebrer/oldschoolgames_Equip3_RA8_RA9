@@ -1,5 +1,7 @@
 import json
 
+data_dir = "app/data"
+
 class User:
 	def __init__(self, username, password):
 		self.username = username
@@ -12,19 +14,26 @@ class User:
 		}
 
 	def obtenirtots(self):
-		with open('users.json', 'r') as f:
-			users = json.load(f)
+		with open(f'{data_dir}/users.json', 'r', encoding='utf-8') as f:
+			try:
+				users = json.load(f)
+			except json.JSONDecodeError:
+				users = []
 		return users
 
 	def register(self):
 		users = self.obtenirtots()
+		for user in users:
+			if user['username'] == self.username:
+				return False, 'Usuari ja existeix'
 		users.append(self.to_dict())
-		with open('users.json', 'w') as f:
-			json.dump(users, f)
+		with open(f'{data_dir}/users.json', 'w', encoding='utf-8') as f:
+			json.dump(users, f, ensure_ascii=False, indent=4)
+		return True, 'Usuari registrat correctament'
 
 	def login(self):
 		users = self.obtenirtots()
 		for user in users:
 			if user['username'] == self.username and user['password'] == self.password:
-				return True
-		return False
+				return True, 'Login correcte'
+		return False, 'Usuari o contranya incorrectes'

@@ -48,6 +48,7 @@
             text-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
         }
     </style>
+    <script src="/static/js/index/index.js"></script>
 </head>
 
 <body
@@ -90,15 +91,25 @@
                         </div>
                     </label>
                     <div class="flex items-center gap-3">
-                        <a href="/login" 
-                        class="text-slate-600 dark:text-slate-300 text-sm font-bold uppercase tracking-widest px-4 hover:opacity-80 transition-opacity">
-                        Login
+                        {% if username %}
+                        <a href="/auth/profile"
+                            class="text-slate-600 dark:text-slate-300 text-sm font-bold uppercase tracking-widest px-4 hover:opacity-80 transition-opacity"><span
+                                class="material-symbols-outlined">person</span>{{ username }}
                         </a>
-
-                        <a href="/register" 
-                        class="flex min-w-[100px] cursor-pointer items-center justify-center rounded-lg h-10 px-5 bg-primary hover:bg-primary/90 text-white text-xs font-black uppercase tracking-widest transition-all shadow-[0_4px_0_0_#063bb3] active:translate-y-1 active:shadow-none decoration-none">
-                        Sign Up
+                        <a href="/auth/logout"
+                            class="text-slate-600 dark:text-slate-300 text-sm font-bold uppercase tracking-widest px-4 hover:opacity-80 transition-opacity">
+                            logout
                         </a>
+                        {% else %}
+                        <a href="/auth/login"
+                            class="flex min-w-[100px] cursor-pointer items-center justify-center rounded-lg h-10 px-5 bg-primary hover:bg-primary/90 text-white text-xs font-black uppercase tracking-widest transition-all shadow-[0_4px_0_0_#063bb3] active:translate-y-1 active:shadow-none decoration-none">
+                            Inicia Sessió
+                        </a>
+                        <a href="/auth/register"
+                            class="flex min-w-[100px] cursor-pointer items-center justify-center rounded-lg h-10 px-5 bg-primary hover:bg-primary/90 text-white text-xs font-black uppercase tracking-widest transition-all shadow-[0_4px_0_0_#063bb3] active:translate-y-1 active:shadow-none decoration-none">
+                            Registrar-se
+                        </a>
+                        {% endif %}
                     </div>
                 </div>
             </header>
