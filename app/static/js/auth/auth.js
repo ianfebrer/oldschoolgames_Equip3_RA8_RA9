@@ -45,6 +45,7 @@ function handleResponseLogin(response) {
 	if (response.success) {
 		alert(response.message);
 		window.location.href = "/";
+		localStorage.setItem("username", response.username);
 	} else {
 		alert(response.message);
 	}
