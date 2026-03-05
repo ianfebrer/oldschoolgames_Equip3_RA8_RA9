@@ -219,9 +219,18 @@
             class="lg:col-span-3 border-b-2 lg:border-b-0 lg:border-r-2 border-arcade-gray bg-arcade-black flex flex-col">
             <div class="p-6 border-b-2 border-arcade-gray bg-arcade-dark">
                 <h2 class="font-display text-4xl uppercase text-arcade-cyan flex items-center gap-2">
-                    <span class="text-arcade-red">>></span> High Scores<span class="cursor-blink">_</span>
+                    <span class="text-arcade-red">>></span> Leaderboard<span class="cursor-blink">|</span>
                 </h2>
                 <p class="text-xs text-arcade-gray font-bold tracking-widest mt-1">GLOBAL RANKING // TOP 5</p>
+                <!-- 3 botones para filtrar leaderboard por juego -->
+                <div class="flex gap-2">
+                    {% for joc in jocs %}
+                    <button onclick="window.location.href='?game={{ joc.id }}'"
+                        class="px-4 py-2 {% if selected_game == joc.id %}bg-arcade-lime text-arcade-black{% else %}bg-arcade-gray text-arcade-white{% endif %} font-bold uppercase tracking-wider text-sm hover:bg-arcade-white hover:text-arcade-black transition-colors text-center">
+                        {{ joc.name }}
+                    </button>
+                    {% endfor %}
+                </div>
             </div>
 
             <div class="flex-1 p-6 flex flex-col gap-4">
@@ -232,53 +241,18 @@
                     <span>SCORE</span>
                 </div>
 
-                <!-- Leaderboard Item 1 -->
+                <!-- Leaderboard Items -->
+                {% for session in leaderboard %}
                 <div class="group flex items-center justify-between font-bold text-sm">
                     <div class="flex items-center gap-3">
-                        <span class="text-arcade-lime w-6">01.</span>
+                        <span class="text-arcade-lime w-6">{{ loop.index }}.</span>
                         <span
-                            class="uppercase text-arcade-white group-hover:text-arcade-lime transition-colors">PixelKing</span>
+                            class="uppercase text-arcade-white group-hover:text-arcade-lime transition-colors">{{ session.username }}</span>
                     </div>
-                    <span class="text-arcade-lime">99,999</span>
+                    <span class="text-arcade-lime">{{ session.score }}</span>
                 </div>
+                {% endfor %}
 
-                <!-- Leaderboard Item 2 -->
-                <div class="group flex items-center justify-between text-sm">
-                    <div class="flex items-center gap-3">
-                        <span class="text-arcade-gray w-6">02.</span>
-                        <span
-                            class="uppercase text-arcade-gray group-hover:text-arcade-white transition-colors">RetroGal</span>
-                    </div>
-                    <span class="text-arcade-white">84,200</span>
-                </div>
-
-                <!-- Leaderboard Item 3 -->
-                <div class="group flex items-center justify-between text-sm">
-                    <div class="flex items-center gap-3">
-                        <span class="text-arcade-gray w-6">03.</span>
-                        <span
-                            class="uppercase text-arcade-gray group-hover:text-arcade-white transition-colors">8BitGhost</span>
-                    </div>
-                    <span class="text-arcade-white">76,550</span>
-                </div>
-                <!-- Leaderboard Item 4 -->
-                <div class="group flex items-center justify-between text-sm">
-                    <div class="flex items-center gap-3">
-                        <span class="text-arcade-gray w-6">04.</span>
-                        <span
-                            class="uppercase text-arcade-gray group-hover:text-arcade-white transition-colors">CyberPunk</span>
-                    </div>
-                    <span class="text-arcade-white">62,100</span>
-                </div>
-                <!-- Leaderboard Item 5 -->
-                <div class="group flex items-center justify-between text-sm">
-                    <div class="flex items-center gap-3">
-                        <span class="text-arcade-gray w-6">05.</span>
-                        <span
-                            class="uppercase text-arcade-gray group-hover:text-arcade-white transition-colors">NullByte</span>
-                    </div>
-                    <span class="text-arcade-white">58,050</span>
-                </div>
             </div>
         </aside>
 
