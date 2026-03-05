@@ -68,28 +68,8 @@
                             Old School <span class="text-accent-cyan">Games</span>
                         </h2>
                     </div>
-                    <nav class="hidden lg:flex items-center gap-8">
-                        <a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-accent-cyan text-sm font-bold uppercase tracking-widest transition-colors"
-                            href="#">Home</a>
-                        <a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-accent-cyan text-sm font-bold uppercase tracking-widest transition-colors"
-                            href="#">Games</a>
-                        <a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-accent-cyan text-sm font-bold uppercase tracking-widest transition-colors"
-                            href="#">Leaderboard</a>
-                    </nav>
                 </div>
                 <div class="flex flex-1 justify-end gap-6 items-center">
-                    <label class="hidden md:flex flex-col min-w-40 !h-10 max-w-64">
-                        <div
-                            class="flex w-full flex-1 items-stretch rounded-lg h-full overflow-hidden border border-slate-200 dark:border-slate-700">
-                            <div
-                                class="text-slate-400 flex bg-slate-100 dark:bg-slate-800 items-center justify-center pl-4">
-                                <span class="material-symbols-outlined text-xl">search</span>
-                            </div>
-                            <input
-                                class="form-input flex w-full min-w-0 flex-1 border-none bg-slate-100 dark:bg-slate-800 focus:ring-0 placeholder:text-slate-500 text-sm font-medium px-3"
-                                placeholder="Search games..." value="" />
-                        </div>
-                    </label>
                     <div class="flex items-center gap-3">
                         {% if username %}
                         <a href="/auth/profile"
@@ -162,78 +142,14 @@
                             class="w-full mt-6 py-2 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-primary transition-colors">View
                             All Scores</button>
                     </div>
-                    <div class="bg-primary/5 p-6 rounded-xl border border-primary/20">
-                        <h4 class="text-xs font-black uppercase tracking-widest mb-4 text-primary">Active Tournaments
-                        </h4>
-                        <div class="flex flex-col gap-3">
-                            <div class="flex gap-3 items-center">
-                                <div class="size-2 rounded-full bg-accent-magenta animate-pulse"></div>
-                                <span class="text-xs font-bold">Pong Masters Cup</span>
-                            </div>
-                            <div class="flex gap-3 items-center opacity-60">
-                                <div class="size-2 rounded-full bg-slate-400"></div>
-                                <span class="text-xs font-bold">Memory Marathon</span>
-                            </div>
-                        </div>
-                    </div>
                 </aside>
                 <div class="flex-1 flex flex-col gap-10 order-1 md:order-2">
-                    <section
-                        class="relative overflow-hidden rounded-2xl bg-slate-900 aspect-[21/9] flex items-center p-8 md:p-12 border-2 border-primary/30 group">
-                        <div
-                            class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 pointer-events-none">
-                        </div>
-                        <div
-                            class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/60 to-transparent z-10">
-                        </div>
-                        <div class="absolute top-0 right-0 w-1/2 h-full z-0 overflow-hidden">
-                            <div class="w-full h-full bg-center bg-cover transform scale-110 group-hover:scale-100 transition-transform duration-700"
-                                data-alt="Retro gaming console with controllers and neon lighting"
-                                style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAHakADM7fscjFfCSl1yZ2doencKdDLncpwFeHePZz244Ou2EsX40ul-LD308s0ccONppYKsK046SAxXuLTL5-sS9kBMYTPPYEcKbbDJJWX_6iXXTEZdRSi7giz7MaIHlskAGtmHGQpF3zTyRLlVtFu7dCcFfjZ2_7os4TpT_KsooC1H8Nz5jwxxtiuT4Ws9Bj4rA65jo5VtJlGLf0RU1PN9-8f3MYEjSAxNNtTtEJR0hFGbWtotLlaeasEnoh5bb7D78RKAg9hdBc');">
-                            </div>
-                        </div>
-                        <div class="relative z-20 max-w-lg flex flex-col gap-6">
-                            <div class="flex flex-col gap-2">
-                                <span
-                                    class="text-accent-cyan font-black tracking-[0.2em] uppercase text-xs neon-glow-cyan">System
-                                    Ready</span>
-                                <h1
-                                    class="text-white text-4xl md:text-6xl font-black leading-none tracking-tighter uppercase italic">
-                                    PLAY THE <br /><span class="text-primary italic">CLASSICS</span> AGAIN
-                                </h1>
-                                <p class="text-slate-300 text-sm md:text-lg max-w-sm leading-relaxed font-medium">
-                                    Experience the golden age of gaming in your browser. Pixel-perfect action awaits
-                                    your command.
-                                </p>
-                            </div>
-                            <div class="flex gap-4">
-                                <button
-                                    class="flex min-w-[160px] cursor-pointer items-center justify-center rounded-lg h-14 px-8 bg-primary hover:bg-primary/90 text-white text-sm font-black uppercase tracking-widest transition-all shadow-[0_6px_0_0_#063bb3] active:translate-y-1 active:shadow-none">
-                                    Press Start
-                                </button>
-                                <button
-                                    class="flex items-center justify-center rounded-lg h-14 px-8 border-2 border-white/20 hover:border-white/40 text-white text-sm font-black uppercase tracking-widest transition-all">
-                                    Browse All
-                                </button>
-                            </div>
-                        </div>
-                    </section>
                     <section class="flex flex-col gap-6">
                         <div
                             class="flex items-center justify-between border-b-2 border-slate-200 dark:border-slate-800 pb-4">
                             <h2
                                 class="text-slate-900 dark:text-white text-2xl font-black uppercase tracking-tighter italic">
-                                Featured Games</h2>
-                            <div class="flex gap-2">
-                                <button
-                                    class="size-10 rounded border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-400 hover:text-primary transition-colors">
-                                    <span class="material-symbols-outlined">chevron_left</span>
-                                </button>
-                                <button
-                                    class="size-10 rounded border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-400 hover:text-primary transition-colors">
-                                    <span class="material-symbols-outlined">chevron_right</span>
-                                </button>
-                            </div>
+                                Old School Games</h2>
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                             <div
@@ -342,26 +258,9 @@
                     <div class="flex items-center gap-3">
                         <div class="size-6 bg-slate-400 rounded-sm"></div>
                         <span class="text-slate-500 font-black uppercase tracking-widest text-xs italic">Old School
-                            Games © 2024</span>
+                            Games © 2026</span>
                     </div>
-                    <div class="flex gap-8">
-                        <a class="text-slate-400 hover:text-primary text-xs font-black uppercase tracking-widest transition-colors"
-                            href="#">Privacy</a>
-                        <a class="text-slate-400 hover:text-primary text-xs font-black uppercase tracking-widest transition-colors"
-                            href="#">Terms</a>
-                        <a class="text-slate-400 hover:text-primary text-xs font-black uppercase tracking-widest transition-colors"
-                            href="#">Support</a>
-                    </div>
-                    <div class="flex gap-4">
-                        <div
-                            class="size-10 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-400 hover:text-accent-cyan transition-colors cursor-pointer">
-                            <span class="material-symbols-outlined text-xl">chat</span>
-                        </div>
-                        <div
-                            class="size-10 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-400 hover:text-accent-magenta transition-colors cursor-pointer">
-                            <span class="material-symbols-outlined text-xl">share</span>
-                        </div>
-                    </div>
+                    <p class="text-slate-500 text-xs font-black uppercase tracking-widest">Roy<br>Miguel<br>Derek</p>
                 </div>
             </footer>
         </div>
