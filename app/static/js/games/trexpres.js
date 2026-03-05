@@ -131,7 +131,7 @@ class Trexpres {
 	stop() {
 		this.playing = false;
 		console.log("Game over! Score: " + this.score);
-		fetch("/games/api/sessions", {
+		fetch("/api/sessions", {
 			method: "POST",
 			body: JSON.stringify({
 				username: localStorage.getItem("username"),
