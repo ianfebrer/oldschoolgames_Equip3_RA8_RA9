@@ -1,4 +1,6 @@
-from flask import render_template, Blueprint
+from flask import render_template, Blueprint, request, jsonify
+from app.models.game import Game
+from app.models.game_session import GameSession
 
 games_bp = Blueprint('games', __name__, url_prefix='/games')
 
@@ -13,3 +15,5 @@ def trexpres():
 @games_bp.route('/atencioflash')
 def atencioflash():
 	return render_template('atencioflash.html')
+
+

@@ -2,7 +2,7 @@ function register(event) {
 	event.preventDefault();
 	const username = document.getElementById("username").value;
 	const password = document.getElementById("password").value;
-	fetch("/auth/api/register", {
+	fetch("/api/register", {
 		method: "POST",
 		body: JSON.stringify({ username: username, password: password }),
 		headers: {
@@ -19,7 +19,7 @@ function login(event) {
 	event.preventDefault();
 	const username = document.getElementById("username").value;
 	const password = document.getElementById("password").value;
-	fetch("/auth/api/login", {
+	fetch("/api/login", {
 		method: "POST",
 		body: JSON.stringify({ username: username, password: password }),
 		headers: {
@@ -45,6 +45,7 @@ function handleResponseLogin(response) {
 	if (response.success) {
 		alert(response.message);
 		window.location.href = "/";
+		localStorage.setItem("username", response.username);
 	} else {
 		alert(response.message);
 	}
