@@ -1,160 +1,248 @@
 <!DOCTYPE html>
-
-<html class="dark" lang="en">
+<html lang="en" class="scroll-smooth">
 
 <head>
   <meta charset="utf-8" />
-  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-  <title>Retro User Authentication - Old School Games</title>
-  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SYS.AUTH // REGISTRAT</title>
+
+  <!-- Scripts requeridos -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/static/js/auth/auth.js"></script>
+
+  <!-- Fuentes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-    rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700;800;900&amp;display=swap"
-    rel="stylesheet" />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-    rel="stylesheet" />
-  <script id="tailwind-config">
+    href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Teko:wght@500;600;700&display=swap"
+    rel="stylesheet">
+
+  <!-- Configuración Tailwind Arcade -->
+  <script>
     tailwind.config = {
-      darkMode: "class",
       theme: {
         extend: {
-          colors: {
-            "primary": "#0d59f2",
-            "retro-green": "#4ade80",
-            "background-light": "#f5f6f8",
-            "background-dark": "#101622",
-          },
           fontFamily: {
-            "display": ["Spline Sans", "sans-serif"]
+            display: ['Teko', 'sans-serif'],
+            mono: ['Space Mono', 'monospace'],
           },
-          borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
-        },
-      },
+          colors: {
+            arcade: {
+              black: '#0a0a0a',
+              dark: '#121212',
+              gray: '#2a2a2a',
+              lime: '#CCFF00',
+              red: '#FF2A2A',
+              cyan: '#00F0FF',
+              white: '#EAEAEA'
+            }
+          },
+          boxShadow: {
+            'brutal-lime': '6px 6px 0px 0px #CCFF00',
+            'brutal-red': '6px 6px 0px 0px #FF2A2A',
+            'brutal-cyan': '6px 6px 0px 0px #00F0FF',
+            'brutal-white': '4px 4px 0px 0px #EAEAEA',
+            'brutal-active': '2px 2px 0px 0px #CCFF00',
+          },
+          backgroundImage: {
+            'noise': "url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')",
+          }
+        }
+      }
     }
   </script>
-  <script src="/static/js/auth/auth.js"></script>
+
+  <!-- Estilos Arcade -->
   <style>
-    .retro-window {
-      border: 4px solid #3b4354;
-      box-shadow: 8px 8px 0px 0px rgba(0, 0, 0, 0.5);
+    /* CSS Scanline Effect for CRT feel */
+    body::before {
+      content: " ";
+      display: block;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background: linear-gradient(to bottom,
+          rgba(18, 16, 16, 0) 50%,
+          rgba(0, 0, 0, 0.25) 50%);
+      background-size: 100% 4px;
+      z-index: 9999;
+      pointer-events: none;
     }
 
-    .pixel-border {
-      image-rendering: pixelated;
+    /* Custom selection */
+    ::selection {
+      background-color: #CCFF00;
+      color: #0a0a0a;
+    }
+
+    /* Blinking cursor */
+    .cursor-blink {
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0;
+      }
+    }
+
+    /* Marquee Animation */
+    .marquee-content {
+      display: inline-block;
+      white-space: nowrap;
+      animation: marquee 20s linear infinite;
+    }
+
+    @keyframes marquee {
+      0% {
+        transform: translateX(0);
+      }
+
+      100% {
+        transform: translateX(-50%);
+      }
     }
   </style>
 </head>
 
-<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
-  <div
-    class="relative flex h-auto min-h-screen w-full flex-col bg-background-light dark:bg-background-dark group/design-root overflow-x-hidden">
-    <div class="layout-container flex h-full grow flex-col">
-      <header
-        class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 px-10 py-3 bg-background-light dark:bg-background-dark">
-        <div class="flex items-center gap-4">
-          <div class="text-primary size-6 flex items-center justify-center">
-            <span class="material-symbols-outlined text-3xl">videogame_asset</span>
-          </div>
-          <h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-[-0.015em]">Old School
-            Games</h2>
+<body
+  class="bg-arcade-black text-arcade-white font-mono antialiased relative min-h-screen flex flex-col selection:bg-arcade-lime selection:text-arcade-black">
+
+  <!-- Subtle noise texture overlay -->
+  <div class="fixed inset-0 opacity-[0.03] pointer-events-none z-0 bg-noise"></div>
+
+  <!-- Header / Navigation -->
+  <header class="relative z-10 border-b-2 border-arcade-gray bg-arcade-dark/90 backdrop-blur-sm">
+    <div
+      class="max-w-[1600px] mx-auto px-4 sm:px-8 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+
+      <!-- Logo Section -->
+      <a href="/" class="flex items-center gap-4 group cursor-pointer hover:opacity-80 transition-opacity">
+        <div
+          class="w-12 h-12 bg-arcade-lime text-arcade-black flex items-center justify-center font-display text-4xl leading-none mt-1 shadow-brutal-white group-hover:shadow-brutal-active transition-shadow">
+          JS
         </div>
-        <div class="flex flex-1 justify-end gap-8">
-          <div class="flex items-center gap-9">
-            <a class="text-slate-700 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors"
-              href="#">Play</a>
-            <a class="text-slate-700 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors"
-              href="#">High Scores</a>
-            <a class="text-slate-700 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors"
-              href="#">Library</a>
-          </div>
-          <button
-            class="flex min-w-[84px] cursor-pointer items-center justify-center rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold tracking-[0.015em]">
-            <span class="truncate">Help</span>
-          </button>
+        <div class="flex flex-col leading-none">
+          <h1
+            class="font-display text-4xl sm:text-5xl uppercase tracking-widest text-arcade-white m-0 p-0 leading-[0.85]">
+            Old School <span class="text-arcade-lime">Games</span>
+          </h1>
+          <span class="text-xs text-arcade-lime font-bold tracking-widest uppercase mt-1">SYS.VER.2.0.26 // REG</span>
         </div>
-      </header>
-      <main class="flex flex-1 items-center justify-center p-4 md:p-10">
-        <div class="retro-window w-full max-w-[800px] bg-slate-100 dark:bg-slate-900 flex flex-col overflow-hidden">
-          <div
-            class="bg-primary px-4 py-2 flex items-center justify-between border-b-4 border-slate-300 dark:border-slate-700">
-            <div class="flex items-center gap-2">
-              <span class="material-symbols-outlined text-white text-sm">settings_input_component</span>
-              <span class="text-white text-sm font-bold tracking-wider uppercase">User_Profile_Setup.exe</span>
-            </div>
-            <div class="flex gap-1">
-              <div
-                class="w-5 h-5 bg-slate-200 dark:bg-slate-800 border-2 border-slate-400 flex items-center justify-center">
-                <span class="material-symbols-outlined text-xs text-slate-600">minimize</span>
-              </div>
-              <div
-                class="w-5 h-5 bg-slate-200 dark:bg-slate-800 border-2 border-slate-400 flex items-center justify-center">
-                <span class="material-symbols-outlined text-xs text-slate-600">check_box_outline_blank</span>
-              </div>
-              <div class="w-5 h-5 bg-red-500 border-2 border-red-700 flex items-center justify-center">
-                <span class="material-symbols-outlined text-xs text-white">close</span>
-              </div>
-            </div>
-          </div>
-          <form id="register-form" onsubmit="register(event)">
-            <div class="p-8 flex flex-col md:flex-row gap-8">
-              <div class="flex-1 space-y-6">
-                <div class="space-y-2">
-                  <h1
-                    class="text-slate-900 dark:text-slate-100 text-3xl font-black leading-tight tracking-tight uppercase">
-                    Registrat</h1>
-                </div>
-                <div class="space-y-4">
-                  <label class="flex flex-col gap-2">
-                    <span
-                      class="text-slate-700 dark:text-slate-300 text-xs font-bold uppercase tracking-widest">USUARI</span>
-                    <div class="relative">
-                      <span
-                        class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">person</span>
-                      <input
-                        class="w-full bg-slate-200 dark:bg-slate-800 border-4 border-slate-300 dark:border-slate-700 focus:border-primary px-10 py-3 text-slate-900 dark:text-slate-100 font-bold placeholder:text-slate-500 outline-none"
-                        placeholder="pepito" type="text" id="username" name="username" />
-                    </div>
-                  </label>
-                  <label class="flex flex-col gap-2">
-                    <span
-                      class="text-slate-700 dark:text-slate-300 text-xs font-bold uppercase tracking-widest">CONTRASENYA</span>
-                    <div class="relative">
-                      <span
-                        class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">lock</span>
-                      <input
-                        class="w-full bg-slate-200 dark:bg-slate-800 border-4 border-slate-300 dark:border-slate-700 focus:border-primary px-10 py-3 text-slate-900 dark:text-slate-100 font-bold placeholder:text-slate-500 outline-none"
-                        placeholder="**********" type="password" id="password" />
-                    </div>
-                  </label>
-                </div>
-                <div class="flex items-center gap-4 pt-4">
-                  <button type="submit"
-                    class="flex-1 bg-retro-green hover:bg-green-500 text-slate-900 font-black py-4 px-6 flex items-center justify-center gap-3 border-b-4 border-green-800 active:border-b-0 active:translate-y-1 transition-all">
-                    <span class="material-symbols-outlined">keyboard_return</span>
-                    REGISTRAR-SE
-                  </button>
-                  <a href="/auth/login"
-                    class="bg-slate-300 dark:bg-slate-700 hover:bg-slate-400 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 font-bold py-4 px-6 border-b-4 border-slate-500 active:border-b-0 active:translate-y-1 transition-all">
-                    YA TINC COMPTE
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div
-              class="bg-slate-200 dark:bg-slate-800 px-4 py-2 border-t-4 border-slate-300 dark:border-slate-700 flex justify-between items-center text-[10px] uppercase font-bold text-slate-500">
-              <span>Terminal: 127.0.0.1</span>
-              <span>OS v9.0.2 - Protected Session</span>
-            </div>
-          </form>
-        </div>
-      </main>
-      <footer class="p-8 text-center text-slate-500 text-xs uppercase tracking-[0.2em]">
-        © 1994-1998 Old School Games Corporation. All rights reserved.
-      </footer>
+      </a>
+
+      <!-- Return Control -->
+      <div class="flex items-center gap-4 w-full sm:w-auto mt-2 sm:mt-0">
+        <a href="/"
+          class="flex-1 sm:flex-none px-6 py-2 border-2 border-arcade-gray text-arcade-gray font-bold uppercase tracking-wider text-sm hover:border-arcade-white hover:text-arcade-white transition-colors text-center">
+          << RETURN_ </a>
+      </div>
     </div>
-  </div>
+  </header>
+
+  <!-- Main Content: Register Terminal -->
+  <main class="relative z-10 flex-1 w-full max-w-[1600px] mx-auto flex items-center justify-center p-4 sm:p-8">
+
+    <!-- Auth Box -->
+    <div class="relative w-full max-w-md bg-arcade-dark border-2 border-arcade-gray shadow-brutal-lime p-8">
+
+      <!-- System Badge -->
+      <div
+        class="absolute top-0 right-0 bg-arcade-lime text-arcade-black px-3 py-1 text-xs font-bold z-10 border-b-2 border-l-2 border-arcade-gray">
+        ID: TERMINAL_REG
+      </div>
+
+      <!-- Header -->
+      <div class="border-b-2 border-arcade-gray pb-6 mb-8 mt-2">
+        <h2 class="font-display text-5xl uppercase text-arcade-white flex items-center gap-2 m-0 leading-none">
+          <span class="text-arcade-lime">>></span> REGISTRAT<span class="cursor-blink text-arcade-lime">_</span>
+        </h2>
+        <p class="text-xs text-arcade-gray font-bold tracking-widest mt-2">USER_PROFILE_SETUP.EXE</p>
+      </div>
+
+      <!-- Register Form -->
+      <form id="register-form" onsubmit="register(event)" class="flex flex-col gap-6">
+
+        <!-- Username Input -->
+        <div class="flex flex-col gap-2">
+          <label for="username"
+            class="text-arcade-cyan text-xs font-bold uppercase tracking-widest flex justify-between">
+            <span>USUARI //</span>
+          </label>
+          <div class="relative">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-arcade-gray">></span>
+            <input type="text" name="username" id="username" placeholder="pepito"
+              class="w-full bg-arcade-black border-2 border-arcade-gray text-arcade-white font-mono pl-10 pr-4 py-3 focus:border-arcade-lime focus:outline-none transition-colors placeholder:text-arcade-gray/50"
+              required />
+          </div>
+        </div>
+
+        <!-- Password Input -->
+        <div class="flex flex-col gap-2">
+          <label for="password"
+            class="text-arcade-cyan text-xs font-bold uppercase tracking-widest flex justify-between">
+            <span>CONTRASENYA //</span>
+          </label>
+          <div class="relative">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-arcade-gray">></span>
+            <input type="password" name="password" id="password" placeholder="**********"
+              class="w-full bg-arcade-black border-2 border-arcade-gray text-arcade-white font-mono pl-10 pr-4 py-3 focus:border-arcade-lime focus:outline-none transition-colors placeholder:text-arcade-gray/50"
+              required />
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="mt-4 flex flex-col gap-4">
+          <button type="submit"
+            class="w-full bg-arcade-lime border-2 border-arcade-lime text-arcade-black font-bold uppercase tracking-widest py-3 shadow-brutal-white hover:shadow-[2px_2px_0px_0px_#00F0FF] hover:translate-y-[2px] hover:translate-x-[2px] transition-all text-center">
+            [ REGISTRAR-SE ]
+          </button>
+
+          <div class="flex items-center gap-4 text-xs font-bold tracking-widest text-arcade-gray my-2">
+            <div class="flex-1 h-px bg-arcade-gray"></div>
+            <span>ALREADY IN THE SYSTEM?</span>
+            <div class="flex-1 h-px bg-arcade-gray"></div>
+          </div>
+
+          <a href="/auth/login"
+            class="w-full border-2 border-arcade-white text-arcade-white font-bold uppercase tracking-widest py-3 hover:bg-arcade-white hover:text-arcade-black transition-colors text-center">
+            JA TINC COMPTE_
+          </a>
+        </div>
+
+        <!-- Terminal Footer -->
+        <div
+          class="mt-4 pt-4 border-t-2 border-dashed border-arcade-gray flex justify-between items-center text-[10px] uppercase font-bold text-arcade-gray">
+          <span>IP: 127.0.0.1</span>
+          <span class="text-arcade-lime">NEW USER INSTANCE</span>
+        </div>
+      </form>
+
+    </div>
+  </main>
+
+  <!-- Marquee Footer -->
+  <footer
+    class="relative z-10 w-full bg-arcade-lime text-arcade-black py-3 border-y-2 border-arcade-black overflow-hidden flex items-center font-bold text-sm tracking-widest mt-auto shadow-[0_-4px_20px_rgba(0,240,255,0.1)]">
+    <div class="marquee-content uppercase flex">
+      <!-- Repeated content for continuous scroll -->
+      <span>*** SYSTEM INIT *** NEW USER REGISTRATION PROTOCOL *** OLD SCHOOL GAMES 2026 *** PREPARE FOR DATA ENTRY ***
+        END OF LINE ***</span>
+      <span class="ml-8">*** SYSTEM INIT *** NEW USER REGISTRATION PROTOCOL *** OLD SCHOOL GAMES 2026 *** PREPARE FOR
+        DATA ENTRY *** END OF LINE ***</span>
+      <span class="ml-8">*** SYSTEM INIT *** NEW USER REGISTRATION PROTOCOL *** OLD SCHOOL GAMES 2026 *** PREPARE FOR
+        DATA ENTRY *** END OF LINE ***</span>
+    </div>
+  </footer>
+
 </body>
 
 </html>
