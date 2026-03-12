@@ -137,66 +137,43 @@
     <div class="fixed inset-0 opacity-[0.03] pointer-events-none z-0 bg-noise"></div>
 
     <!-- Header / Navigation -->
-    <header class="relative z-10 border-b-2 border-arcade-gray bg-arcade-dark/90 backdrop-blur-sm sticky top-0">
+    <header class="relative z-10 border-b-2 border-arcade-gray bg-arcade-dark/90 backdrop-blur-sm">
         <div
-            class="max-w-[1600px] mx-auto px-4 sm:px-8 py-4 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+            class="max-w-[1600px] mx-auto px-4 sm:px-8 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
 
             <!-- Logo Section -->
-            <div class="flex items-center gap-8">
-                <a href="/" class="flex items-center gap-4 group cursor-pointer hover:opacity-80 transition-opacity">
-                    <div
-                        class="w-12 h-12 bg-arcade-lime text-arcade-black flex items-center justify-center font-display text-4xl leading-none mt-1 shadow-brutal-white group-hover:shadow-brutal-active transition-shadow">
-                        JS
-                    </div>
-                    <div class="flex flex-col leading-none hidden sm:flex">
-                        <h1
-                            class="font-display text-3xl sm:text-4xl uppercase tracking-widest text-arcade-white m-0 p-0 leading-[0.85]">
-                            Old School <span class="text-arcade-lime">Games</span>
-                        </h1>
-                        <span
-                            class="text-[10px] text-arcade-cyan font-bold tracking-widest uppercase mt-1">SYS.VER.2.0.26
-                            // PONG</span>
-                    </div>
-                </a>
-
-                <!-- Nav Links -->
-                <nav class="hidden md:flex items-center gap-6 border-l-2 border-arcade-gray pl-8">
-                    <a class="text-arcade-lime text-sm font-bold tracking-widest uppercase flex items-center gap-2"
-                        href="#">
-                        <span class="text-arcade-gray">></span> GAMES.EXE
-                    </a>
-                    <a class="text-arcade-gray text-sm font-bold tracking-widest uppercase hover:text-arcade-white transition-colors flex items-center gap-2"
-                        href="#">
-                        LEADERBOARD.DAT
-                    </a>
-                    <a class="text-arcade-gray text-sm font-bold tracking-widest uppercase hover:text-arcade-white transition-colors flex items-center gap-2"
-                        href="#">
-                        PROFILE.SYS
-                    </a>
-                </nav>
+            <div class="flex items-center gap-4">
+                <div
+                    class="w-12 h-12 bg-arcade-lime text-arcade-black flex items-center justify-center font-display text-4xl leading-none mt-1 shadow-brutal-white">
+                    JS
+                </div>
+                <div class="flex flex-col leading-none">
+                    <h1
+                        class="font-display text-4xl sm:text-5xl uppercase tracking-widest text-arcade-white m-0 p-0 leading-[0.85]">
+                        Old School <span class="text-arcade-lime">Games</span>
+                    </h1>
+                    <span class="text-xs text-arcade-cyan font-bold tracking-widest uppercase mt-1">SYS.VER.2.0.26 //
+                        ONLINE</span>
+                </div>
             </div>
 
-            <!-- User & Actions -->
-            <div class="flex items-center gap-4 w-full lg:w-auto mt-2 lg:mt-0 justify-between lg:justify-end">
-                <label class="hidden sm:flex items-center relative w-64">
-                    <span class="absolute left-3 text-arcade-gray font-bold">></span>
-                    <input
-                        class="w-full bg-arcade-black border-2 border-arcade-gray text-arcade-white font-mono pl-8 pr-4 py-2 text-xs uppercase focus:border-arcade-cyan focus:outline-none transition-colors placeholder:text-arcade-gray/50"
-                        placeholder="SEARCH_CLASSICS..." type="text" />
-                </label>
-
-                <div class="flex items-center gap-4">
-                    <button
-                        class="bg-transparent border-2 border-arcade-red text-arcade-red px-4 py-2 text-xs font-bold uppercase tracking-widest hover:bg-arcade-red hover:text-arcade-black transition-colors flex items-center gap-2">
-                        <span>[ LOGOUT ]</span>
-                    </button>
-                    <div
-                        class="size-10 border-2 border-arcade-cyan shadow-brutal-cyan bg-arcade-black overflow-hidden flex-shrink-0">
-                        <img class="w-full h-full object-cover grayscale opacity-80 mix-blend-screen"
-                            data-alt="User avatar placeholder"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuByyLz3ys076TffhnwRuCos8fqvRlzeUXvduuAIpA9ujBBIufWwmiseBPSV3izlXSBrwzdpiCA3udbz5nMvAb4yOWnMMsIxUibOSI4EN16jFpQc37n90963bD7qQNhutigdylVQRXQH8DHTc79dYBfQymUntZCmK3Ys1SqvWNxUl3sdCAFmKRdG4xiHxuuPTfdsBu6vwpqSi_caJ6FU5KqTd7Bp9HZFuBTiQAoTCkrYRY3MpylR2l0Rog1ZpWJO9KoJwpjt8J3Wt5E" />
-                    </div>
-                </div>
+            <!-- Auth Controls -->
+            <div class="flex items-center gap-4 w-full sm:w-auto mt-2 sm:mt-0">
+                {% if username %}
+                <a href="/auth/logout"
+                    class="flex-1 sm:flex-none px-6 py-2 border-2 border-arcade-white text-arcade-white font-bold uppercase tracking-wider text-sm hover:bg-arcade-white hover:text-arcade-black transition-colors text-center">
+                    [ LOGOUT ]
+                </a>
+                {% else %}
+                <a href="/auth/login"
+                    class="flex-1 sm:flex-none px-6 py-2 border-2 border-arcade-white text-arcade-white font-bold uppercase tracking-wider text-sm hover:bg-arcade-white hover:text-arcade-black transition-colors text-center">
+                    [ LOGIN ]
+                </a>
+                <a href="/auth/register"
+                    class="flex-1 sm:flex-none px-6 py-2 bg-arcade-lime border-2 border-arcade-lime text-arcade-black font-bold uppercase tracking-wider text-sm shadow-brutal-white hover:shadow-brutal-active hover:translate-y-[2px] hover:translate-x-[2px] transition-all text-center">
+                    REGISTER_
+                </a>
+                {% endif %}
             </div>
         </div>
     </header>

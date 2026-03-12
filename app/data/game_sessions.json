@@ -12,5 +12,12 @@
         "start_time": 1773126883880,
         "end_time": 1773126894139,
         "score": 403
+    },
+    {
+        "game_id": "pong",
+        "username": "test",
+        "start_time": 1773320227645,
+        "end_time": 1773320266120,
+        "score": 5
     }
 ]

@@ -59,6 +59,9 @@ let ball = {
 
 let player1Score = 0;
 let player2Score = 0;
+let gameState = "idle"; // idle | running | paused | finished
+let sessionStartTime = null;
+let hasSavedSession = false;
 
 // ===============================
 // INITIALIZATION
@@ -66,14 +69,12 @@ let player2Score = 0;
 
 window.onload = function() {
     board = document.getElementById("board");
-    context = board.getContext("2d"); 
+    context = board.getContext("2d");
 
     // inicializar tamaño y posiciones
     resizeCanvas();
-
-    // dibujar paddle inicial
-    context.fillStyle = "skyblue";
-    context.fillRect(player1.x, player1.y, playerWidth, playerHeight);
+    bindControlButtons();
+    drawFrame();
 
     requestAnimationFrame(update);
 
@@ -107,6 +108,74 @@ function resizeCanvas() {
     ball.y = board.height / 2 - ballHeight / 2;
 }
 
+function bindControlButtons() {
+    const startButton = document.getElementById("start-game");
+    const pauseButton = document.getElementById("pause-game");
+    const endButton = document.getElementById("end-game");
+
+    if (startButton) startButton.addEventListener("click", startGame);
+    if (pauseButton) pauseButton.addEventListener("click", pauseGame);
+    if (endButton) endButton.addEventListener("click", endGame);
+}
+
+function startGame() {
+    if (gameState === "running") return;
+
+    if (gameState === "idle" || gameState === "finished") {
+        player1Score = 0;
+        player2Score = 0;
+        sessionStartTime = Date.now();
+        hasSavedSession = false;
+        resetGame(Math.random() > 0.5 ? 1 : -1);
+    }
+
+    gameState = "running";
+}
+
+function pauseGame() {
+    if (gameState !== "running") return;
+    gameState = "paused";
+    player1.velocityY = 0;
+    player2.velocityY = 0;
+}
+
+function endGame() {
+    if (gameState === "idle" || gameState === "finished") return;
+    gameState = "finished";
+    player1.velocityY = 0;
+    player2.velocityY = 0;
+    saveSessionData();
+}
+
+function saveSessionData() {
+    if (hasSavedSession || !sessionStartTime) return;
+
+    hasSavedSession = true;
+    fetch("/api/sessions", {
+        method: "POST",
+        body: JSON.stringify({
+            username: localStorage.getItem("username"),
+            game_id: "pong",
+            start_time: sessionStartTime,
+            end_time: Date.now(),
+            score: player1Score
+        }),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            if (!data.success) {
+                console.error("No se pudo guardar la sesion de Pong:", data.message);
+            }
+        })
+        .catch((error) => {
+            console.error("Error guardando sesion de Pong:", error);
+            hasSavedSession = false;
+        });
+}
+
 // ===============================
 // MAIN GAME LOOP
 // ===============================
@@ -115,63 +184,81 @@ function update() {
     requestAnimationFrame(update);
     context.clearRect(0, 0, board.width, board.height);
 
-    // player1
-    context.fillStyle = "skyblue";
-    let nextPlayer1Y = player1.y + player1.velocityY;
-    if (!outOfBounds(nextPlayer1Y)) {
-        player1.y = nextPlayer1Y;
-    }
-    context.fillRect(player1.x, player1.y, playerWidth, playerHeight);
+    if (gameState === "running") {
+        let nextPlayer1Y = player1.y + player1.velocityY;
+        if (!outOfBounds(nextPlayer1Y)) {
+            player1.y = nextPlayer1Y;
+        }
 
-    // player2
-    context.fillStyle = "skyblue";
-    let nextPlayer2Y = player2.y + player2.velocityY;
-    if (!outOfBounds(nextPlayer2Y)) {
-        player2.y = nextPlayer2Y;
+        let nextPlayer2Y = player2.y + player2.velocityY;
+        if (!outOfBounds(nextPlayer2Y)) {
+            player2.y = nextPlayer2Y;
+        }
+
+        ball.x += ball.velocityX;
+        ball.y += ball.velocityY;
+
+        if (ball.y <= 0 || (ball.y + ballHeight >= board.height)) {
+            ball.velocityY *= -1;
+        }
+
+        // bounce
+        if (detectCollision(ball, player1)) {
+            if (ball.x <= player1.x + player1.width) {
+                ball.velocityX *= -1;
+            }
+        } else if (detectCollision(ball, player2)) {
+            if (ball.x + ballWidth >= player2.x) {
+                ball.velocityX *= -1;
+            }
+        }
+
+        // score
+        if (ball.x < 0) {
+            player2Score++;
+            resetGame(1);
+        } else if (ball.x + ballWidth > board.width) {
+            player1Score++;
+            resetGame(-1);
+        }
     }
+
+    drawFrame();
+}
+
+function drawFrame() {
+    context.fillStyle = "skyblue";
+    context.fillRect(player1.x, player1.y, playerWidth, playerHeight);
     context.fillRect(player2.x, player2.y, playerWidth, playerHeight);
 
-    // ball
     context.fillStyle = "white";
-    ball.x += ball.velocityX;
-    ball.y += ball.velocityY;
     context.fillRect(ball.x, ball.y, ballWidth, ballHeight);
 
-    if (ball.y <= 0 || (ball.y + ballHeight >= board.height)) { 
-        ball.velocityY *= -1; 
-    }
-
-    // bounce
-    if (detectCollision(ball, player1)) {
-        if (ball.x <= player1.x + player1.width) {
-            ball.velocityX *= -1;
-        }
-    }
-    else if (detectCollision(ball, player2)) {
-        if (ball.x + ballWidth >= player2.x) {
-            ball.velocityX *= -1;
-        }
-    }
-
-    // game over
-    if (ball.x < 0) {
-        player2Score++;
-        resetGame(1);
-    }
-    else if (ball.x + ballWidth > board.width) {
-        player1Score++;
-        resetGame(-1);
-    }
-
-    // score
     context.font = "45px sans-serif";
     context.fillText(player1Score, board.width/5, 45);
     context.fillText(player2Score, board.width*4/5 - 45, 45);
 
-    // dotted line
     for (let i = 10; i < board.height; i += 25) {
-        context.fillRect(board.width / 2 - 10, i, 5, 5); 
+        context.fillRect(board.width / 2 - 10, i, 5, 5);
     }
+
+    if (gameState === "idle") {
+        drawCenterMessage("PRESIONA INICIAR");
+    } else if (gameState === "paused") {
+        drawCenterMessage("PAUSA");
+    } else if (gameState === "finished") {
+        drawCenterMessage("PARTIDA FINALIZADA");
+    }
+}
+
+function drawCenterMessage(message) {
+    context.fillStyle = "rgba(0, 0, 0, 0.6)";
+    context.fillRect(0, board.height / 2 - 40, board.width, 80);
+    context.fillStyle = "#CCFF00";
+    context.font = "28px sans-serif";
+    context.textAlign = "center";
+    context.fillText(message, board.width / 2, board.height / 2 + 10);
+    context.textAlign = "start";
 }
 
 // ===============================
@@ -201,6 +288,8 @@ function resetGame(direction) {
 // ===============================
 
 function movePlayerWithMouse(e) {
+    if (gameState !== "running") return;
+
     let rect = board.getBoundingClientRect(); 
     let mouseY = e.clientY - rect.top;
     player1.y = mouseY - playerHeight / 2;
@@ -210,6 +299,8 @@ function movePlayerWithMouse(e) {
 }
 
 function keyDown(e) {
+    if (gameState !== "running") return;
+
     if (e.code == "ArrowUp") player2.velocityY = -playerSpeed;
     else if (e.code == "ArrowDown") player2.velocityY = playerSpeed;
 }
