@@ -212,6 +212,11 @@
                     </div>
 
                     <!-- Game Screen -->
+                    {% if not username %}
+                    <div
+                        class="bg-arcade-red text-arcade-white px-4 py-2 rounded-md text-sm font-bold uppercase tracking-widest">
+                        Has de loguear-te per poder jugar i participar al leaderboard</div>
+                    {% else %}
                     <div
                         class="relative aspect-video bg-black flex items-center justify-center overflow-hidden border-b-2 border-arcade-gray">
                         <div class="crt-overlay absolute inset-0 z-10"></div>
@@ -228,6 +233,7 @@
                                 v1.0.4-retro-stable</p>
                         </div>
                     </div>
+                    {% endif %}
 
                     <!-- Terminal Footer -->
                     <div
@@ -242,6 +248,7 @@
             <!-- Right Column: Sidebar Stats -->
             <div class="lg:col-span-4 flex flex-col gap-8">
 
+                {% if username %}
                 <!-- GAME CONTROLS -->
                 <aside class="bg-arcade-dark border-2 border-arcade-gray shadow-brutal-cyan relative flex flex-col">
                     <div
@@ -272,14 +279,18 @@
                         </button>
                     </div>
                 </aside>
-
+                {% else %}
+                <div
+                    class="bg-arcade-red text-arcade-white px-4 py-2 rounded-md text-sm font-bold uppercase tracking-widest">
+                    Has de loguear-te per poder jugar i participar al leaderboard</div>
+                {% endif %}
             </div>
         </div>
     </main>
 
     <!-- Marquee Footer -->
     <footer
-        class="relative z-10 w-full bg-arcade-cyan text-arcade-black py-3 border-y-2 border-arcade-black overflow-hidden flex items-center font-bold text-sm tracking-widest mt-auto shadow-[0_-4px_20px_rgba(0,240,255,0.1)]">
+        class="relative z-10 w-full bg-arcade-cyan text-arcade-black py-2 border-y-2 border-arcade-black overflow-hidden flex items-center font-bold text-sm tracking-widest mt-auto shadow-[0_-4px_20px_rgba(0,240,255,0.1)]">
         <div class="marquee-content uppercase flex">
             <span>*** SYS_NOTICE: ALL GAMING INSTANCES MONITORED *** COPYRIGHT 1994-2026 OLD SCHOOL GAMES CORP ***
                 UNAUTHORIZED MODIFICATION STRICTLY PROHIBITED *** PING: 24MS ***</span>

@@ -1,204 +1,319 @@
-class Trexpres {
-	constructor() {
-		this.canvas = document.getElementById("simulation-canvas");
-		this.ctx = this.canvas.getContext("2d");
-		this.cellSize = 80;
-		this.boardOffset = { x: 50, y: 50 };
+// version muy simple estilo principiante
 
-		this.phase = "idle";
-		this.board = [];
-		this.pieceToPlace = null;
-		this.correctCell = { row: 0, col: 0 };
-		this.phaseStartTime = 0;
-		this.memorizeDuration = 500;
-		this.score = 0;
-		this.round = 0;
-		this.startTime = null;
+var canvas;
+var ctx;
 
-		this.puzzles = this.generatePuzzles();
+var cellSize = 80;
+var boardX = 50;
+var boardY = 50;
+
+var phase = "idle";
+var previousPhase = "idle";
+var score = 0;
+var round = 0;
+var startTime = null;
+var sessionSaved = false;
+var memorizeTimer = null;
+
+var board = [
+	[null, null, null],
+	[null, null, null],
+	[null, null, null],
+];
+
+var pieceToPlace = "X";
+
+var correctRow = 0;
+var correctCol = 0;
+
+var puzzles = [
+	{
+		board: [
+			["X", "O", null],
+			[null, "X", null],
+			["O", "O", null],
+		],
+		piece: "X",
+		winRow: 2,
+		winCol: 2,
+	},
+	{
+		board: [
+			["X", "O", null],
+			["X", null, null],
+			[null, "O", null],
+		],
+		piece: "X",
+		winRow: 2,
+		winCol: 0,
+	},
+];
+
+function startGame() {
+	if (phase == "paused") {
+		phase = previousPhase;
+		draw();
+		return;
 	}
 
-	generatePuzzles() {
-		return [
-			{
-				board: [
-					["X", "O", null],
-					[null, "X", null],
-					["O", "O", null],
-				],
-				piece: "X",
-				win: [2, 2],
-			},
-			{
-				board: [
-					["X", "O", null],
-					["X", null, null],
-					[null, "O", null],
-				],
-				piece: "X",
-				win: [2, 0],
-			},
-			{
-				board: [
-					[null, null, "X"],
-					["O", "O", null],
-					["X", null, null],
-				],
-				piece: "O",
-				win: [1, 2],
-			},
-		];
+	if (phase != "idle") {
+		return;
 	}
 
-	start() {
-		this.score = 0;
-		this.round = 0;
-		this.startTime = Date.now();
-		this.nextRound();
-	}
+	score = 0;
+	round = 0;
+	startTime = Date.now();
+	sessionSaved = false;
 
-	nextRound() {
-		this.round++;
-		const p = this.puzzles[(this.round - 1) % this.puzzles.length];
-		this.board = p.board.map((row) => [...row]);
-		this.pieceToPlace = p.piece;
-		this.correctCell = { row: p.win[0], col: p.win[1] };
-		this.phase = "memorize";
-		this.phaseStartTime = Date.now();
-		this.gameLoop();
-	}
+	nextRound();
+}
 
-	update() {
-		if (
-			this.phase === "memorize" &&
-			Date.now() - this.phaseStartTime > this.memorizeDuration
-		) {
-			this.phase = "place";
-			this.phaseStartTime = Date.now();
+function nextRound() {
+	round = round + 1;
+
+	var index = (round - 1) % puzzles.length;
+	var puzzle = puzzles[index];
+
+	for (var r = 0; r < 3; r++) {
+		for (var c = 0; c < 3; c++) {
+			board[r][c] = puzzle.board[r][c];
 		}
 	}
 
-	handleClick(canvasX, canvasY) {
-		if (this.phase !== "place") return;
+	pieceToPlace = puzzle.piece;
+	correctRow = puzzle.winRow;
+	correctCol = puzzle.winCol;
 
-		const col = Math.floor((canvasX - this.boardOffset.x) / this.cellSize);
-		const row = Math.floor((canvasY - this.boardOffset.y) / this.cellSize);
-		if (row < 0 || row > 2 || col < 0 || col > 2) return;
+	phase = "memorize";
+	previousPhase = "memorize";
 
-		const correct =
-			row === this.correctCell.row && col === this.correctCell.col;
-		const timeBonus = Math.max(0, 500 - (Date.now() - this.phaseStartTime));
-		this.score += correct ? 100 + Math.floor(timeBonus / 100) : 0;
+	draw();
 
-		if (correct) {
-			this.phase = "result";
-			setTimeout(() => this.nextRound(), 1000);
-		} else {
-			this.stop();
-		}
+	if (memorizeTimer) {
+		clearTimeout(memorizeTimer);
 	}
 
-	stop() {
-		this.phase = "idle";
-		console.log("Game over! Score: " + this.score);
-		fetch("/api/sessions", {
-			method: "POST",
-			body: JSON.stringify({
-				username: localStorage.getItem("username"),
-				game_id: "trexpres",
-				start_time: this.startTime,
-				end_time: Date.now(),
-				score: this.score,
-			}),
-			headers: {
-				"Content-Type": "application/json",
-			},
-		});
+	memorizeTimer = setTimeout(function () {
+		if (phase == "memorize") {
+			phase = "place";
+			previousPhase = "place";
+			draw();
+		}
+	}, 900);
+}
+
+function draw() {
+	if (!canvas || !ctx) {
+		return;
 	}
 
-	draw() {
-		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-		if (this.phase === "idle") return;
+	if (phase == "idle") {
+		drawHud();
+		drawMessage("PRESIONA INICIAR");
+		return;
+	}
 
-		const { x: ox, y: oy } = this.boardOffset;
-		const size = this.cellSize;
+	drawGrid();
 
-		// grid de 3 per 3
-		this.ctx.strokeStyle = "#666";
-		this.ctx.lineWidth = 2;
-		for (let i = 0; i <= 3; i++) {
-			this.ctx.beginPath();
-			this.ctx.moveTo(ox, oy + i * size);
-			this.ctx.lineTo(ox + 3 * size, oy + i * size);
-			this.ctx.stroke();
+	if (phase == "memorize") {
+		drawPieces();
+	}
 
-			this.ctx.beginPath();
-			this.ctx.moveTo(ox + i * size, oy);
-			this.ctx.lineTo(ox + i * size, oy + 3 * size);
-			this.ctx.stroke();
+	if (phase == "place") {
+		drawPieceHint();
+	}
+
+	if (phase == "paused") {
+		if (previousPhase == "memorize") {
+			drawPieces();
+		} else if (previousPhase == "place") {
+			drawPieceHint();
 		}
+		drawMessage("PAUSA");
+	}
 
-		// fase memorize: dibuixar peçes al grid
-		if (this.phase === "memorize") {
-			for (let r = 0; r < 3; r++) {
-				for (let c = 0; c < 3; c++) {
-					const piece = this.board[r][c];
-					if (piece) {
-						const cx = ox + c * size + size / 2;
-						const cy = oy + r * size + size / 2;
-						this.ctx.font = "bold 36px sans-serif";
-						this.ctx.textAlign = "center";
-						this.ctx.textBaseline = "middle";
-						this.ctx.fillStyle =
-							piece === "X" ? "#e74c3c" : "#3498db";
-						this.ctx.fillText(piece, cx, cy);
-					}
-				}
+	drawHud();
+}
+
+function drawGrid() {
+	ctx.strokeStyle = "#666";
+
+	for (var i = 0; i <= 3; i++) {
+		ctx.beginPath();
+		ctx.moveTo(boardX, boardY + i * cellSize);
+		ctx.lineTo(boardX + cellSize * 3, boardY + i * cellSize);
+		ctx.stroke();
+
+		ctx.beginPath();
+		ctx.moveTo(boardX + i * cellSize, boardY);
+		ctx.lineTo(boardX + i * cellSize, boardY + cellSize * 3);
+		ctx.stroke();
+	}
+}
+
+function drawPieces() {
+	ctx.font = "36px sans-serif";
+	ctx.textAlign = "center";
+	ctx.textBaseline = "middle";
+
+	for (var r = 0; r < 3; r++) {
+		for (var c = 0; c < 3; c++) {
+			var piece = board[r][c];
+
+			if (piece != null) {
+				var x = boardX + c * cellSize + cellSize / 2;
+				var y = boardY + r * cellSize + cellSize / 2;
+
+				ctx.fillText(piece, x, y);
 			}
-		}
-
-		// fase place: dibuixar peça a la posició seleccionada
-		if (this.phase === "place") {
-			this.ctx.font = "bold 32px sans-serif";
-			this.ctx.textAlign = "center";
-			this.ctx.textBaseline = "middle";
-			this.ctx.fillStyle =
-				this.pieceToPlace === "X" ? "#e74c3c" : "#3498db";
-			this.ctx.fillText(this.pieceToPlace, ox + 3 * size + 30, oy + 15);
-		}
-
-		// score y ronda
-		this.ctx.fillStyle = "#fff";
-		this.ctx.font = "16px monospace";
-		this.ctx.textAlign = "left";
-		this.ctx.textBaseline = "top";
-		this.ctx.fillText(`Score: ${this.score}`, 10, 10);
-		this.ctx.fillText(`Ronda: ${this.round}`, 10, 30);
-	}
-
-	gameLoop() {
-		this.update();
-		this.draw();
-		if (this.phase !== "idle") {
-			requestAnimationFrame(() => this.gameLoop());
 		}
 	}
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-	const game = new Trexpres();
+function drawHud() {
+	ctx.fillStyle = "white";
+	ctx.font = "16px monospace";
 
-	document
-		.getElementById("start-simulation")
-		.addEventListener("click", () => {
-			game.start();
-		});
+	ctx.fillText("Score: " + score, 10, 20);
+	ctx.fillText("Round: " + round, 10, 40);
+}
 
-	game.canvas.addEventListener("click", (e) => {
-		const rect = game.canvas.getBoundingClientRect();
-		const x = e.clientX - rect.left;
-		const y = e.clientY - rect.top;
-		game.handleClick(x, y);
+function drawPieceHint() {
+	ctx.fillStyle = "#00F0FF";
+	ctx.font = "bold 28px sans-serif";
+	ctx.textAlign = "left";
+	ctx.textBaseline = "top";
+	ctx.fillText("Pieza: " + pieceToPlace, boardX + cellSize * 3 + 15, boardY);
+}
+
+function drawMessage(text) {
+	ctx.fillStyle = "rgba(0,0,0,0.65)";
+	ctx.fillRect(0, canvas.height / 2 - 35, canvas.width, 70);
+	ctx.fillStyle = "#CCFF00";
+	ctx.font = "bold 28px sans-serif";
+	ctx.textAlign = "center";
+	ctx.textBaseline = "middle";
+	ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+}
+
+function pauseGame() {
+	if (phase == "idle") {
+		return;
+	}
+
+	if (phase == "paused") {
+		phase = previousPhase;
+		draw();
+		return;
+	}
+
+	previousPhase = phase;
+	phase = "paused";
+	draw();
+}
+
+function handleClick(x, y) {
+	if (phase != "place") {
+		return;
+	}
+
+	var col = Math.floor((x - boardX) / cellSize);
+	var row = Math.floor((y - boardY) / cellSize);
+
+	if (row == correctRow && col == correctCol) {
+		score = score + 100;
+		nextRound();
+	} else {
+		endGame();
+	}
+}
+
+function endGame() {
+	if (memorizeTimer) {
+		clearTimeout(memorizeTimer);
+		memorizeTimer = null;
+	}
+
+	phase = "idle";
+
+	console.log("Game over. Score: " + score);
+	saveSession();
+	draw();
+}
+
+function saveSession() {
+	if (sessionSaved || !startTime) {
+		return;
+	}
+
+	sessionSaved = true;
+
+	fetch("/api/sessions", {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+			username: localStorage.getItem("username"),
+			game_id: "trexpres",
+			start_time: startTime,
+			end_time: Date.now(),
+			score: score,
+		}),
+	}).catch(function () {
+		sessionSaved = false;
 	});
+}
+
+function resizeCanvas() {
+	if (!canvas) {
+		return;
+	}
+
+	var container = canvas.parentElement;
+	canvas.width = container.clientWidth;
+	canvas.height = container.clientHeight;
+
+	boardX = Math.max(20, Math.floor((canvas.width - cellSize * 3) / 2));
+	boardY = Math.max(70, Math.floor((canvas.height - cellSize * 3) / 2));
+
+	draw();
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+	canvas = document.getElementById("board");
+	if (!canvas) {
+		return;
+	}
+	ctx = canvas.getContext("2d");
+
+	resizeCanvas();
+	window.addEventListener("resize", resizeCanvas);
+
+	var startBtn = document.getElementById("start-game");
+	var pauseBtn = document.getElementById("pause-game");
+	var endBtn = document.getElementById("end-game");
+
+	startBtn.addEventListener("click", function () {
+		startGame();
+	});
+	pauseBtn.addEventListener("click", function () {
+		pauseGame();
+	});
+	endBtn.addEventListener("click", function () {
+		endGame();
+	});
+
+	canvas.addEventListener("click", function (e) {
+		var rect = canvas.getBoundingClientRect();
+
+		var x = e.clientX - rect.left;
+		var y = e.clientY - rect.top;
+
+		handleClick(x, y);
+	});
+
+	draw();
 });
