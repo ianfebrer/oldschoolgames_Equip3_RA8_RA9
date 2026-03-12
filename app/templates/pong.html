@@ -1,285 +1,364 @@
 <!DOCTYPE html>
-
-<html class="dark" lang="en">
+<html lang="en" class="scroll-smooth">
 
 <head>
     <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Pong Game Interface - Old School Games</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SYS.GAMES // PONG</title>
+
+    <!-- Scripts requeridos -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="{{ url_for('static', filename='js/games/pong.js') }}" defer></script>
+
+    <!-- Fuentes y Material Symbols -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;family=Noto+Sans:wght@400;700&amp;display=swap"
+        href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Teko:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
         rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap"
-        rel="stylesheet" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-        rel="stylesheet" />
-    <script id="tailwind-config">
+
+    <!-- Configuración Tailwind Arcade -->
+    <script>
         tailwind.config = {
-            darkMode: "class",
             theme: {
                 extend: {
-                    colors: {
-                        "primary": "#0d59f2",
-                        "retro-green": "#33ff33",
-                        "background-light": "#f5f6f8",
-                        "background-dark": "#0a0c10",
-                    },
                     fontFamily: {
-                        "display": ["Spline Sans", "sans-serif"]
+                        display: ['Teko', 'sans-serif'],
+                        mono: ['Space Mono', 'monospace'],
                     },
-                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
-                },
-            },
+                    colors: {
+                        arcade: {
+                            black: '#0a0a0a',
+                            dark: '#121212',
+                            gray: '#2a2a2a',
+                            lime: '#CCFF00',
+                            red: '#FF2A2A',
+                            cyan: '#00F0FF',
+                            white: '#EAEAEA'
+                        }
+                    },
+                    boxShadow: {
+                        'brutal-lime': '6px 6px 0px 0px #CCFF00',
+                        'brutal-red': '6px 6px 0px 0px #FF2A2A',
+                        'brutal-cyan': '6px 6px 0px 0px #00F0FF',
+                        'brutal-white': '4px 4px 0px 0px #EAEAEA',
+                        'brutal-active': '2px 2px 0px 0px #CCFF00',
+                    },
+                    backgroundImage: {
+                        'noise': "url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')",
+                    }
+                }
+            }
         }
     </script>
+
+    <!-- Estilos Arcade -->
     <style>
+        /* CSS Scanline Effect for CRT feel */
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(to bottom,
+                    rgba(18, 16, 16, 0) 50%,
+                    rgba(0, 0, 0, 0.25) 50%);
+            background-size: 100% 4px;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        /* Inner CRT overlay for the game screen */
         .crt-overlay {
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
             background-size: 100% 4px, 3px 100%;
             pointer-events: none;
         }
 
-        .retro-glow {
-            text-shadow: 0 0 8px rgba(51, 255, 51, 0.6);
+        /* Custom selection */
+        ::selection {
+            background-color: #CCFF00;
+            color: #0a0a0a;
         }
 
-        .retro-border {
-            border: 2px solid #33ff33;
-            box-shadow: 0 0 15px rgba(51, 255, 51, 0.2);
+        /* Blinking cursor */
+        .cursor-blink {
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+        }
+
+        /* Marquee Animation */
+        .marquee-content {
+            display: inline-block;
+            white-space: nowrap;
+            animation: marquee 30s linear infinite;
+        }
+
+        @keyframes marquee {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* Canvas styling to fit properly inside the retro monitor */
+        #board {
+            width: 100%;
+            height: 100%;
+            image-rendering: pixelated;
+            /* Keeps graphics sharp */
         }
     </style>
-    <script src="{{ url_for('static', filename='js/games/pong.js') }}" defer></script>
 </head>
 
-<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
-    <div
-        class="relative flex h-auto min-h-screen w-full flex-col bg-background-light dark:bg-background-dark overflow-x-hidden">
-        <div class="layout-container flex h-full grow flex-col">
-            <header
-                class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 px-6 lg:px-20 py-4 bg-white dark:bg-background-dark sticky top-0 z-50">
-                <div class="flex items-center gap-8">
-                    <div class="flex items-center gap-3">
-                        <div class="size-8 bg-primary rounded-lg flex items-center justify-center text-white">
-                            <span class="material-symbols-outlined">videogame_asset</span>
-                        </div>
-                        <h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-tight">Old
-                            School Games</h2>
+<body
+    class="bg-arcade-black text-arcade-white font-mono antialiased relative min-h-screen flex flex-col selection:bg-arcade-lime selection:text-arcade-black">
+
+    <!-- Subtle noise texture overlay -->
+    <div class="fixed inset-0 opacity-[0.03] pointer-events-none z-0 bg-noise"></div>
+
+    <!-- Header / Navigation -->
+    <header class="relative z-10 border-b-2 border-arcade-gray bg-arcade-dark/90 backdrop-blur-sm sticky top-0">
+        <div
+            class="max-w-[1600px] mx-auto px-4 sm:px-8 py-4 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+
+            <!-- Logo Section -->
+            <div class="flex items-center gap-8">
+                <a href="/" class="flex items-center gap-4 group cursor-pointer hover:opacity-80 transition-opacity">
+                    <div
+                        class="w-12 h-12 bg-arcade-lime text-arcade-black flex items-center justify-center font-display text-4xl leading-none mt-1 shadow-brutal-white group-hover:shadow-brutal-active transition-shadow">
+                        JS
                     </div>
-                    <nav class="hidden md:flex items-center gap-8">
-                        <a class="text-primary text-sm font-semibold" href="#">Games</a>
-                        <a class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors"
-                            href="#">Leaderboard</a>
-                        <a class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors"
-                            href="#">Profile</a>
-                    </nav>
-                </div>
-                <div class="flex items-center gap-6">
-                    <label class="hidden sm:flex items-center relative w-64">
-                        <span class="material-symbols-outlined absolute left-3 text-slate-400 text-lg">search</span>
-                        <input
-                            class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-lg py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary transition-all placeholder:text-slate-500"
-                            placeholder="Search classics..." type="text" />
-                    </label>
+                    <div class="flex flex-col leading-none hidden sm:flex">
+                        <h1
+                            class="font-display text-3xl sm:text-4xl uppercase tracking-widest text-arcade-white m-0 p-0 leading-[0.85]">
+                            Old School <span class="text-arcade-lime">Games</span>
+                        </h1>
+                        <span
+                            class="text-[10px] text-arcade-cyan font-bold tracking-widest uppercase mt-1">SYS.VER.2.0.26
+                            // PONG</span>
+                    </div>
+                </a>
+
+                <!-- Nav Links -->
+                <nav class="hidden md:flex items-center gap-6 border-l-2 border-arcade-gray pl-8">
+                    <a class="text-arcade-lime text-sm font-bold tracking-widest uppercase flex items-center gap-2"
+                        href="#">
+                        <span class="text-arcade-gray">></span> GAMES.EXE
+                    </a>
+                    <a class="text-arcade-gray text-sm font-bold tracking-widest uppercase hover:text-arcade-white transition-colors flex items-center gap-2"
+                        href="#">
+                        LEADERBOARD.DAT
+                    </a>
+                    <a class="text-arcade-gray text-sm font-bold tracking-widest uppercase hover:text-arcade-white transition-colors flex items-center gap-2"
+                        href="#">
+                        PROFILE.SYS
+                    </a>
+                </nav>
+            </div>
+
+            <!-- User & Actions -->
+            <div class="flex items-center gap-4 w-full lg:w-auto mt-2 lg:mt-0 justify-between lg:justify-end">
+                <label class="hidden sm:flex items-center relative w-64">
+                    <span class="absolute left-3 text-arcade-gray font-bold">></span>
+                    <input
+                        class="w-full bg-arcade-black border-2 border-arcade-gray text-arcade-white font-mono pl-8 pr-4 py-2 text-xs uppercase focus:border-arcade-cyan focus:outline-none transition-colors placeholder:text-arcade-gray/50"
+                        placeholder="SEARCH_CLASSICS..." type="text" />
+                </label>
+
+                <div class="flex items-center gap-4">
                     <button
-                        class="bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2">
-                        <span class="material-symbols-outlined text-lg">logout</span>
-                        <span>Sign Out</span>
+                        class="bg-transparent border-2 border-arcade-red text-arcade-red px-4 py-2 text-xs font-bold uppercase tracking-widest hover:bg-arcade-red hover:text-arcade-black transition-colors flex items-center gap-2">
+                        <span>[ LOGOUT ]</span>
                     </button>
                     <div
-                        class="size-10 rounded-full border-2 border-primary/20 bg-slate-200 dark:bg-slate-800 overflow-hidden">
-                        <img class="w-full h-full object-cover" data-alt="User avatar placeholder"
+                        class="size-10 border-2 border-arcade-cyan shadow-brutal-cyan bg-arcade-black overflow-hidden flex-shrink-0">
+                        <img class="w-full h-full object-cover grayscale opacity-80 mix-blend-screen"
+                            data-alt="User avatar placeholder"
                             src="https://lh3.googleusercontent.com/aida-public/AB6AXuByyLz3ys076TffhnwRuCos8fqvRlzeUXvduuAIpA9ujBBIufWwmiseBPSV3izlXSBrwzdpiCA3udbz5nMvAb4yOWnMMsIxUibOSI4EN16jFpQc37n90963bD7qQNhutigdylVQRXQH8DHTc79dYBfQymUntZCmK3Ys1SqvWNxUl3sdCAFmKRdG4xiHxuuPTfdsBu6vwpqSi_caJ6FU5KqTd7Bp9HZFuBTiQAoTCkrYRY3MpylR2l0Rog1ZpWJO9KoJwpjt8J3Wt5E" />
                     </div>
                 </div>
-            </header>
-            <main class="flex-1 px-6 lg:px-20 py-8">
-                <div class="max-w-7xl mx-auto">
-                    <div class="mb-6 flex items-center gap-2 text-sm text-slate-500">
-                        <a class="hover:text-primary transition-colors" href="#">Games</a>
-                        <span class="material-symbols-outlined text-xs">chevron_right</span>
-                        <span class="text-slate-900 dark:text-slate-100 font-medium">Pong: Retro Edition</span>
-                    </div>
-                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                        <div class="lg:col-span-8 flex flex-col gap-6">
-                            <div
-                                class="bg-slate-900 rounded-2xl overflow-hidden relative shadow-2xl border-4 border-slate-800">
-                                <div
-                                    class="bg-slate-800 px-6 py-3 flex items-center justify-between border-b border-slate-700">
-                                    <div class="flex items-center gap-2">
-                                        <div class="size-3 rounded-full bg-red-500"></div>
-                                        <span class="text-xs font-bold text-slate-400 tracking-widest uppercase">Live
-                                            System Monitor</span>
-                                    </div>
-                                    <span class="text-xs font-mono text-retro-green opacity-70">SIGNAL: OPTIMAL</span>
-                                </div>
-                                <div
-                                    class="relative aspect-video bg-black flex items-center justify-center overflow-hidden">
-                                    <div class="crt-overlay absolute inset-0 z-10 opacity-30"></div>
-                                    <div class="w-full h-full flex flex-col items-center justify-center relative p-8">
-                                        <canvas id="board"></canvas>
-                                        <!-- <div
-                                            class="absolute left-10 top-0 bottom-0 w-4 bg-retro-green shadow-[0_0_15px_rgba(51,255,51,0.5)] my-12">
-                                        </div>
-                                        <div
-                                            class="absolute right-10 top-1/2 -translate-y-1/2 w-4 h-24 bg-retro-green shadow-[0_0_15px_rgba(51,255,51,0.5)]">
-                                        </div>
-                                        <div
-                                            class="size-6 bg-retro-green rounded-none shadow-[0_0_20px_rgba(51,255,51,0.8)] absolute left-1/2 top-1/2 -translate-x-1/2">
-                                        </div>
-                                        <div
-                                            class="absolute inset-y-0 left-1/2 w-1 border-l-2 border-dashed border-retro-green/30">
-                                        </div>
-                                        <div class="z-20 flex flex-col items-center gap-6">
-                                            <h1
-                                                class="text-retro-green text-6xl md:text-8xl font-black tracking-tighter retro-glow">
-                                                PONG</h1>
-                                            <button
-                                                class="bg-retro-green/10 border-2 border-retro-green text-retro-green hover:bg-retro-green hover:text-black transition-all px-8 py-4 rounded-none font-bold text-xl uppercase tracking-widest retro-glow flex items-center gap-3 group">
-                                                <span
-                                                    class="material-symbols-outlined text-3xl group-hover:scale-110 transition-transform">play_arrow</span>
-                                                Start Simulation
-                                            </button>
-                                        </div> -->
-                                    </div>
-                                    <div class="absolute bottom-4 right-6 z-20">
-                                        <p
-                                            class="text-retro-green font-mono text-xs opacity-50 uppercase tracking-widest">
-                                            v1.0.4-retro-stable</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <section
-                                class="bg-white dark:bg-slate-900/50 rounded-xl p-8 border border-slate-200 dark:border-slate-800">
-                                <div class="flex items-center gap-3 mb-6">
-                                    <span class="material-symbols-outlined text-primary">info</span>
-                                    <h3 class="text-xl font-bold dark:text-white">How to Play</h3>
-                                </div>
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                                    <div class="flex flex-col gap-3">
-                                        <div
-                                            class="size-10 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-primary">
-                                            <span class="material-symbols-outlined">keyboard_arrow_up</span>
-                                        </div>
-                                        <h4 class="font-bold dark:text-slate-200">Move Up</h4>
-                                        <p class="text-sm text-slate-500 leading-relaxed">Use the 'W' key or the Up
-                                            Arrow to move your paddle upwards.</p>
-                                    </div>
-                                    <div class="flex flex-col gap-3">
-                                        <div
-                                            class="size-10 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-primary">
-                                            <span class="material-symbols-outlined">keyboard_arrow_down</span>
-                                        </div>
-                                        <h4 class="font-bold dark:text-slate-200">Move Down</h4>
-                                        <p class="text-sm text-slate-500 leading-relaxed">Use the 'S' key or the Down
-                                            Arrow to move your paddle downwards.</p>
-                                    </div>
-                                    <div class="flex flex-col gap-3">
-                                        <div
-                                            class="size-10 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-primary">
-                                            <span class="material-symbols-outlined">star</span>
-                                        </div>
-                                        <h4 class="font-bold dark:text-slate-200">Objective</h4>
-                                        <p class="text-sm text-slate-500 leading-relaxed">Don't let the ball pass your
-                                            paddle. Score points by making the opponent miss.</p>
-                                    </div>
-                                </div>
-                            </section>
-                        </div>
-                        <div class="lg:col-span-4 flex flex-col gap-6">
-                            <aside
-                                class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm">
-                                <div
-                                    class="p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
-                                    <h3 class="text-lg font-bold flex items-center gap-2">
-                                        <span class="material-symbols-outlined text-primary">analytics</span>
-                                        Game Session
-                                    </h3>
-                                </div>
-                                <div class="p-6 flex flex-col gap-6">
-                                    <div
-                                        class="flex flex-col gap-2 p-5 bg-slate-50 dark:bg-slate-800/30 rounded-xl border border-slate-100 dark:border-slate-800">
-                                        <div class="flex items-center justify-between">
-                                            <p class="text-sm font-medium text-slate-500 uppercase tracking-wider">Time
-                                                Elapsed</p>
-                                            <span
-                                                class="material-symbols-outlined text-slate-400 text-sm">schedule</span>
-                                        </div>
-                                        <p class="text-3xl font-mono font-bold text-slate-900 dark:text-white">04:22</p>
-                                    </div>
-                                    <div
-                                        class="flex flex-col gap-2 p-5 bg-primary/5 dark:bg-primary/10 rounded-xl border border-primary/20">
-                                        <div class="flex items-center justify-between">
-                                            <p class="text-sm font-medium text-primary uppercase tracking-wider">Current
-                                                Score</p>
-                                            <span
-                                                class="material-symbols-outlined text-primary text-sm">emoji_events</span>
-                                        </div>
-                                        <p class="text-3xl font-mono font-bold text-slate-900 dark:text-white">1,250</p>
-                                    </div>
-                                    <div
-                                        class="flex flex-col gap-2 p-5 bg-slate-50 dark:bg-slate-800/30 rounded-xl border border-slate-100 dark:border-slate-800">
-                                        <div class="flex items-center justify-between">
-                                            <p class="text-sm font-medium text-slate-500 uppercase tracking-wider">Lives
-                                                Remaining</p>
-                                            <div class="flex gap-1">
-                                                <span
-                                                    class="material-symbols-outlined text-red-500 text-xs fill-1">favorite</span>
-                                                <span
-                                                    class="material-symbols-outlined text-red-500 text-xs fill-1">favorite</span>
-                                                <span
-                                                    class="material-symbols-outlined text-red-500 text-xs fill-1">favorite</span>
-                                            </div>
-                                        </div>
-                                        <p class="text-3xl font-mono font-bold text-slate-900 dark:text-white">3</p>
-                                    </div>
-                                </div>
-                                <div class="p-6 bg-slate-50 dark:bg-slate-800/50 flex flex-col gap-3">
-                                    <button
-                                        class="w-full py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold rounded-lg hover:opacity-90 transition-opacity">
-                                        Reset Session
-                                    </button>
-                                    <button
-                                        class="w-full py-3 border border-slate-300 dark:border-slate-700 font-bold rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-                                        Settings
-                                    </button>
-                                </div>
-                            </aside>
-                            <div
-                                class="bg-gradient-to-br from-primary to-blue-600 rounded-2xl p-6 text-white relative overflow-hidden group">
-                                <div class="relative z-10">
-                                    <h4 class="text-xl font-bold mb-2">Pro Gamer?</h4>
-                                    <p class="text-white/80 text-sm mb-4">Join the global monthly tournament and win
-                                        exclusive badges.</p>
-                                    <button
-                                        class="bg-white text-primary px-4 py-2 rounded-lg text-sm font-bold shadow-lg group-hover:scale-105 transition-transform">Join
-                                        Now</button>
-                                </div>
-                                <span
-                                    class="material-symbols-outlined absolute -bottom-4 -right-4 text-9xl opacity-10 rotate-12">military_tech</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </main>
-            <footer
-                class="mt-auto border-t border-slate-200 dark:border-slate-800 py-8 px-6 lg:px-20 bg-white dark:bg-background-dark">
-                <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-                    <div class="flex items-center gap-2 opacity-50">
-                        <span class="material-symbols-outlined">videogame_asset</span>
-                        <span class="text-xs font-medium">© 2024 Old School Games Retro Arcade</span>
-                    </div>
-                    <div class="flex gap-8 text-xs font-medium text-slate-500">
-                        <a class="hover:text-primary transition-colors" href="#">Terms of Service</a>
-                        <a class="hover:text-primary transition-colors" href="#">Privacy Policy</a>
-                        <a class="hover:text-primary transition-colors" href="#">API Access</a>
-                        <a class="hover:text-primary transition-colors" href="#">Support</a>
-                    </div>
-                </div>
-            </footer>
+            </div>
         </div>
-    </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="relative z-10 flex-1 w-full max-w-[1600px] mx-auto px-4 sm:px-8 py-8 flex flex-col gap-8">
+
+        <!-- Breadcrumbs / Header -->
+        <div class="flex items-center gap-2 text-xs text-arcade-gray font-bold tracking-widest uppercase">
+            <a class="hover:text-arcade-cyan transition-colors" href="#">ROOT</a>
+            <span>/</span>
+            <a class="hover:text-arcade-cyan transition-colors" href="#">GAMES</a>
+            <span>/</span>
+            <span class="text-arcade-white">PONG.EXE</span>
+            <span class="cursor-blink text-arcade-lime">_</span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+            <!-- Left Column: Game & Instructions -->
+            <div class="lg:col-span-8 flex flex-col gap-8">
+
+                <!-- GAME TERMINAL -->
+                <div class="bg-arcade-dark border-2 border-arcade-gray shadow-brutal-lime relative flex flex-col">
+
+                    <!-- Terminal Header -->
+                    <div
+                        class="bg-arcade-black border-b-2 border-arcade-gray px-4 py-2 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="size-3 bg-arcade-red animate-pulse"></div>
+                            <span
+                                class="text-[10px] font-bold text-arcade-white tracking-widest uppercase">SYSTEM_MONITOR
+                                :: PONG</span>
+                        </div>
+                        <span class="text-[10px] text-arcade-lime tracking-widest uppercase">SIGNAL: OPTIMAL</span>
+                    </div>
+
+                    <!-- Game Screen -->
+                    <div
+                        class="relative aspect-video bg-black flex items-center justify-center overflow-hidden border-b-2 border-arcade-gray">
+                        <div class="crt-overlay absolute inset-0 z-10"></div>
+
+                        <!-- Canvas container -->
+                        <div class="w-full h-full relative z-0">
+                            <!-- JS will target this canvas -->
+                            <canvas id="board"></canvas>
+                        </div>
+
+                        <!-- Screen Details -->
+                        <div class="absolute bottom-4 right-6 z-20 pointer-events-none">
+                            <p class="text-arcade-lime text-[10px] opacity-50 uppercase tracking-widest">
+                                v1.0.4-retro-stable</p>
+                        </div>
+                    </div>
+
+                    <!-- Terminal Footer -->
+                    <div
+                        class="px-4 py-2 bg-arcade-dark flex justify-between items-center text-[10px] uppercase font-bold text-arcade-gray">
+                        <span>FPS: 60.0</span>
+                        <span>MEM: 12MB / 64MB</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Column: Sidebar Stats -->
+            <div class="lg:col-span-4 flex flex-col gap-8">
+
+                <!-- SESSION STATS -->
+                <aside class="bg-arcade-dark border-2 border-arcade-gray shadow-brutal-cyan relative flex flex-col">
+                    <div
+                        class="absolute top-0 right-0 bg-arcade-cyan text-arcade-black px-3 py-1 text-xs font-bold z-10 border-b-2 border-l-2 border-arcade-gray">
+                        TELEMETRY
+                    </div>
+
+                    <div class="p-6 border-b-2 border-arcade-gray">
+                        <h3
+                            class="font-display text-3xl uppercase text-arcade-white m-0 leading-none mt-1 flex items-center gap-2">
+                            <span class="text-arcade-cyan">>></span> SESSION_DATA
+                        </h3>
+                    </div>
+
+                    <div class="p-6 flex flex-col gap-6">
+                        <!-- Stat: Time -->
+                        <div
+                            class="flex flex-col gap-2 p-4 bg-arcade-black border-2 border-arcade-gray relative overflow-hidden group">
+                            <div
+                                class="absolute inset-0 bg-arcade-gray/10 translate-y-full group-hover:translate-y-0 transition-transform">
+                            </div>
+                            <div class="flex items-center justify-between relative z-10">
+                                <p class="text-[10px] font-bold text-arcade-gray uppercase tracking-widest">TIME_ELAPSED
+                                </p>
+                                <span class="material-symbols-outlined text-arcade-gray text-sm">schedule</span>
+                            </div>
+                            <p class="text-3xl font-display text-arcade-white relative z-10 leading-none">04:22</p>
+                        </div>
+
+                        <!-- Stat: Score -->
+                        <div
+                            class="flex flex-col gap-2 p-4 bg-arcade-black border-2 border-arcade-lime shadow-[inset_0_0_10px_rgba(204,255,0,0.1)] relative overflow-hidden group">
+                            <div
+                                class="absolute inset-0 bg-arcade-lime/10 translate-y-full group-hover:translate-y-0 transition-transform">
+                            </div>
+                            <div class="flex items-center justify-between relative z-10">
+                                <p class="text-[10px] font-bold text-arcade-lime uppercase tracking-widest">
+                                    CURRENT_SCORE</p>
+                                <span class="material-symbols-outlined text-arcade-lime text-sm">emoji_events</span>
+                            </div>
+                            <p
+                                class="text-4xl font-display text-arcade-lime relative z-10 leading-none drop-shadow-[0_0_8px_rgba(204,255,0,0.5)]">
+                                1,250</p>
+                        </div>
+
+                        <!-- Stat: Lives -->
+                        <div
+                            class="flex flex-col gap-2 p-4 bg-arcade-black border-2 border-arcade-gray relative overflow-hidden group">
+                            <div
+                                class="absolute inset-0 bg-arcade-red/5 translate-y-full group-hover:translate-y-0 transition-transform">
+                            </div>
+                            <div class="flex items-center justify-between relative z-10">
+                                <p class="text-[10px] font-bold text-arcade-gray uppercase tracking-widest">
+                                    LIVES_REMAINING</p>
+                                <div class="flex gap-2">
+                                    <div class="size-3 bg-arcade-red shadow-[0_0_5px_#FF2A2A]"></div>
+                                    <div class="size-3 bg-arcade-red shadow-[0_0_5px_#FF2A2A]"></div>
+                                    <div class="size-3 bg-arcade-red shadow-[0_0_5px_#FF2A2A]"></div>
+                                </div>
+                            </div>
+                            <p class="text-3xl font-display text-arcade-red relative z-10 leading-none">3</p>
+                        </div>
+                    </div>
+
+                    <!-- Controls -->
+                    <div class="p-6 border-t-2 border-arcade-gray bg-arcade-black flex flex-col gap-4">
+                        <button
+                            class="w-full py-3 bg-arcade-white text-arcade-black font-bold uppercase tracking-widest text-sm border-2 border-arcade-white hover:bg-arcade-black hover:text-arcade-white transition-colors">
+                            [ RESET_SESSION ]
+                        </button>
+                        <button
+                            class="w-full py-3 bg-transparent text-arcade-gray font-bold uppercase tracking-widest text-sm border-2 border-arcade-gray hover:border-arcade-white hover:text-arcade-white transition-colors">
+                            [ CONFIG.INI ]
+                        </button>
+                    </div>
+                </aside>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Marquee Footer -->
+    <footer
+        class="relative z-10 w-full bg-arcade-cyan text-arcade-black py-3 border-y-2 border-arcade-black overflow-hidden flex items-center font-bold text-sm tracking-widest mt-auto shadow-[0_-4px_20px_rgba(0,240,255,0.1)]">
+        <div class="marquee-content uppercase flex">
+            <span>*** SYS_NOTICE: ALL GAMING INSTANCES MONITORED *** COPYRIGHT 1994-2026 OLD SCHOOL GAMES CORP ***
+                UNAUTHORIZED MODIFICATION STRICTLY PROHIBITED *** PING: 24MS ***</span>
+            <span class="ml-8">*** SYS_NOTICE: ALL GAMING INSTANCES MONITORED *** COPYRIGHT 1994-2026 OLD SCHOOL GAMES
+                CORP *** UNAUTHORIZED MODIFICATION STRICTLY PROHIBITED *** PING: 24MS ***</span>
+            <span class="ml-8">*** SYS_NOTICE: ALL GAMING INSTANCES MONITORED *** COPYRIGHT 1994-2026 OLD SCHOOL GAMES
+                CORP *** UNAUTHORIZED MODIFICATION STRICTLY PROHIBITED *** PING: 24MS ***</span>
+        </div>
+    </footer>
+
 </body>
 
 </html>
