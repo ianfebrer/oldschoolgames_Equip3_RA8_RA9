@@ -1,125 +1,12 @@
-<!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+{% extends "base.html" %}
 
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SYS.AUTH // REGISTRAT</title>
+{% block title %}SYS.AUTH // REGISTRAT{% endblock %}
 
-  <!-- Scripts requeridos -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="/static/js/auth/auth.js"></script>
+{% block head_scripts %}
+<script src="/static/js/auth/auth.js"></script>
+{% endblock %}
 
-  <!-- Fuentes -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Teko:wght@500;600;700&display=swap"
-    rel="stylesheet">
-
-  <!-- Configuración Tailwind Arcade -->
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            display: ['Teko', 'sans-serif'],
-            mono: ['Space Mono', 'monospace'],
-          },
-          colors: {
-            arcade: {
-              black: '#0a0a0a',
-              dark: '#121212',
-              gray: '#2a2a2a',
-              lime: '#CCFF00',
-              red: '#FF2A2A',
-              cyan: '#00F0FF',
-              white: '#EAEAEA'
-            }
-          },
-          boxShadow: {
-            'brutal-lime': '6px 6px 0px 0px #CCFF00',
-            'brutal-red': '6px 6px 0px 0px #FF2A2A',
-            'brutal-cyan': '6px 6px 0px 0px #00F0FF',
-            'brutal-white': '4px 4px 0px 0px #EAEAEA',
-            'brutal-active': '2px 2px 0px 0px #CCFF00',
-          },
-          backgroundImage: {
-            'noise': "url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')",
-          }
-        }
-      }
-    }
-  </script>
-
-  <!-- Estilos Arcade -->
-  <style>
-    /* CSS Scanline Effect for CRT feel */
-    body::before {
-      content: " ";
-      display: block;
-      position: fixed;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      right: 0;
-      background: linear-gradient(to bottom,
-          rgba(18, 16, 16, 0) 50%,
-          rgba(0, 0, 0, 0.25) 50%);
-      background-size: 100% 4px;
-      z-index: 9999;
-      pointer-events: none;
-    }
-
-    /* Custom selection */
-    ::selection {
-      background-color: #CCFF00;
-      color: #0a0a0a;
-    }
-
-    /* Blinking cursor */
-    .cursor-blink {
-      animation: blink 1s step-end infinite;
-    }
-
-    @keyframes blink {
-
-      0%,
-      100% {
-        opacity: 1;
-      }
-
-      50% {
-        opacity: 0;
-      }
-    }
-
-    /* Marquee Animation */
-    .marquee-content {
-      display: inline-block;
-      white-space: nowrap;
-      animation: marquee 20s linear infinite;
-    }
-
-    @keyframes marquee {
-      0% {
-        transform: translateX(0);
-      }
-
-      100% {
-        transform: translateX(-50%);
-      }
-    }
-  </style>
-</head>
-
-<body
-  class="bg-arcade-black text-arcade-white font-mono antialiased relative min-h-screen flex flex-col selection:bg-arcade-lime selection:text-arcade-black">
-
-  <!-- Subtle noise texture overlay -->
-  <div class="fixed inset-0 opacity-[0.03] pointer-events-none z-0 bg-noise"></div>
-
-  <!-- Header / Navigation -->
+{% block header %}
   <header class="relative z-10 border-b-2 border-arcade-gray bg-arcade-dark/90 backdrop-blur-sm">
     <div
       class="max-w-[1600px] mx-auto px-4 sm:px-8 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -147,8 +34,9 @@
       </div>
     </div>
   </header>
+{% endblock %}
 
-  <!-- Main Content: Register Terminal -->
+{% block main %}
   <main class="relative z-10 flex-1 w-full max-w-[1600px] mx-auto flex items-center justify-center p-4 sm:p-8">
 
     <!-- Auth Box -->
@@ -228,8 +116,9 @@
 
     </div>
   </main>
+{% endblock %}
 
-  <!-- Marquee Footer -->
+{% block footer %}
   <footer
     class="relative z-10 w-full bg-arcade-lime text-arcade-black py-3 border-y-2 border-arcade-black overflow-hidden flex items-center font-bold text-sm tracking-widest mt-auto shadow-[0_-4px_20px_rgba(0,240,255,0.1)]">
     <div class="marquee-content uppercase flex">
@@ -242,7 +131,4 @@
         DATA ENTRY *** END OF LINE ***</span>
     </div>
   </footer>
-
-</body>
-
-</html>
+{% endblock %}

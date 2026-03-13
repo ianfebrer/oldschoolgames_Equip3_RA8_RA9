@@ -1,216 +1,8 @@
-<!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SYS.ARCADE // OLD SCHOOL GAMES</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Teko for massive, condensed, brutalist headers; Space Mono for technical/data text -->
-    <link
-        href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Teko:wght@500;600;700&display=swap"
-        rel="stylesheet">
+{% block title %}SYS.ARCADE // OLD SCHOOL GAMES{% endblock %}
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        display: ['Teko', 'sans-serif'],
-                        mono: ['Space Mono', 'monospace'],
-                    },
-                    colors: {
-                        arcade: {
-                            black: '#0a0a0a',
-                            dark: '#121212',
-                            gray: '#2a2a2a',
-                            lime: '#CCFF00',
-                            red: '#FF2A2A',
-                            cyan: '#00F0FF',
-                            white: '#EAEAEA'
-                        }
-                    },
-                    boxShadow: {
-                        'brutal-lime': '6px 6px 0px 0px #CCFF00',
-                        'brutal-red': '6px 6px 0px 0px #FF2A2A',
-                        'brutal-cyan': '6px 6px 0px 0px #00F0FF',
-                        'brutal-white': '4px 4px 0px 0px #EAEAEA',
-                        'brutal-active': '2px 2px 0px 0px #CCFF00',
-                    },
-                    backgroundImage: {
-                        'noise': "url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')",
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        /* CSS Scanline Effect for CRT feel */
-        body::before {
-            content: " ";
-            display: block;
-            position: fixed;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-            background: linear-gradient(to bottom,
-                    rgba(18, 16, 16, 0) 50%,
-                    rgba(0, 0, 0, 0.25) 50%);
-            background-size: 100% 4px;
-            z-index: 9999;
-            pointer-events: none;
-        }
-
-        /* Custom selection */
-        ::selection {
-            background-color: #CCFF00;
-            color: #0a0a0a;
-        }
-
-        /* Glitch text effect on hover */
-        .glitch-hover:hover {
-            animation: glitch-skew 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
-            color: #CCFF00;
-        }
-
-        @keyframes glitch-skew {
-            0% {
-                transform: skew(0deg);
-            }
-
-            20% {
-                transform: skew(-10deg);
-            }
-
-            40% {
-                transform: skew(10deg);
-            }
-
-            60% {
-                transform: skew(-5deg);
-            }
-
-            80% {
-                transform: skew(5deg);
-            }
-
-            100% {
-                transform: skew(0deg);
-            }
-        }
-
-        /* Blinking cursor */
-        .cursor-blink {
-            animation: blink 1s step-end infinite;
-        }
-
-        @keyframes blink {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0;
-            }
-        }
-
-        /* Marquee Animation */
-        .marquee-content {
-            display: inline-block;
-            white-space: nowrap;
-            animation: marquee 20s linear infinite;
-        }
-
-        @keyframes marquee {
-            0% {
-                transform: translateX(0);
-            }
-
-            100% {
-                transform: translateX(-50%);
-            }
-        }
-
-        /* Game Card Image Filter */
-        .game-img {
-            filter: grayscale(100%) contrast(120%) brightness(80%);
-            transition: all 0.3s ease;
-        }
-
-        .group:hover .game-img {
-            filter: grayscale(0%) contrast(110%) brightness(100%);
-        }
-
-        /* Hide scrollbar but keep functionality */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #0a0a0a;
-            border-left: 1px solid #2a2a2a;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #CCFF00;
-        }
-    </style>
-</head>
-
-<body
-    class="bg-arcade-black text-arcade-white font-mono antialiased relative min-h-screen flex flex-col selection:bg-arcade-lime selection:text-arcade-black">
-
-    <!-- Subtle noise texture overlay -->
-    <div class="fixed inset-0 opacity-[0.03] pointer-events-none z-0 bg-noise"></div>
-
-    <!-- Header / Navigation -->
-    <header class="relative z-10 border-b-2 border-arcade-gray bg-arcade-dark/90 backdrop-blur-sm">
-        <div
-            class="max-w-[1600px] mx-auto px-4 sm:px-8 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-
-            <!-- Logo Section -->
-            <div class="flex items-center gap-4">
-                <div
-                    class="w-12 h-12 bg-arcade-lime text-arcade-black flex items-center justify-center font-display text-4xl leading-none mt-1 shadow-brutal-white">
-                    JS
-                </div>
-                <div class="flex flex-col leading-none">
-                    <h1
-                        class="font-display text-4xl sm:text-5xl uppercase tracking-widest text-arcade-white m-0 p-0 leading-[0.85]">
-                        Old School <span class="text-arcade-lime">Games</span>
-                    </h1>
-                    <span class="text-xs text-arcade-cyan font-bold tracking-widest uppercase mt-1">SYS.VER.2.0.26 //
-                        ONLINE</span>
-                </div>
-            </div>
-
-            <!-- Auth Controls -->
-            <div class="flex items-center gap-4 w-full sm:w-auto mt-2 sm:mt-0">
-                {% if username %}
-                <a href="/auth/logout"
-                    class="flex-1 sm:flex-none px-6 py-2 border-2 border-arcade-white text-arcade-white font-bold uppercase tracking-wider text-sm hover:bg-arcade-white hover:text-arcade-black transition-colors text-center">
-                    [ LOGOUT ]
-                </a>
-                {% else %}
-                <a href="/auth/login"
-                    class="flex-1 sm:flex-none px-6 py-2 border-2 border-arcade-white text-arcade-white font-bold uppercase tracking-wider text-sm hover:bg-arcade-white hover:text-arcade-black transition-colors text-center">
-                    [ LOGIN ]
-                </a>
-                <a href="/auth/register"
-                    class="flex-1 sm:flex-none px-6 py-2 bg-arcade-lime border-2 border-arcade-lime text-arcade-black font-bold uppercase tracking-wider text-sm shadow-brutal-white hover:shadow-brutal-active hover:translate-y-[2px] hover:translate-x-[2px] transition-all text-center">
-                    REGISTER_
-                </a>
-                {% endif %}
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Layout Grid -->
+{% block main %}
     <main
         class="relative z-10 flex-1 w-full max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 border-x-0 sm:border-x-2 border-arcade-gray">
 
@@ -404,8 +196,9 @@
             </div>
         </section>
     </main>
+{% endblock %}
 
-    <!-- Marquee Footer -->
+{% block footer %}
     <footer
         class="relative z-10 w-full bg-arcade-lime text-arcade-black py-3 border-y-2 border-arcade-black overflow-hidden flex items-center font-bold text-sm tracking-widest mt-auto shadow-[0_-4px_20px_rgba(204,255,0,0.1)]">
         <div class="marquee-content uppercase flex">
@@ -418,7 +211,4 @@
                 DEREK *** END OF LINE ***</span>
         </div>
     </footer>
-
-</body>
-
-</html>
+{% endblock %}
