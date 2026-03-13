@@ -180,13 +180,39 @@
     <div class="fixed inset-0 opacity-[0.03] pointer-events-none z-0 bg-noise"></div>
 
     {% block header %}
+    {% set header_variant = header_variant|default('main') %}
+    {% set header_status = header_status|default('SYS.VER.2.0.26 // ONLINE') %}
+    {% set header_status_class = header_status_class|default('text-arcade-cyan') %}
+
     <header class="relative z-10 border-b-2 border-arcade-gray bg-arcade-dark/90 backdrop-blur-sm">
         <div
             class="max-w-[1600px] mx-auto px-4 sm:px-8 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
 
-            <div class="flex items-center gap-4">
+            {% if header_variant == 'auth' %}
+            <a href="/" class="flex items-center gap-4 group cursor-pointer hover:opacity-80 transition-opacity">
                 <div
-                    class="w-12 h-12 bg-arcade-lime text-arcade-black flex items-center justify-center font-display text-4xl leading-none mt-1 shadow-brutal-white">
+                    class="w-12 h-12 bg-arcade-lime text-arcade-black flex items-center justify-center font-display text-4xl leading-none mt-1 shadow-brutal-white group-hover:shadow-brutal-active transition-shadow">
+                    JS
+                </div>
+                <div class="flex flex-col leading-none">
+                    <h1
+                        class="font-display text-4xl sm:text-5xl uppercase tracking-widest text-arcade-white m-0 p-0 leading-[0.85]">
+                        Old School <span class="text-arcade-lime">Games</span>
+                    </h1>
+                    <span class="text-xs {{ header_status_class }} font-bold tracking-widest uppercase mt-1">{{ header_status }}</span>
+                </div>
+            </a>
+
+            <div class="flex items-center gap-4 w-full sm:w-auto mt-2 sm:mt-0">
+                <a href="/"
+                    class="flex-1 sm:flex-none px-6 py-2 border-2 border-arcade-gray text-arcade-gray font-bold uppercase tracking-wider text-sm hover:border-arcade-white hover:text-arcade-white transition-colors text-center">
+                    << RETURN_
+                </a>
+            </div>
+            {% else %}
+            <a href="/" class="flex items-center gap-4 group cursor-pointer hover:opacity-80 transition-opacity">
+                <div
+                    class="w-12 h-12 bg-arcade-lime text-arcade-black flex items-center justify-center font-display text-4xl leading-none mt-1 shadow-brutal-white group-hover:shadow-brutal-active transition-shadow">
                     JS
                 </div>
                 <div class="flex flex-col leading-none">
@@ -197,7 +223,7 @@
                     <span class="text-xs text-arcade-cyan font-bold tracking-widest uppercase mt-1">SYS.VER.2.0.26 //
                         ONLINE</span>
                 </div>
-            </div>
+            </a>
 
             <div class="flex items-center gap-4 w-full sm:w-auto mt-2 sm:mt-0">
                 {% if username %}
@@ -216,6 +242,7 @@
                 </a>
                 {% endif %}
             </div>
+            {% endif %}
         </div>
     </header>
     {% endblock %}
