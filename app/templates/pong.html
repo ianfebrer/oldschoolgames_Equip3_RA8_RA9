@@ -121,20 +121,6 @@
     </main>
 {% endblock %}
 
-{% block footer %}
-    <footer
-        class="relative z-10 w-full bg-arcade-cyan text-arcade-black py-2 border-y-2 border-arcade-black overflow-hidden flex items-center font-bold text-sm tracking-widest mt-auto shadow-[0_-4px_20px_rgba(0,240,255,0.1)]">
-        <div class="marquee-content uppercase flex">
-            <span>*** SYS_NOTICE: ALL GAMING INSTANCES MONITORED *** COPYRIGHT 1994-2026 OLD SCHOOL GAMES CORP ***
-                UNAUTHORIZED MODIFICATION STRICTLY PROHIBITED *** PING: 24MS ***</span>
-            <span class="ml-8">*** SYS_NOTICE: ALL GAMING INSTANCES MONITORED *** COPYRIGHT 1994-2026 OLD SCHOOL GAMES
-                CORP *** UNAUTHORIZED MODIFICATION STRICTLY PROHIBITED *** PING: 24MS ***</span>
-            <span class="ml-8">*** SYS_NOTICE: ALL GAMING INSTANCES MONITORED *** COPYRIGHT 1994-2026 OLD SCHOOL GAMES
-                CORP *** UNAUTHORIZED MODIFICATION STRICTLY PROHIBITED *** PING: 24MS ***</span>
-        </div>
-    </footer>
-{% endblock %}
-
 {% block scripts %}
 <script src="{{ url_for('static', filename='js/games/pong.js') }}" defer></script>
 {% endblock %}
