@@ -10,6 +10,6 @@ def pong():
 def trexpres():
 	return render_template('trexpres.html', username=session.get('username'))
 
-@games_bp.route('/atencioflash')
+@games_bp.route('/memory')
 def atencioflash():
-	return render_template('atencioflash.html', username=session.get('username'))
+	return render_template('memory.html', username=session.get('username'))
