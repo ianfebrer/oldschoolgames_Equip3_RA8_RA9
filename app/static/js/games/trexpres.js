@@ -223,7 +223,7 @@ function handleClick(x, y) {
 	var row = Math.floor((y - boardY) / cellSize);
 
 	if (row == correctRow && col == correctCol) {
-		score = score + 100;
+		score++;
 		nextRound();
 	} else {
 		endGame();

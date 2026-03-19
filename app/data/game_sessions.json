@@ -1,44 +1,23 @@
 [
     {
         "game_id": "trexpres",
-        "username": "test",
-        "start_time": 1772743725121,
-        "end_time": 1772743737135,
-        "score": 504
+        "username": "miguel",
+        "start_time": 1773918648824,
+        "end_time": 1773918689859,
+        "score": 2
     },
     {
         "game_id": "trexpres",
-        "username": null,
-        "start_time": 1773126883880,
-        "end_time": 1773126894139,
-        "score": 403
-    },
-    {
-        "game_id": "pong",
         "username": "test",
-        "start_time": 1773320227645,
-        "end_time": 1773320266120,
-        "score": 5
-    },
-    {
-        "game_id": "pong",
-        "username": "roy",
-        "start_time": 1773398727977,
-        "end_time": 1773398733915,
-        "score": 1
-    },
-    {
-        "game_id": "pong",
-        "username": "roy",
-        "start_time": 1773398741596,
-        "end_time": 1773398757107,
-        "score": 3
+        "start_time": 1773918660787,
+        "end_time": 1773918673822,
+        "score": 4
     },
     {
         "game_id": "trexpres",
         "username": "roy",
-        "start_time": 1773398768158,
-        "end_time": 1773398772337,
-        "score": 100
+        "start_time": 1773918716630,
+        "end_time": 1773918743245,
+        "score": 4
     }
 ]
