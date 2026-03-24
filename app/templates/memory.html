@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block title %}SYS.GAMES // MEMORY{% endblock %}
+
+{% block extra_head %}
+<style>
+    .marquee-content {
+        animation: marquee 30s linear infinite;
+    }
+    
+    #board {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(4, 1fr);
+        gap: 10px;
+        width: 100%;
+        height: 100%;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    .card {
+        background-color: #222;
+        border: 3px solid #555;
+        border-radius: 8px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 3rem;
+        cursor: pointer;
+        user-select: none;
+        transition: all 0.2s ease;
+    }
+    
+    .card:hover {
+        border-color: #00ffcc;
+        box-shadow: 0 0 10px #00ffcc;
+    }
+
+    .card.flipped {
+        background-color: #e2e8f0;
+        border-color: #333;
+    }
+</style>
+{% endblock %}
+
+{% block main %}
+<main class="relative z-10 flex-1 w-full max-w-[1600px] mx-auto px-4 sm:px-8 py-8 flex flex-col gap-8">
+
+    <!-- Breadcrumbs / Header -->
+    <div class="flex items-center gap-2 text-xs text-arcade-gray font-bold tracking-widest uppercase">
+        <a class="hover:text-arcade-cyan transition-colors" href="/">ROOT</a>
+        <span>/</span>
+        <span class="text-arcade-white">MEMORY.EXE</span>
+        <span class="cursor-blink text-arcade-lime">_</span>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+        <!-- Left Column: Game & Instructions -->
+        <div class="lg:col-span-8 flex flex-col gap-8">
+
+            <!-- GAME TERMINAL -->
+            <div class="bg-arcade-dark border-2 border-arcade-gray shadow-brutal-lime relative flex flex-col">
+
+                <!-- Terminal Header -->
+                <div class="bg-arcade-black border-b-2 border-arcade-gray px-4 py-2 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="size-3 bg-arcade-red animate-pulse"></div>
+                        <span class="text-[10px] font-bold text-arcade-white tracking-widest uppercase">SYSTEM_MONITOR
+                            :: MEMORY</span>
+                    </div>
+                    <span class="text-[10px] text-arcade-lime tracking-widest uppercase">SIGNAL: OPTIMAL</span>
+                </div>
+
+                <!-- Game Screen -->
+                {% if not username %}
+                <div
+                    class="bg-arcade-red text-arcade-white px-4 py-2 rounded-md text-sm font-bold uppercase tracking-widest">
+                    Has de loguear-te per poder jugar i participar al leaderboard</div>
+                {% else %}
+                <div
+                    class="relative aspect-video bg-black flex items-center justify-center overflow-hidden border-b-2 border-arcade-gray">
+                    <div class="crt-overlay absolute inset-0 z-10 pointer-events-none"></div>
+
+                    <!-- Board container -->
+                    <div class="w-full h-full relative z-0 flex items-center justify-center">
+                        <!-- JS will target this div -->
+                        <div id="board"></div>
+                    </div>
+
+                    <!-- Screen Details -->
+                    <div class="absolute bottom-4 right-6 z-20 pointer-events-none">
+                        <p class="text-arcade-lime text-[10px] opacity-50 uppercase tracking-widest">
+                            v1.0.4-retro-stable</p>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Terminal Footer -->
+                <div
+                    class="px-4 py-2 bg-arcade-dark flex justify-between items-center text-[10px] uppercase font-bold text-arcade-gray">
+                    <span>FPS: 60.0</span>
+                    <span>MEM: 12MB / 64MB</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right Column: Sidebar Stats -->
+        <div class="lg:col-span-4 flex flex-col gap-8">
+
+            {% if username %}
+            <!-- GAME CONTROLS -->
+            <aside class="bg-arcade-dark border-2 border-arcade-gray shadow-brutal-cyan relative flex flex-col">
+                <div
+                    class="absolute top-0 right-0 bg-arcade-cyan text-arcade-black px-3 py-1 text-xs font-bold z-10 border-b-2 border-l-2 border-arcade-gray">
+                    CONTROLS
+                </div>
+
+                <div class="p-6 border-b-2 border-arcade-gray">
+                    <h3
+                        class="font-display text-3xl uppercase text-arcade-white m-0 leading-none mt-1 flex items-center gap-2">
+                        <span class="text-arcade-cyan">>></span> MEMORY_CONTROLS
+                    </h3>
+                </div>
+
+                <!-- Controls -->
+                <div class="p-6 border-t-2 border-arcade-gray bg-arcade-black flex flex-col gap-4">
+                    <p class="mb-2" id="player1-score">La teua puntuació:</p>
+                    <button id="start-game"
+                        class="w-full py-3 bg-arcade-lime text-arcade-black font-bold uppercase tracking-widest text-sm border-2 border-arcade-lime hover:bg-arcade-black hover:text-arcade-lime transition-colors">
+                        [ INICIAR ]
+                    </button>
+                    <button id="pause-game"
+                        class="w-full py-3 bg-transparent text-arcade-cyan font-bold uppercase tracking-widest text-sm border-2 border-arcade-cyan hover:bg-arcade-cyan hover:text-arcade-black transition-colors">
+                        [ PAUSAR ]
+                    </button>
+                    <button id="end-game"
+                        class="w-full py-3 bg-transparent text-arcade-red font-bold uppercase tracking-widest text-sm border-2 border-arcade-red hover:bg-arcade-red hover:text-arcade-black transition-colors">
+                        [ FINALIZAR ]
+                    </button>
+                </div>
+            </aside>
+            {% else %}
+            <div
+                class="bg-arcade-red text-arcade-white px-4 py-2 rounded-md text-sm font-bold uppercase tracking-widest">
+                Has de loguear-te per poder jugar i participar al leaderboard</div>
+            {% endif %}
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/games/memory.js') }}" defer></script>
+{% endblock %}
