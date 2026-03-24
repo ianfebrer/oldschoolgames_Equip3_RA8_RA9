@@ -14,7 +14,7 @@ def api_sessions():
 	score = data.get('score')
 
 	game_session = GameSession(game_id, username, start_time, end_time, score)
-	success, message = game_session.create()
+	success, message = game_session.save()
 	if success:
 		return jsonify({'success': True, 'message': message})
 	else:

@@ -1,0 +1,14 @@
+[
+	{
+		"nom": "Pong",
+		"descripcio": "Juego de Pong"
+	},
+	{
+		"nom": "Trexpres",
+		"descripcio": "Juego de Trexpres"
+	},
+	{
+		"nom": "Memory",
+		"descripcio": "Juego de Memory"
+	}
+]

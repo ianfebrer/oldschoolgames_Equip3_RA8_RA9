@@ -3,197 +3,114 @@
 {% block title %}SYS.ARCADE // OLD SCHOOL GAMES{% endblock %}
 
 {% block main %}
-    <main
-        class="relative z-10 flex-1 w-full max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 border-x-0 sm:border-x-2 border-arcade-gray">
+<main
+    class="relative z-10 flex-1 w-full max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 border-x-0 sm:border-x-2 border-arcade-gray">
 
-        <!-- LEADERBOARD (Sidebar) -->
-        <aside
-            class="lg:col-span-3 border-b-2 lg:border-b-0 lg:border-r-2 border-arcade-gray bg-arcade-black flex flex-col">
-            <div class="p-6 border-b-2 border-arcade-gray bg-arcade-dark">
-                <h2 class="font-display text-4xl uppercase text-arcade-cyan flex items-center gap-2">
-                    <span class="text-arcade-red">>></span> Leaderboard<span class="cursor-blink">|</span>
-                </h2>
-                <p class="text-xs text-arcade-gray font-bold tracking-widest mt-1">GLOBAL RANKING // TOP 5</p>
-                <!-- 3 botones para filtrar leaderboard por juego -->
-                <div class="flex gap-2">
-                    {% for joc in jocs %}
-                    <button onclick="window.location.href='?game={{ joc.id }}'"
-                        class="px-4 py-2 {% if selected_game == joc.id %}bg-arcade-lime text-arcade-black{% else %}bg-arcade-gray text-arcade-white{% endif %} font-bold uppercase tracking-wider text-sm hover:bg-arcade-white hover:text-arcade-black transition-colors text-center">
-                        {{ joc.name }}
-                    </button>
-                    {% endfor %}
-                </div>
-            </div>
-
-            <div class="flex-1 p-6 flex flex-col gap-4">
-                <!-- Table Header -->
-                <div
-                    class="flex items-center justify-between text-xs text-arcade-gray border-b border-arcade-gray pb-2 mb-2">
-                    <span>RANK // USER</span>
-                    <span>SCORE</span>
-                </div>
-
-                <!-- Leaderboard Items -->
-                {% for session in leaderboard %}
-                <div class="group flex items-center justify-between font-bold text-sm">
-                    <div class="flex items-center gap-3">
-                        <span class="text-arcade-lime w-6">{{ loop.index }}.</span>
-                        <span
-                            class="uppercase text-arcade-white group-hover:text-arcade-lime transition-colors">{{ session.username }}</span>
-                    </div>
-                    <span class="text-arcade-lime">{{ session.score }}</span>
-                </div>
+    <!-- LEADERBOARD (Sidebar) -->
+    <aside
+        class="lg:col-span-3 border-b-2 lg:border-b-0 lg:border-r-2 border-arcade-gray bg-arcade-black flex flex-col">
+        <div class="p-6 border-b-2 border-arcade-gray bg-arcade-dark">
+            <h2 class="font-display text-4xl uppercase text-arcade-cyan flex items-center gap-2">
+                <span class="text-arcade-red">>></span> Leaderboard<span class="cursor-blink">|</span>
+            </h2>
+            <p class="text-xs text-arcade-gray font-bold tracking-widest mt-1">GLOBAL RANKING // TOP 5</p>
+            <!-- 3 botones para filtrar leaderboard por juego -->
+            <div class="flex gap-2">
+                {% for joc in jocs %}
+                <button onclick="window.location.href='?game={{ joc.nom }}'"
+                    class="px-4 py-2 {% if selected_game == joc.nom %}bg-arcade-lime text-arcade-black{% else %}bg-arcade-gray text-arcade-white{% endif %} font-bold uppercase tracking-wider text-sm hover:bg-arcade-white hover:text-arcade-black transition-colors text-center">
+                    {{ joc.nom }}
+                </button>
                 {% endfor %}
-
             </div>
-        </aside>
+        </div>
 
-        <!-- GAMES GRID (Main Content) -->
-        <section class="lg:col-span-9 bg-arcade-black p-4 sm:p-8">
-            <div class="flex items-end justify-between mb-8 border-b-2 border-arcade-gray pb-4">
-                <div>
-                    <h2 class="font-display text-5xl sm:text-6xl uppercase tracking-wide m-0 leading-none">Select <span
-                            class="text-arcade-red">Game</span></h2>
-                    <p class="text-arcade-gray text-sm mt-2">AVAILABLE MODULES: 3</p>
-                </div>
-                <div class="hidden sm:block text-right">
-                    <div class="text-xs text-arcade-cyan">STATUS: READY</div>
-                    <div class="text-xs text-arcade-gray">INSERT COIN</div>
-                </div>
-            </div>
-            <!-- Jocs -->
-            {% if not username %}
+        <div class="flex-1 p-6 flex flex-col gap-4">
+            <!-- Table Header -->
             <div
-                class="bg-arcade-red text-arcade-white px-4 py-2 rounded-md text-sm font-bold uppercase tracking-widest">
-                Has de loguear-te per poder jugar i participar al leaderboard
+                class="flex items-center justify-between text-xs text-arcade-gray border-b border-arcade-gray pb-2 mb-2">
+                <span>RANK // USER</span>
+                <span>SCORE</span>
             </div>
-            {% else %}
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 
-                <!-- Game Card 1 -->
-                <article
-                    class="group relative bg-arcade-dark border-2 border-arcade-gray hover:border-arcade-lime transition-colors duration-300 flex flex-col h-full hover:-translate-y-2 hover:shadow-brutal-lime">
-                    <div
-                        class="absolute top-0 right-0 bg-arcade-gray text-arcade-black px-2 py-1 text-xs font-bold z-10 group-hover:bg-arcade-lime transition-colors">
-                        ID: P0N6</div>
+            <!-- Leaderboard Items -->
+            {% for session in leaderboard %}
+            <div class="group flex items-center justify-between font-bold text-sm">
+                <div class="flex items-center gap-3">
+                    <span class="text-arcade-lime w-6">{{ loop.index }}.</span>
+                    <span
+                        class="uppercase text-arcade-white group-hover:text-arcade-lime transition-colors">{{ session.username }}</span>
+                </div>
+                <span class="text-arcade-lime">{{ session.score }}</span>
+            </div>
+            {% endfor %}
 
-                    <div class="w-full aspect-[4/3] border-b-2 border-arcade-gray overflow-hidden relative">
-                        <div class="absolute inset-0 bg-cover bg-center game-img scale-105 group-hover:scale-100 duration-500"
-                            style="background-image: url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=800&auto=format&fit=crop');">
-                        </div>
-                        <!-- Play Button Overlay -->
-                        <div
-                            class="absolute inset-0 bg-arcade-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
-                            <a href="/games/pong">
-                                <span
-                                    class="bg-arcade-lime text-arcade-black px-6 py-3 font-bold uppercase tracking-widest border-2 border-arcade-lime shadow-brutal-white transform -skew-x-12 group-hover:skew-x-0 transition-transform cursor-pointer">
-                                    START GAME
-                                </span>
-                            </a>
-                        </div>
+        </div>
+    </aside>
+
+    <!-- GAMES GRID (Main Content) -->
+    <section class="lg:col-span-9 bg-arcade-black p-4 sm:p-8">
+        <div class="flex items-end justify-between mb-8 border-b-2 border-arcade-gray pb-4">
+            <div>
+                <h2 class="font-display text-5xl sm:text-6xl uppercase tracking-wide m-0 leading-none">Select <span
+                        class="text-arcade-red">Game</span></h2>
+                <p class="text-arcade-gray text-sm mt-2">AVAILABLE MODULES: 3</p>
+            </div>
+            <div class="hidden sm:block text-right">
+                <div class="text-xs text-arcade-cyan">STATUS: READY</div>
+                <div class="text-xs text-arcade-gray">INSERT COIN</div>
+            </div>
+        </div>
+        <!-- Jocs -->
+        {% if not username %}
+        <div class="bg-arcade-red text-arcade-white px-4 py-2 rounded-md text-sm font-bold uppercase tracking-widest">
+            Has de loguear-te per poder jugar i participar al leaderboard
+        </div>
+        {% else %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+            {% for joc in jocs %}
+            <article
+                class="group relative bg-arcade-dark border-2 border-arcade-gray hover:border-arcade-red transition-colors duration-300 flex flex-col h-full hover:-translate-y-2 hover:shadow-brutal-red">
+                <div
+                    class="absolute top-0 right-0 bg-arcade-gray text-arcade-black px-2 py-1 text-xs font-bold z-10 group-hover:bg-arcade-red transition-colors">
+                    ID: {{ joc.nom }}</div>
+
+                <div class="w-full aspect-[4/3] border-b-2 border-arcade-gray overflow-hidden relative">
+                    <div class="absolute inset-0 bg-cover bg-center game-img scale-105 group-hover:scale-100 duration-500"
+                        style="background-image: url('https://images.unsplash.com/photo-1518546305927-5a555bb7020d?q=80&w=800&auto=format&fit=crop');">
                     </div>
-
-                    <div class="p-5 flex-1 flex flex-col">
-                        <div class="flex justify-between items-start mb-2">
-                            <h3
-                                class="font-display text-4xl uppercase leading-none m-0 group-hover:text-arcade-lime transition-colors">
-                                PONG</h3>
-                            <span
-                                class="text-[10px] bg-arcade-white text-arcade-black px-1.5 py-0.5 mt-1 font-bold">MULTIPLAYER</span>
-                        </div>
-                        <p class="text-xs text-arcade-gray mb-4 flex-1">The original digital anomaly. Two paddles, one
-                            point of data. Do not miss.</p>
-
-                        <div
-                            class="border-t-2 border-dashed border-arcade-gray pt-3 flex justify-between items-center text-xs">
-                            <span class="text-arcade-white"><span class="text-arcade-cyan">>></span> ACTV: 1.2K</span>
-                        </div>
-                    </div>
-                </article>
-
-                <!-- Game Card 2 -->
-                <article
-                    class="group relative bg-arcade-dark border-2 border-arcade-gray hover:border-arcade-red transition-colors duration-300 flex flex-col h-full hover:-translate-y-2 hover:shadow-brutal-red">
                     <div
-                        class="absolute top-0 right-0 bg-arcade-gray text-arcade-black px-2 py-1 text-xs font-bold z-10 group-hover:bg-arcade-red transition-colors">
-                        ID: TR3X</div>
-
-                    <div class="w-full aspect-[4/3] border-b-2 border-arcade-gray overflow-hidden relative">
-                        <div class="absolute inset-0 bg-cover bg-center game-img scale-105 group-hover:scale-100 duration-500"
-                            style="background-image: url('https://images.unsplash.com/photo-1518546305927-5a555bb7020d?q=80&w=800&auto=format&fit=crop');">
-                        </div>
-                        <div
-                            class="absolute inset-0 bg-arcade-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
-                            <a href="/games/trexpres">
-                                <span class="bg-arcade-red text-arcade-white px-6 py-3 font-bold uppercase tracking-widest
+                        class="absolute inset-0 bg-arcade-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
+                        <a href="/games/{{ joc.nom }}">
+                            <span class="bg-arcade-red text-arcade-white px-6 py-3 font-bold uppercase tracking-widest
                                 border-2 border-arcade-red shadow-brutal-white transform skew-x-12 group-hover:skew-x-0
                                 transition-transform cursor-pointer">
-                                    START GAME
-                                </span>
-                            </a>
-                        </div>
+                                START GAME
+                            </span>
+                        </a>
                     </div>
+                </div>
 
-                    <div class="p-5 flex-1 flex flex-col">
-                        <div class="flex justify-between items-start mb-2">
-                            <h3
-                                class="font-display text-4xl uppercase leading-none m-0 group-hover:text-arcade-red transition-colors">
-                                TREXPRES</h3>
-                            <span
-                                class="text-[10px] bg-arcade-white text-arcade-black px-1.5 py-0.5 mt-1 font-bold">REFLEX</span>
-                        </div>
-                        <p class="text-xs text-arcade-gray mb-4 flex-1">Prehistoric evasion simulation. Network
-                            disconnected. Jump to survive.</p>
-
-                        <div
-                            class="border-t-2 border-dashed border-arcade-gray pt-3 flex justify-between items-center text-xs">
-                            <span class="text-arcade-white"><span class="text-arcade-cyan">>></span> ACTV: 840</span>
-                        </div>
+                <div class="p-5 flex-1 flex flex-col">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3
+                            class="font-display text-4xl uppercase leading-none m-0 group-hover:text-arcade-red transition-colors">
+                            {{ joc.nom }}
+                        </h3>
+                        <span
+                            class="text-[10px] bg-arcade-white text-arcade-black px-1.5 py-0.5 mt-1 font-bold">REFLEX</span>
                     </div>
-                </article>
+                    <p class="text-xs text-arcade-gray mb-4 flex-1">{{ joc.descripcio }}</p>
 
-                <!-- Game Card 3 -->
-                <article
-                    class="group relative bg-arcade-dark border-2 border-arcade-gray hover:border-arcade-cyan transition-colors duration-300 flex flex-col h-full hover:-translate-y-2 hover:shadow-brutal-cyan">
                     <div
-                        class="absolute top-0 right-0 bg-arcade-gray text-arcade-black px-2 py-1 text-xs font-bold z-10 group-hover:bg-arcade-cyan transition-colors">
-                        ID: M3M0</div>
-
-                    <div class="w-full aspect-[4/3] border-b-2 border-arcade-gray overflow-hidden relative">
-                        <div class="absolute inset-0 bg-cover bg-center game-img scale-105 group-hover:scale-100 duration-500"
-                            style="background-image: url('https://images.unsplash.com/photo-1614294149010-950b698f72c0?q=80&w=800&auto=format&fit=crop');">
-                        </div>
-                        <div
-                            class="absolute inset-0 bg-arcade-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
-                            <a href="/games/memory">
-                                <span class="bg-arcade-cyan text-arcade-black px-6 py-3 font-bold uppercase tracking-widest
-                                    border-2 border-arcade-cyan shadow-brutal-white transform -skew-x-6 group-hover:skew-x-0
-                                    transition-transform cursor-pointer">
-                                    START GAME
-                                </span>
-                            </a>
-                        </div>
+                        class="border-t-2 border-dashed border-arcade-gray pt-3 flex justify-between items-center text-xs">
                     </div>
-
-                    <div class="p-5 flex-1 flex flex-col">
-                        <div class="flex justify-between items-start mb-2">
-                            <h3
-                                class="font-display text-4xl uppercase leading-none m-0 group-hover:text-arcade-cyan transition-colors">
-                                MEMORY</h3>
-                            <span
-                                class="text-[10px] bg-arcade-white text-arcade-black px-1.5 py-0.5 mt-1 font-bold">PUZZLE</span>
-                        </div>
-                        <p class="text-xs text-arcade-gray mb-4 flex-1">Neural pathway reconstruction. Match data blocks
-                            to clear the buffer.</p>
-
-                        <div
-                            class="border-t-2 border-dashed border-arcade-gray pt-3 flex justify-between items-center text-xs">
-                            <span class="text-arcade-white"><span class="text-arcade-cyan">>></span> LVLS: 1-100</span>
-                        </div>
-                    </div>
-                </article>
-                {% endif %}
-            </div>
-        </section>
-    </main>
+                </div>
+            </article>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </section>
+</main>
 {% endblock %}
