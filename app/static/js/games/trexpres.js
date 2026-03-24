@@ -15,6 +15,10 @@ var startTime = null;
 var sessionSaved = false;
 var memorizeTimer = null;
 
+var elapsedTimeMs = 0;
+var lastTimerTick = null;
+var lastRenderedSeconds = -1;
+
 var board = [
 	[null, null, null],
 	[null, null, null],
@@ -49,9 +53,37 @@ var puzzles = [
 	},
 ];
 
+function advanceTimer() {
+	if (lastTimerTick === null) return;
+	var now = Date.now();
+	elapsedTimeMs += now - lastTimerTick;
+	lastTimerTick = now;
+	updateTimerDisplay();
+}
+
+function updateTimerDisplay(force) {
+	force = force === true;
+	var timerEl = document.getElementById("game-timer");
+	if (!timerEl) return;
+
+	var totalSeconds = Math.floor(elapsedTimeMs / 1000);
+	if (!force && totalSeconds === lastRenderedSeconds) return;
+
+	lastRenderedSeconds = totalSeconds;
+	var minutes = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
+	var seconds = String(totalSeconds % 60).padStart(2, "0");
+	timerEl.textContent = "Temps de partida: " + minutes + ":" + seconds;
+}
+
+function updateSidebarScore() {
+	var el = document.getElementById("player1-score");
+	if (el) el.textContent = "La teua puntuació: " + score;
+}
+
 function startGame() {
 	if (phase == "paused") {
 		phase = previousPhase;
+		lastTimerTick = Date.now();
 		draw();
 		return;
 	}
@@ -64,6 +96,11 @@ function startGame() {
 	round = 0;
 	startTime = Date.now();
 	sessionSaved = false;
+	elapsedTimeMs = 0;
+	lastRenderedSeconds = -1;
+	updateTimerDisplay(true);
+	lastTimerTick = Date.now();
+	updateSidebarScore();
 
 	nextRound();
 }
@@ -205,9 +242,15 @@ function pauseGame() {
 
 	if (phase == "paused") {
 		phase = previousPhase;
+		lastTimerTick = Date.now();
 		draw();
 		return;
 	}
+
+	if (phase == "memorize" || phase == "place") {
+		advanceTimer();
+	}
+	lastTimerTick = null;
 
 	previousPhase = phase;
 	phase = "paused";
@@ -224,6 +267,7 @@ function handleClick(x, y) {
 
 	if (row == correctRow && col == correctCol) {
 		score++;
+		updateSidebarScore();
 		nextRound();
 	} else {
 		endGame();
@@ -236,10 +280,23 @@ function endGame() {
 		memorizeTimer = null;
 	}
 
-	phase = "idle";
+	if (phase == "memorize" || phase == "place") {
+		advanceTimer();
+	}
 
 	console.log("Game over. Score: " + score);
 	saveSession();
+
+	phase = "idle";
+	score = 0;
+	round = 0;
+	startTime = null;
+	lastTimerTick = null;
+	elapsedTimeMs = 0;
+	lastRenderedSeconds = -1;
+	updateTimerDisplay(true);
+	updateSidebarScore();
+
 	draw();
 }
 
@@ -261,6 +318,7 @@ function saveSession() {
 			start_time: startTime,
 			end_time: Date.now(),
 			score: score,
+			duration_ms: elapsedTimeMs,
 		}),
 	}).catch(function () {
 		sessionSaved = false;
@@ -282,6 +340,13 @@ function resizeCanvas() {
 	draw();
 }
 
+function gameLoop() {
+	requestAnimationFrame(gameLoop);
+	if (phase === "memorize" || phase === "place") {
+		advanceTimer();
+	}
+}
+
 document.addEventListener("DOMContentLoaded", function () {
 	canvas = document.getElementById("board");
 	if (!canvas) {
@@ -296,15 +361,25 @@ document.addEventListener("DOMContentLoaded", function () {
 	var pauseBtn = document.getElementById("pause-game");
 	var endBtn = document.getElementById("end-game");
 
-	startBtn.addEventListener("click", function () {
-		startGame();
-	});
-	pauseBtn.addEventListener("click", function () {
-		pauseGame();
-	});
-	endBtn.addEventListener("click", function () {
-		endGame();
-	});
+	if (startBtn) {
+		startBtn.addEventListener("click", function () {
+			startGame();
+		});
+	}
+	if (pauseBtn) {
+		pauseBtn.addEventListener("click", function () {
+			pauseGame();
+		});
+	}
+	if (endBtn) {
+		endBtn.addEventListener("click", function () {
+			endGame();
+		});
+	}
+
+	updateSidebarScore();
+	updateTimerDisplay(true);
+	requestAnimationFrame(gameLoop);
 
 	canvas.addEventListener("click", function (e) {
 		var rect = canvas.getBoundingClientRect();

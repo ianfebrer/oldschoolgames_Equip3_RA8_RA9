@@ -55,6 +55,10 @@ let bloquejarBoard = false;
 let firstCard = null;
 let secondCard = null;
 
+let lastTimerTick = null;
+let elapsedTimeMs = 0;
+let lastRenderedSeconds = -1;
+
 function getGridForLevel(idx) {
 	const i = Math.min(Math.max(0, idx), LEVEL_GRIDS.length - 1);
 	return LEVEL_GRIDS[i];
@@ -108,9 +112,27 @@ function tamanyFontCarta(files, columnes) {
 	return "1.1rem";
 }
 
-function actualitzarHud() {
+function advançarTimer() {
+	if (lastTimerTick === null) return;
+	const now = Date.now();
+	elapsedTimeMs += now - lastTimerTick;
+	lastTimerTick = now;
+	actualitzarHud();
+}
+
+function actualitzarHud(force = false) {
 	const el = document.getElementById("player1-score");
 	if (el) el.textContent = `Nivell: ${nivellIndex + 1} · Puntuació: ${score}`;
+	const timerEl = document.getElementById("game-timer");
+	if (!timerEl) return;
+
+	const totalSeconds = Math.floor(elapsedTimeMs / 1000);
+	if (!force && totalSeconds === lastRenderedSeconds) return;
+
+	lastRenderedSeconds = totalSeconds;
+	const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
+	const seconds = String(totalSeconds % 60).padStart(2, "0");
+	timerEl.textContent = `Temps de partida: ${minutes}:${seconds}`;
 }
 
 function limpiarBoard() {
@@ -233,7 +255,7 @@ function iniciarJoc() {
 	estat = "running";
 	nivellIndex = 0;
 	score = 0;
-	sessionStartTime = Date.now();
+	lastTimerTick = Date.now();
 	teSessioGuardada = false;
 	començarNivell(0);
 }
@@ -263,11 +285,14 @@ function finalitzarJoc() {
 		gameboard.style.gridTemplateRows = "";
 	}
 	const el = document.getElementById("player1-score");
-	if (el) el.textContent = "La teua puntació:";
+	if (el) el.textContent = "La teua puntuació: 0";
+	elapsedTimeMs = 0;
+	lastRenderedSeconds = -1;
+	actualitzarHud(true);
 }
 
 function guardarSessio() {
-	if (teSessioGuardada || !sessionStartTime) return;
+	if (teSessioGuardada || !lastTimerTick) return;
 
 	teSessioGuardada = true;
 	fetch("/api/sessions", {
@@ -275,7 +300,7 @@ function guardarSessio() {
 		body: JSON.stringify({
 			username: localStorage.getItem("username"),
 			game_id: "memory",
-			start_time: sessionStartTime,
+			start_time: lastTimerTick,
 			end_time: Date.now(),
 			score: score,
 		}),
@@ -305,4 +330,12 @@ function bindControls() {
 	if (endBtn) endBtn.addEventListener("click", finalitzarJoc);
 }
 
-if (gameboard) bindControls();
+function update() {
+	requestAnimationFrame(update);
+	if (estat === "running") advançarTimer();
+}
+
+if (gameboard) {
+	bindControls();
+	requestAnimationFrame(update);
+}
