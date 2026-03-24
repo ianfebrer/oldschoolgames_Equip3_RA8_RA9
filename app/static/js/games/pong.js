@@ -62,6 +62,9 @@ let player2Score = 0;
 let gameState = "idle"; // idle | running | paused | finished
 let sessionStartTime = null;
 let hasSavedSession = false;
+let elapsedTimeMs = 0;
+let lastTimerTick = null;
+let lastRenderedSeconds = -1;
 
 // ===============================
 // INITIALIZATION
@@ -74,6 +77,9 @@ window.onload = function () {
 	// inicializar tamaño y posiciones
 	resizeCanvas();
 	bindControlButtons();
+	document.getElementById("player1-score").textContent =
+		`La teua puntuació: ${player1Score}`;
+	updateTimerDisplay(true);
 	drawFrame();
 
 	requestAnimationFrame(update);
@@ -98,11 +104,7 @@ function resizeCanvas() {
 	board.height = container.clientHeight;
 
 	// posiciones iniciales responsive
-	player1.x = 10;
-	player1.y = board.height / 2 - playerHeight / 2;
-
-	player2.x = board.width - playerWidth - 10;
-	player2.y = board.height / 2 - playerHeight / 2;
+	resetPlayersPosition();
 
 	ball.x = board.width / 2 - ballWidth / 2;
 	ball.y = board.height / 2 - ballHeight / 2;
@@ -126,27 +128,47 @@ function startGame() {
 		player2Score = 0;
 		sessionStartTime = Date.now();
 		hasSavedSession = false;
+		elapsedTimeMs = 0;
+		lastRenderedSeconds = -1;
+		updateTimerDisplay(true);
+		resetPlayersPosition();
 		resetGame(Math.random() > 0.5 ? 1 : -1);
 	}
 	document.getElementById("player1-score").textContent =
 		`La teua puntuació: ${player1Score}`;
 
+	lastTimerTick = Date.now();
 	gameState = "running";
 }
 
 function pauseGame() {
 	if (gameState !== "running") return;
+	advanceTimer();
+	lastTimerTick = null;
 	gameState = "paused";
 	player1.velocityY = 0;
 	player2.velocityY = 0;
 }
 
 function endGame() {
-	if (gameState === "idle" || gameState === "finished") return;
-	gameState = "finished";
+	if (gameState === "idle") return;
+	if (gameState === "running") {
+		advanceTimer();
+	}
+	saveSessionData();
+	gameState = "idle";
 	player1.velocityY = 0;
 	player2.velocityY = 0;
-	saveSessionData();
+	player1Score = 0;
+	player2Score = 0;
+	lastTimerTick = null;
+	resetPlayersPosition();
+	resetGame(Math.random() > 0.5 ? 1 : -1);
+	document.getElementById("player1-score").textContent =
+		"La teua puntuació: 0";
+	elapsedTimeMs = 0;
+	lastRenderedSeconds = -1;
+	updateTimerDisplay(true);
 }
 
 function saveSessionData() {
@@ -161,6 +183,7 @@ function saveSessionData() {
 			start_time: sessionStartTime,
 			end_time: Date.now(),
 			score: player1Score,
+			duration_ms: elapsedTimeMs,
 		}),
 		headers: {
 			"Content-Type": "application/json",
@@ -190,6 +213,7 @@ function update() {
 	context.clearRect(0, 0, board.width, board.height);
 
 	if (gameState === "running") {
+		advanceTimer();
 		let nextPlayer1Y = player1.y + player1.velocityY;
 		if (!outOfBounds(nextPlayer1Y)) {
 			player1.y = nextPlayer1Y;
@@ -231,6 +255,27 @@ function update() {
 	}
 
 	drawFrame();
+}
+
+function advanceTimer() {
+	if (lastTimerTick === null) return;
+	const now = Date.now();
+	elapsedTimeMs += now - lastTimerTick;
+	lastTimerTick = now;
+	updateTimerDisplay();
+}
+
+function updateTimerDisplay(force = false) {
+	const timerElement = document.getElementById("game-timer");
+	if (!timerElement) return;
+
+	const totalSeconds = Math.floor(elapsedTimeMs / 1000);
+	if (!force && totalSeconds === lastRenderedSeconds) return;
+
+	lastRenderedSeconds = totalSeconds;
+	const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
+	const seconds = String(totalSeconds % 60).padStart(2, "0");
+	timerElement.textContent = `Temps de partida: ${minutes}:${seconds}`;
 }
 
 function drawFrame() {
@@ -283,6 +328,13 @@ function detectCollision(a, b) {
 		a.y < b.y + b.height &&
 		a.y + a.height > b.y
 	);
+}
+
+function resetPlayersPosition() {
+	player1.x = 10;
+	player1.y = board.height / 2 - playerHeight / 2;
+	player2.x = board.width - playerWidth - 10;
+	player2.y = board.height / 2 - playerHeight / 2;
 }
 
 function resetGame(direction) {

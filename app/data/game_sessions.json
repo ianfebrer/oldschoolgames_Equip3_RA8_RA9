@@ -24,7 +24,16 @@
         "game_id": "pong",
         "username": "roy",
         "start_time": 1773921634732,
-        "end_time": 1773922240548,
-        "score": 2
+        "end_time": 1774338058816,
+        "score": 4,
+        "duration_ms": 26301
+    },
+    {
+        "game_id": "pong",
+        "username": "derek",
+        "start_time": 1774338246051,
+        "end_time": 1774338280415,
+        "score": 4,
+        "duration_ms": 34363
     }
 ]

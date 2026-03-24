@@ -5,12 +5,13 @@ from app.models.base import Base
 class GameSession(Base):
 	FILE_NAME = 'game_sessions.json'
 
-	def __init__(self, game_id, username, start_time, end_time, score):
+	def __init__(self, game_id, username, start_time, end_time, score, duration_ms=None):
 		self.game_id = game_id
 		self.username = username
 		self.start_time = start_time
 		self.end_time = end_time
 		self.score = score
+		self.duration_ms = duration_ms
 
 	def to_dict(self):
 		return {
@@ -18,7 +19,8 @@ class GameSession(Base):
 			'username': self.username,
 			'start_time': self.start_time,
 			'end_time': self.end_time,
-			'score': self.score
+			'score': self.score,
+			'duration_ms': self.duration_ms
 		}
 
 	@classmethod
@@ -41,14 +43,23 @@ class GameSession(Base):
 				millors[user] = sessio
 			else:
 				score_actual = millors[user].get('score')
+				duracio_actual = millors[user].get('duration_ms')
+				duracio_nova = sessio.get('duration_ms')
+				duracio_actual = float('inf') if duracio_actual is None else duracio_actual
+				duracio_nova = float('inf') if duracio_nova is None else duracio_nova
 				if score > score_actual:
 					millors[user] = sessio
+				elif score == score_actual and duracio_nova < duracio_actual:
+					millors[user] = sessio
 
-		def puntuacio(sessio):
-			return sessio.get('score')
+		def clau_ordenacio(sessio):
+			score = sessio.get('score', 0)
+			duracio = sessio.get('duration_ms')
+			duracio = float('inf') if duracio is None else duracio
+			return (-score, duracio)
 
 		llista_millors = list(millors.values())
-		llista_ordenada = sorted(llista_millors, key=puntuacio, reverse=True)
+		llista_ordenada = sorted(llista_millors, key=clau_ordenacio)
 		return llista_ordenada[:limit]
 
 
@@ -62,6 +73,7 @@ class GameSession(Base):
 				if game['score'] < self.score:
 					game['score'] = self.score
 					game['end_time'] = self.end_time
+					game['duration_ms'] = self.duration_ms
 				break
 
 		if not user_found:
