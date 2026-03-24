@@ -227,6 +227,15 @@
 
             <div class="flex items-center gap-4 w-full sm:w-auto mt-2 sm:mt-0">
                 {% if username %}
+                <div
+                    class="flex-1 sm:flex-none px-4 py-2 border-2 border-arcade-gray text-arcade-cyan font-bold tracking-wider text-sm flex items-center justify-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-4 h-4" fill="none"
+                        stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <circle cx="12" cy="8" r="4"></circle>
+                        <path d="M4 20a8 8 0 0 1 16 0"></path>
+                    </svg>
+                    <span class="truncate max-w-[140px]">{{ username }}</span>
+                </div>
                 <a href="/auth/logout"
                     class="flex-1 sm:flex-none px-6 py-2 border-2 border-arcade-white text-arcade-white font-bold uppercase tracking-wider text-sm hover:bg-arcade-white hover:text-arcade-black transition-colors text-center">
                     [ LOGOUT ]
