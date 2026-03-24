@@ -1,8 +1,10 @@
 import json
 
-data_dir = "app/data"
+from app.models.base import Base
 
-class GameSession:
+class GameSession(Base):
+	FILE_NAME = 'game_sessions.json'
+
 	def __init__(self, game_id, username, start_time, end_time, score):
 		self.game_id = game_id
 		self.username = username
@@ -19,15 +21,38 @@ class GameSession:
 			'score': self.score
 		}
 
-	def get_all(self):
-		with open(f'{data_dir}/game_sessions.json', 'r', encoding='utf-8') as f:
-			try:
-				game_sessions = json.load(f)
-			except json.JSONDecodeError:
-				game_sessions = []
-		return game_sessions
+	@classmethod
+	def get_leaderboard(cls, game_id, limit=5):
+		# primer obtenim totes les sesions actuals
+		sessions = cls.get_all()
 
-	def create(self):
+		# després filtrem nomes les del joc
+		filtrades = []
+		for sessio in sessions:
+			if sessio.get('game_id') == game_id:
+				filtrades.append(sessio)
+
+		# per cada usuario, només agafem la seua millor puntuació
+		millors = {}
+		for sessio in filtrades:
+			user = sessio.get('username')
+			score = sessio.get('score')
+			if user not in millors:
+				millors[user] = sessio
+			else:
+				score_actual = millors[user].get('score')
+				if score > score_actual:
+					millors[user] = sessio
+
+		def puntuacio(sessio):
+			return sessio.get('score')
+
+		llista_millors = list(millors.values())
+		llista_ordenada = sorted(llista_millors, key=puntuacio, reverse=True)
+		return llista_ordenada[:limit]
+
+
+	def save(self):
 		game_sessions = self.get_all()
 		user_found = False
 
@@ -42,6 +67,4 @@ class GameSession:
 		if not user_found:
 			game_sessions.append(self.to_dict())
 
-		with open(f'{data_dir}/game_sessions.json', 'w', encoding='utf-8') as f:
-			json.dump(game_sessions, f, ensure_ascii=False, indent=4)
-		return True, 'Sesión de juego creada correctamente'
+		return self.save_items(game_sessions)

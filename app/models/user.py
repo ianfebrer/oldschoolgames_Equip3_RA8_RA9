@@ -1,8 +1,10 @@
 import json
 
-data_dir = "app/data"
+from app.models.base import Base
 
-class User:
+class User(Base):
+	FILE_NAME = 'users.json'
+
 	def __init__(self, username, password):
 		self.username = username
 		self.password = password
@@ -13,26 +15,17 @@ class User:
 			'password': self.password
 		}
 
-	def obtenirtots(self):
-		with open(f'{data_dir}/users.json', 'r', encoding='utf-8') as f:
-			try:
-				users = json.load(f)
-			except json.JSONDecodeError:
-				users = []
-		return users
-
 	def register(self):
-		users = self.obtenirtots()
+		users = self.get_all()
 		for user in users:
 			if user['username'] == self.username:
 				return False, 'Usuari ja existeix'
 		users.append(self.to_dict())
-		with open(f'{data_dir}/users.json', 'w', encoding='utf-8') as f:
-			json.dump(users, f, ensure_ascii=False, indent=4)
+		self.save(users)
 		return True, 'Usuari registrat correctament'
 
 	def login(self):
-		users = self.obtenirtots()
+		users = self.get_all()
 		for user in users:
 			if user['username'] == self.username and user['password'] == self.password:
 				return True, 'Login correcte'

@@ -1,28 +1,35 @@
-import json
+from app.models.base import Base
 
-data_dir = "app/data"
+class Game(Base):
+	FILE_NAME = 'games.json'
 
-class Game:
-	def __init__(self, name, description):
-		self.name = name
-		self.description = description
+	def __init__(self, nom, descripcio):
+		self.nom = nom
+		self.descripcio = descripcio
 
 	def to_dict(self):
 		return {
-			'name': self.name,
-			'description': self.description
+			'nom': self.nom,
+			'descripcio': self.descripcio
 		}
 
-	def get_all(self):
-		try:
-			with open(f'{data_dir}/games.json', 'r', encoding='utf-8') as f:
-				return json.load(f)
-		except json.JSONDecodeError:
-			return []
+	@classmethod
+	def get_all_main(cls):
+		raw_games = cls.get_all()
+		result = []
+		for game in raw_games:
+			nom = game.get('nom').lower()
+			descripcio = game.get('descripcio')
+			result.append(
+				{
+					'nom': nom,
+					'descripcio': descripcio
+				}
+			)
+		return result
 
-	def create(self):
+	def save(self):
 		games = self.get_all()
 		games.append(self.to_dict())
-		with open(f'{data_dir}/games.json', 'w', encoding='utf-8') as f:
-			json.dump(games, f, ensure_ascii=False, indent=4)
+		self.save(games)
 		return True, 'Juego creado correctamente'
