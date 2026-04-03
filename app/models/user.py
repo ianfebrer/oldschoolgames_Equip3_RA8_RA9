@@ -21,7 +21,7 @@ class User(Base):
 			if user['username'] == self.username:
 				return False, 'Usuari ja existeix'
 		users.append(self.to_dict())
-		self.save(users)
+		self.save_items(users)
 		return True, 'Usuari registrat correctament'
 
 	def login(self):

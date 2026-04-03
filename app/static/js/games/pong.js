@@ -150,12 +150,24 @@ function pauseGame() {
 	player2.velocityY = 0;
 }
 
+function formatTempsPartida(ms) {
+	const totalSeconds = Math.floor(ms / 1000);
+	const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
+	const seconds = String(totalSeconds % 60).padStart(2, "0");
+	return `${minutes}:${seconds}`;
+}
+
 function endGame() {
 	if (gameState === "idle") return;
 	if (gameState === "running") {
 		advanceTimer();
 	}
+	const puntuacioFinal = player1Score;
+	const tempsText = formatTempsPartida(elapsedTimeMs);
 	saveSessionData();
+	alert(
+		`Partida finalitzada.\nLa teua puntuació: ${puntuacioFinal}\nTemps: ${tempsText}`,
+	);
 	gameState = "idle";
 	player1.velocityY = 0;
 	player2.velocityY = 0;
@@ -299,7 +311,7 @@ function drawFrame() {
 	} else if (gameState === "paused") {
 		drawCenterMessage("PAUSA");
 	} else if (gameState === "finished") {
-		drawCenterMessage("PARTIDA FINALIZADA");
+		drawCenterMessage("Partida finalitzada. Puntuació: " + player1Score);
 	}
 }
 

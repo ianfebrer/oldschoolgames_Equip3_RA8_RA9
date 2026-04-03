@@ -112,6 +112,13 @@ function tamanyFontCarta(files, columnes) {
 	return "1.1rem";
 }
 
+function formatTempsPartida(ms) {
+	const totalSeconds = Math.floor(ms / 1000);
+	const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
+	const seconds = String(totalSeconds % 60).padStart(2, "0");
+	return `${minutes}:${seconds}`;
+}
+
 function advançarTimer() {
 	if (lastTimerTick === null) return;
 	const now = Date.now();
@@ -271,13 +278,33 @@ function pausarJoc() {
 
 function finalitzarJoc() {
 	if (estat === "idle") return;
+	if (estat === "running") advançarTimer();
+
+	const scoreFinal = score;
+	const nivellFinal = nivellIndex + 1;
+	const tempsText = formatTempsPartida(elapsedTimeMs);
+
 	estat = "idle";
 	bloquejarBoard = false;
 	hasFlippedCard = false;
 	firstCard = null;
 	secondCard = null;
 
-	guardarSessio();
+	guardarSessio().then((data) => {
+		let msg =
+			"Partida finalitzada.\n" +
+			"Nivell assolit: " +
+			nivellFinal +
+			"\nPuntuació: " +
+			scoreFinal +
+			"\nTemps: " +
+			tempsText;
+		if (data && !data.success && !data.skipped) {
+			msg += "\n\nNo s'ha pogut guardar la puntuació al servidor.";
+		}
+		alert(msg);
+	});
+
 	limpiarBoard();
 	if (gameboard) {
 		gameboard.style.display = "";
@@ -292,10 +319,12 @@ function finalitzarJoc() {
 }
 
 function guardarSessio() {
-	if (teSessioGuardada || !lastTimerTick) return;
+	if (teSessioGuardada || !lastTimerTick) {
+		return Promise.resolve({ success: true, skipped: true });
+	}
 
 	teSessioGuardada = true;
-	fetch("/api/sessions", {
+	return fetch("/api/sessions", {
 		method: "POST",
 		body: JSON.stringify({
 			username: localStorage.getItem("username"),
@@ -303,20 +332,25 @@ function guardarSessio() {
 			start_time: lastTimerTick,
 			end_time: Date.now(),
 			score: score,
+			duration_ms: elapsedTimeMs,
 		}),
 		headers: { "Content-Type": "application/json" },
 	})
 		.then((response) => response.json())
 		.then((data) => {
-			if (!data.success)
+			if (!data.success) {
 				console.error(
 					"No s'ha pogut guardar la sessió de Memory:",
 					data.message,
 				);
+				teSessioGuardada = false;
+			}
+			return data;
 		})
 		.catch((error) => {
-			console.error("Error guardando sesión de Memory:", error);
+			console.error("Error guardant la sessió de Memory:", error);
 			teSessioGuardada = false;
+			return { success: false };
 		});
 }
 

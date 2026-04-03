@@ -53,6 +53,13 @@ var puzzles = [
 	},
 ];
 
+function formatTempsPartida(ms) {
+	var totalSeconds = Math.floor(ms / 1000);
+	var minutes = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
+	var seconds = String(totalSeconds % 60).padStart(2, "0");
+	return minutes + ":" + seconds;
+}
+
 function advanceTimer() {
 	if (lastTimerTick === null) return;
 	var now = Date.now();
@@ -284,7 +291,12 @@ function endGame() {
 		advanceTimer();
 	}
 
-	console.log("Game over. Score: " + score);
+	alert(
+		"Partida finalitzada.\nPuntuació: " +
+			score +
+			"\nTemps: " +
+			formatTempsPartida(elapsedTimeMs),
+	);
 	saveSession();
 
 	phase = "idle";
