@@ -17,7 +17,9 @@ let playerSpeed = 6;
 // BALL CONFIGURATION
 // ===============================
 
-let ballSpeed = 4;
+const INITIAL_BALL_SPEED = 4;
+const BALL_SPEED_STEP = 0.0035;
+let ballSpeed = INITIAL_BALL_SPEED;
 let ballWidth = 10;
 let ballHeight = 10;
 
@@ -28,7 +30,7 @@ let ballHeight = 10;
 // Player 1 object (left paddle)
 let player1 = {
 	x: 10,
-	y: 0, // se actualizará en init
+	y: 0, // se actualizara¡ en init
 	width: playerWidth,
 	height: playerHeight,
 	velocityY: 0,
@@ -65,6 +67,9 @@ let hasSavedSession = false;
 let elapsedTimeMs = 0;
 let lastTimerTick = null;
 let lastRenderedSeconds = -1;
+const PLAYER2_GOALS_TO_END = 3;
+let finalMessage = "";
+let autoFinishedByGoals = false;
 
 // ===============================
 // INITIALIZATION
@@ -77,8 +82,9 @@ window.onload = function () {
 	// inicializar tamaño y posiciones
 	resizeCanvas();
 	bindControlButtons();
+	setEndButtonDisabled(false);
 	document.getElementById("player1-score").textContent =
-		`La teua puntuació: ${player1Score}`;
+		`La teua puntuacio: ${player1Score}`;
 	updateTimerDisplay(true);
 	drawFrame();
 
@@ -126,6 +132,10 @@ function startGame() {
 	if (gameState === "idle" || gameState === "finished") {
 		player1Score = 0;
 		player2Score = 0;
+		ballSpeed = INITIAL_BALL_SPEED;
+		finalMessage = "";
+		autoFinishedByGoals = false;
+		setEndButtonDisabled(false);
 		sessionStartTime = Date.now();
 		hasSavedSession = false;
 		elapsedTimeMs = 0;
@@ -135,7 +145,7 @@ function startGame() {
 		resetGame(Math.random() > 0.5 ? 1 : -1);
 	}
 	document.getElementById("player1-score").textContent =
-		`La teua puntuació: ${player1Score}`;
+		`La teua puntuacio: ${player1Score}`;
 
 	lastTimerTick = Date.now();
 	gameState = "running";
@@ -152,23 +162,30 @@ function pauseGame() {
 
 function endGame() {
 	if (gameState === "idle") return;
+	if (autoFinishedByGoals) return;
 	if (gameState === "running") {
 		advanceTimer();
 	}
 	saveSessionData();
-	gameState = "idle";
+	gameState = "finished";
 	player1.velocityY = 0;
 	player2.velocityY = 0;
-	player1Score = 0;
-	player2Score = 0;
 	lastTimerTick = null;
-	resetPlayersPosition();
-	resetGame(Math.random() > 0.5 ? 1 : -1);
-	document.getElementById("player1-score").textContent =
-		"La teua puntuació: 0";
-	elapsedTimeMs = 0;
-	lastRenderedSeconds = -1;
-	updateTimerDisplay(true);
+	finalMessage = `PARTIDA PARADA MANUALMENT // Punts: ${player1Score} // PREM INICIAR`;
+}
+
+// Final automatic quan el player 2 arriba al limit de gols
+function finishByPlayer2Goals() {
+	advanceTimer();
+	saveSessionData();
+	gameState = "finished";
+	autoFinishedByGoals = true;
+	setEndButtonDisabled(true);
+	player1.velocityY = 0;
+	player2.velocityY = 0;
+	lastTimerTick = null;
+	finalMessage =
+		`FINAL: Player 2 ha fet ${PLAYER2_GOALS_TO_END} gols // Punts: ${player1Score} // PREM INICIAR`;
 }
 
 function saveSessionData() {
@@ -214,6 +231,7 @@ function update() {
 
 	if (gameState === "running") {
 		advanceTimer();
+		increaseBallSpeed();
 		let nextPlayer1Y = player1.y + player1.velocityY;
 		if (!outOfBounds(nextPlayer1Y)) {
 			player1.y = nextPlayer1Y;
@@ -245,11 +263,15 @@ function update() {
 		// score
 		if (ball.x < 0) {
 			player2Score++;
+			if (player2Score >= PLAYER2_GOALS_TO_END) {
+				finishByPlayer2Goals();
+				return;
+			}
 			resetGame(1);
 		} else if (ball.x + ballWidth > board.width) {
 			player1Score++;
 			document.getElementById("player1-score").textContent =
-				`La teua puntuació: ${player1Score}`;
+				`La teua puntuacio: ${player1Score}`;
 			resetGame(-1);
 		}
 	}
@@ -278,6 +300,12 @@ function updateTimerDisplay(force = false) {
 	timerElement.textContent = `Temps de partida: ${minutes}:${seconds}`;
 }
 
+function setEndButtonDisabled(isDisabled) {
+	const endButton = document.getElementById("end-game");
+	if (!endButton) return;
+	endButton.disabled = isDisabled;
+}
+
 function drawFrame() {
 	context.fillStyle = "skyblue";
 	context.fillRect(player1.x, player1.y, playerWidth, playerHeight);
@@ -299,7 +327,7 @@ function drawFrame() {
 	} else if (gameState === "paused") {
 		drawCenterMessage("PAUSA");
 	} else if (gameState === "finished") {
-		drawCenterMessage("PARTIDA FINALIZADA");
+		drawCenterMessage(finalMessage);
 	}
 }
 
@@ -335,6 +363,15 @@ function resetPlayersPosition() {
 	player1.y = board.height / 2 - playerHeight / 2;
 	player2.x = board.width - playerWidth - 10;
 	player2.y = board.height / 2 - playerHeight / 2;
+}
+
+// Increment progressiu de velocitat mentres avanca la partida
+function increaseBallSpeed() {
+	ballSpeed += BALL_SPEED_STEP;
+	const dirX = ball.velocityX >= 0 ? 1 : -1;
+	const dirY = ball.velocityY >= 0 ? 1 : -1;
+	ball.velocityX = ballSpeed * dirX;
+	ball.velocityY = ballSpeed * dirY;
 }
 
 function resetGame(direction) {
