@@ -1,14 +1,17 @@
 [
 	{
 		"nom": "Pong",
-		"descripcio": "Juego de Pong"
+		"descripcio": "Juego de Pong",
+		"imatge": "pong.jpg"
 	},
 	{
 		"nom": "Trexpres",
-		"descripcio": "Juego de Trexpres"
+		"descripcio": "Juego de Trexpres",
+		"imatge": "trexpres.jpg"
 	},
 	{
 		"nom": "Memory",
-		"descripcio": "Juego de Memory"
+		"descripcio": "Juego de Memory",
+		"imatge": "joc-memoria.jpg"
 	}
 ]

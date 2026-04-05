@@ -38,8 +38,8 @@
             <div class="group flex items-center justify-between font-bold text-sm">
                 <div class="flex items-center gap-3">
                     <span class="text-arcade-lime w-6">{{ loop.index }}.</span>
-                    <span
-                        class="uppercase text-arcade-white group-hover:text-arcade-lime transition-colors">{{ session.username }}</span>
+                    <span class="uppercase text-arcade-white group-hover:text-arcade-lime transition-colors">{{
+                        session.username }}</span>
                 </div>
                 <span class="text-arcade-lime">{{ session.score }}</span>
             </div>
@@ -78,7 +78,7 @@
 
                 <div class="w-full aspect-[4/3] border-b-2 border-arcade-gray overflow-hidden relative">
                     <div class="absolute inset-0 bg-cover bg-center game-img scale-105 group-hover:scale-100 duration-500"
-                        style="background-image: url('https://images.unsplash.com/photo-1518546305927-5a555bb7020d?q=80&w=800&auto=format&fit=crop');">
+                        style="background-image: url('{{ url_for('static', filename='img/' ~ joc.imatge) }}');">
                     </div>
                     <div
                         class="absolute inset-0 bg-arcade-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
