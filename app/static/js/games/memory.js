@@ -205,7 +205,6 @@ function flipCard() {
 	checkForMatch();
 }
 
-// Esta es la funcio anterior que comprovem
 function checkForMatch() {
 	//Aqui creem una variable que guarda un true o false. Si les dos cartes son iguals sera true
 	// si no sera false
@@ -215,7 +214,6 @@ function checkForMatch() {
 	else unflipCards();
 }
 
-//Esta funcio nomes se fara si les dos cartes son iguals
 function disableCards() {
 	firstCard.removeEventListener("click", flipCard);
 	secondCard.removeEventListener("click", flipCard);
@@ -227,7 +225,6 @@ function disableCards() {
 	if (parsMatched >= totalPars) alFinalitzar();
 }
 
-//Esta funcio nomes se executa si son diferents
 function unflipCards() {
 	bloquejarBoard = true;
 	//Dixem 1 segon pa que puguesem vore les cartes i despues li peguem la volta
@@ -244,7 +241,6 @@ function unflipCards() {
 	}, 1000);
 }
 
-//I esta funcio fa un reset del tablero tan com si es guanya o perd
 function resetBoard() {
 	hasFlippedCard = false;
 	bloquejarBoard = false;

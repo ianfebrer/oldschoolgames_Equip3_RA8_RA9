@@ -3,14 +3,16 @@ from app.models.base import Base
 class Game(Base):
 	FILE_NAME = 'games.json'
 
-	def __init__(self, nom, descripcio):
+	def __init__(self, nom, descripcio, imatge=None):
 		self.nom = nom
 		self.descripcio = descripcio
+		self.imatge = imatge
 
 	def to_dict(self):
 		return {
 			'nom': self.nom,
-			'descripcio': self.descripcio
+			'descripcio': self.descripcio,
+			'imatge': self.imatge
 		}
 
 	@classmethod
@@ -20,10 +22,12 @@ class Game(Base):
 		for game in raw_games:
 			nom = game.get('nom').lower()
 			descripcio = game.get('descripcio')
+			imatge = game.get('imatge')
 			result.append(
 				{
 					'nom': nom,
-					'descripcio': descripcio
+					'descripcio': descripcio,
+					'imatge': imatge
 				}
 			)
 		return result
