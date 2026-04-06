@@ -30,7 +30,7 @@ let ballHeight = 10;
 // Player 1 object (left paddle)
 let player1 = {
 	x: 10,
-	y: 0, // se actualizara¡ en init
+	y: 0,
 	width: playerWidth,
 	height: playerHeight,
 	velocityY: 0,
@@ -38,8 +38,8 @@ let player1 = {
 
 // Player 2 object (right paddle)
 let player2 = {
-	x: 0, // se actualizará en init
-	y: 0, // se actualizará en init
+	x: 0,
+	y: 0,
 	width: playerWidth,
 	height: playerHeight,
 	velocityY: 0,
@@ -47,8 +47,8 @@ let player2 = {
 
 // Ball object with position and velocity
 let ball = {
-	x: 0, // se actualizará en init
-	y: 0, // se actualizará en init
+	x: 0,
+	y: 0,
 	width: ballWidth,
 	height: ballHeight,
 	velocityX: ballSpeed,
@@ -61,15 +61,13 @@ let ball = {
 
 let player1Score = 0;
 let player2Score = 0;
-let gameState = "idle"; // idle | running | paused | finished
+let gameState = "idle";
 let sessionStartTime = null;
 let hasSavedSession = false;
 let elapsedTimeMs = 0;
 let lastTimerTick = null;
 let lastRenderedSeconds = -1;
 const PLAYER2_GOALS_TO_END = 3;
-let finalMessage = "";
-let autoFinishedByGoals = false;
 
 // ===============================
 // INITIALIZATION
@@ -79,7 +77,7 @@ window.onload = function () {
 	board = document.getElementById("board");
 	context = board.getContext("2d");
 
-	// inicializar tamaño y posiciones
+	// Inicializa tamano y posiciones
 	resizeCanvas();
 	bindControlButtons();
 	setEndButtonDisabled(false);
@@ -90,12 +88,12 @@ window.onload = function () {
 
 	requestAnimationFrame(update);
 
-	// controles
+	// Controles
 	board.addEventListener("mousemove", movePlayerWithMouse);
 	document.addEventListener("keydown", keyDown);
 	document.addEventListener("keyup", keyUp);
 
-	// redimensionar al cambiar tamaño de ventana
+	// Recalcula posiciones al redimensionar la ventana
 	window.addEventListener("resize", resizeCanvas);
 };
 
@@ -103,18 +101,22 @@ window.onload = function () {
 // RESIZE CANVAS
 // ===============================
 
-// Ajusta el canvas al tamaño del contenedor y recalcula posiciones
+// Ajusta el canvas al tamano del contenedor y recalcula posiciones
 function resizeCanvas() {
 	const container = board.parentElement;
 	board.width = container.clientWidth;
 	board.height = container.clientHeight;
 
-	// posiciones iniciales responsive
+	// Posiciones iniciales responsive
 	resetPlayersPosition();
 
 	ball.x = board.width / 2 - ballWidth / 2;
 	ball.y = board.height / 2 - ballHeight / 2;
 }
+
+// ===============================
+// GAME FLOW
+// ===============================
 
 function bindControlButtons() {
 	const startButton = document.getElementById("start-game");
@@ -130,23 +132,10 @@ function startGame() {
 	if (gameState === "running") return;
 
 	if (gameState === "idle" || gameState === "finished") {
-		player1Score = 0;
-		player2Score = 0;
-		ballSpeed = INITIAL_BALL_SPEED;
-		finalMessage = "";
-		autoFinishedByGoals = false;
-		setEndButtonDisabled(false);
+		resetMatchVisualState();
 		sessionStartTime = Date.now();
 		hasSavedSession = false;
-		elapsedTimeMs = 0;
-		lastRenderedSeconds = -1;
-		updateTimerDisplay(true);
-		resetPlayersPosition();
-		resetGame(Math.random() > 0.5 ? 1 : -1);
 	}
-	document.getElementById("player1-score").textContent =
-		`La teua puntuacio: ${player1Score}`;
-
 	lastTimerTick = Date.now();
 	gameState = "running";
 }
@@ -167,40 +156,76 @@ function formatTempsPartida(ms) {
 	return `${minutes}:${seconds}`;
 }
 
+function showEndAlert(reasonText, saveData) {
+	let msg =
+		"Partida finalitzada.\n" +
+		"Motiu: " +
+		reasonText +
+		"\nResultat final: " +
+		player1Score +
+		" - " +
+		player2Score +
+		"\nPuntuacio: " +
+		player1Score +
+		"\nTemps: " +
+		formatTempsPartida(elapsedTimeMs);
+
+	if (saveData && !saveData.success && !saveData.skipped) {
+		msg += "\n\nNo s'ha pogut guardar la puntuacio al servidor.";
+	}
+
+	alert(msg);
+}
+
+function prepareReadyToStartState() {
+	gameState = "idle";
+	resetMatchVisualState();
+	sessionStartTime = null;
+	hasSavedSession = false;
+	lastTimerTick = null;
+	drawFrame();
+}
+
 function endGame() {
 	if (gameState === "idle") return;
-	if (autoFinishedByGoals) return;
+	if (gameState === "finished") return;
 	if (gameState === "running") {
 		advanceTimer();
 	}
-	const puntuacioFinal = player1Score;
-	const tempsText = formatTempsPartida(elapsedTimeMs);
-	saveSessionData();
 	gameState = "finished";
 	player1.velocityY = 0;
 	player2.velocityY = 0;
 	lastTimerTick = null;
-	finalMessage = `PARTIDA PARADA MANUALMENT // Punts: ${player1Score} // PREM INICIAR`;
+	saveSessionData().then((data) => {
+		showEndAlert("Partida parada manualment", data);
+		prepareReadyToStartState();
+	});
 }
 
-// Final automatic quan el player 2 arriba al limit de gols
+// Final automatico cuando Player 2 llega al limite de goles
 function finishByPlayer2Goals() {
 	advanceTimer();
-	saveSessionData();
 	gameState = "finished";
-	autoFinishedByGoals = true;
-	setEndButtonDisabled(true);
 	player1.velocityY = 0;
 	player2.velocityY = 0;
 	lastTimerTick = null;
-	finalMessage = `FINAL: Player 2 ha fet ${PLAYER2_GOALS_TO_END} gols // Punts: ${player1Score} // PREM INICIAR`;
+	saveSessionData().then((data) => {
+		showEndAlert(
+			`Player 2 ha arribat a ${PLAYER2_GOALS_TO_END} gols`,
+			data,
+		);
+		prepareReadyToStartState();
+	});
 }
 
 function saveSessionData() {
-	if (hasSavedSession || !sessionStartTime) return;
+	// Evita duplicar guardados de una misma partida
+	if (hasSavedSession || !sessionStartTime) {
+		return Promise.resolve({ success: true, skipped: true });
+	}
 
 	hasSavedSession = true;
-	fetch("/api/sessions", {
+	return fetch("/api/sessions", {
 		method: "POST",
 		body: JSON.stringify({
 			username: localStorage.getItem("username"),
@@ -221,11 +246,14 @@ function saveSessionData() {
 					"No se pudo guardar la sesion de Pong:",
 					data.message,
 				);
+				hasSavedSession = false;
 			}
+			return data;
 		})
 		.catch((error) => {
 			console.error("Error guardando sesion de Pong:", error);
 			hasSavedSession = false;
+			return { success: false };
 		});
 }
 
@@ -314,6 +342,27 @@ function setEndButtonDisabled(isDisabled) {
 	endButton.disabled = isDisabled;
 }
 
+function resetMatchVisualState() {
+	// Deja el tablero visual listo para empezar una partida nueva
+	player1.velocityY = 0;
+	player2.velocityY = 0;
+	player1Score = 0;
+	player2Score = 0;
+	ballSpeed = INITIAL_BALL_SPEED;
+	setEndButtonDisabled(false);
+	elapsedTimeMs = 0;
+	lastRenderedSeconds = -1;
+	updateTimerDisplay(true);
+	document.getElementById("player1-score").textContent =
+		`La teua puntuacio: ${player1Score}`;
+	resetPlayersPosition();
+	resetGame(Math.random() > 0.5 ? 1 : -1);
+}
+
+// ===============================
+// RENDERING
+// ===============================
+
 function drawFrame() {
 	context.fillStyle = "skyblue";
 	context.fillRect(player1.x, player1.y, playerWidth, playerHeight);
@@ -334,8 +383,6 @@ function drawFrame() {
 		drawCenterMessage("PRESIONA INICIAR");
 	} else if (gameState === "paused") {
 		drawCenterMessage("PAUSA");
-	} else if (gameState === "finished") {
-		drawCenterMessage(finalMessage);
 	}
 }
 
@@ -373,7 +420,7 @@ function resetPlayersPosition() {
 	player2.y = board.height / 2 - playerHeight / 2;
 }
 
-// Increment progressiu de velocitat mentres avanca la partida
+// Incremento progresivo de velocidad mientras avanza la partida
 function increaseBallSpeed() {
 	ballSpeed += BALL_SPEED_STEP;
 	const dirX = ball.velocityX >= 0 ? 1 : -1;
