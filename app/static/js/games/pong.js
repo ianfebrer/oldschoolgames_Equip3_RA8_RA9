@@ -160,12 +160,21 @@ function pauseGame() {
 	player2.velocityY = 0;
 }
 
+function formatTempsPartida(ms) {
+	const totalSeconds = Math.floor(ms / 1000);
+	const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
+	const seconds = String(totalSeconds % 60).padStart(2, "0");
+	return `${minutes}:${seconds}`;
+}
+
 function endGame() {
 	if (gameState === "idle") return;
 	if (autoFinishedByGoals) return;
 	if (gameState === "running") {
 		advanceTimer();
 	}
+	const puntuacioFinal = player1Score;
+	const tempsText = formatTempsPartida(elapsedTimeMs);
 	saveSessionData();
 	gameState = "finished";
 	player1.velocityY = 0;
@@ -184,8 +193,7 @@ function finishByPlayer2Goals() {
 	player1.velocityY = 0;
 	player2.velocityY = 0;
 	lastTimerTick = null;
-	finalMessage =
-		`FINAL: Player 2 ha fet ${PLAYER2_GOALS_TO_END} gols // Punts: ${player1Score} // PREM INICIAR`;
+	finalMessage = `FINAL: Player 2 ha fet ${PLAYER2_GOALS_TO_END} gols // Punts: ${player1Score} // PREM INICIAR`;
 }
 
 function saveSessionData() {

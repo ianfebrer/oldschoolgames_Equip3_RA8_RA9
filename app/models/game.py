@@ -35,5 +35,5 @@ class Game(Base):
 	def save(self):
 		games = self.get_all()
 		games.append(self.to_dict())
-		self.save(games)
+		self.save_items(games)
 		return True, 'Juego creado correctamente'

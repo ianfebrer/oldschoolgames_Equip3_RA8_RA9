@@ -7,14 +7,12 @@
     .marquee-content {
         animation: marquee 30s linear infinite;
     }
-    
+
     #board {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        grid-template-rows: repeat(4, 1fr);
-        gap: 10px;
         width: 100%;
         height: 100%;
+        gap: 10px;
         padding: 20px;
         box-sizing: border-box;
     }
@@ -31,7 +29,7 @@
         user-select: none;
         transition: all 0.2s ease;
     }
-    
+
     .card:hover {
         border-color: #00ffcc;
         box-shadow: 0 0 10px #00ffcc;
@@ -127,7 +125,8 @@
 
                 <!-- Controls -->
                 <div class="p-6 border-t-2 border-arcade-gray bg-arcade-black flex flex-col gap-4">
-                    <p class="mb-2" id="player1-score">La teua puntuació:</p>
+                    <p class="mb-2" id="player1-score">La teua puntuació: 0</p>
+                    <p class="mb-2" id="game-timer">Temps de partida: 00:00</p>
                     <button id="start-game"
                         class="w-full py-3 bg-arcade-lime text-arcade-black font-bold uppercase tracking-widest text-sm border-2 border-arcade-lime hover:bg-arcade-black hover:text-arcade-lime transition-colors">
                         [ INICIAR ]
