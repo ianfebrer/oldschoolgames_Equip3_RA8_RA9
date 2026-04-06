@@ -1,2 +1,47 @@
-.venv
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Python cache / bytecode
 __pycache__/
+*.py[cod]
+*$py.class
+
+# Python tooling cache
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+
+# Build / packaging artifacts
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+# Coverage
+.coverage
+.coverage.*
+htmlcov/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# IDE / editors
+.vscode/
+.idea/
+*.suo
+*.user
+*.userossc
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Project local metadata
+.cursor/
