@@ -55,4 +55,4 @@ Aplicar arquitectura client-servidor amb Flask, frontend amb HTML/CSS/JS i progr
 - `POST /api/sessions`
 
 ## Manual d’usuari
-- [manual d'usuari.pdf](manual%20d%27usuari.pdf)
+- [Manual d’usuari (PDF)](manual%20d%27usuari.pdf)
