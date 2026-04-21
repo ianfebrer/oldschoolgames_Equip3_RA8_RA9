@@ -44,3 +44,5 @@ Thumbs.db
 
 # Project local metadata
 .cursor/
+
+docker-compose.yml
