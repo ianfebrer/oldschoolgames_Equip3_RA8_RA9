@@ -1,3 +1,4 @@
+from app.database import get_connection
 from app.models.base import Base
 
 class Game(Base):
@@ -17,23 +18,31 @@ class Game(Base):
 
 	@classmethod
 	def get_all_main(cls):
-		raw_games = cls.get_all()
-		result = []
-		for game in raw_games:
-			nom = game.get('nom').lower()
-			descripcio = game.get('descripcio')
-			imatge = game.get('imatge')
-			result.append(
-				{
-					'nom': nom,
-					'descripcio': descripcio,
-					'imatge': imatge
-				}
-			)
-		return result
+		with get_connection() as conn:
+			with conn.cursor(dictionary=True) as cursor:
+				cursor.execute(
+					'SELECT slug, description, image FROM games ORDER BY id'
+				)
+				raw_games = cursor.fetchall()
+
+		return [
+			{
+				'nom': game['slug'],
+				'descripcio': game['description'],
+				'imatge': game['image']
+			}
+			for game in raw_games
+		]
 
 	def save(self):
-		games = self.get_all()
-		games.append(self.to_dict())
-		self.save_items(games)
+		with get_connection() as conn:
+			with conn.cursor() as cursor:
+				cursor.execute(
+					'''
+					INSERT INTO games (slug, name, description, image)
+					VALUES (%s, %s, %s, %s)
+					''',
+					(self.nom.lower(), self.nom, self.descripcio, self.imatge)
+				)
+				conn.commit()
 		return True, 'Juego creado correctamente'
