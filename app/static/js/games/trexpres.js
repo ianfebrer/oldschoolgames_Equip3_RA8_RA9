@@ -1,5 +1,45 @@
 // version muy simple estilo principiante
 
+// ===============================
+// AUDIO & MONGODB INTEGRATION
+// ===============================
+var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+function playSound(type) {
+	if (audioCtx.state === 'suspended') audioCtx.resume();
+	var osc = audioCtx.createOscillator();
+	var gainNode = audioCtx.createGain();
+	osc.connect(gainNode);
+	gainNode.connect(audioCtx.destination);
+	if (type === 'success') {
+		osc.type = 'sine';
+		osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+		gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+		gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+	} else if (type === 'error') {
+		osc.type = 'sawtooth';
+		osc.frequency.setValueAtTime(200, audioCtx.currentTime);
+		gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+		gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+	} else if (type === 'click') {
+		osc.type = 'square';
+		osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+		gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime);
+		gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+	}
+	osc.start();
+	osc.stop(audioCtx.currentTime + 0.3);
+}
+
+var mongoSessionId = null;
+
+function logEvent(eventType, eventData) {
+	fetch('/api/events', {
+		method: 'POST',
+		headers: {'Content-Type': 'application/json'},
+		body: JSON.stringify({ game_id: 'trexpres', event_type: eventType, data: eventData })
+	}).catch(function(e) { console.error("Error logging event", e) });
+}
+
 var canvas;
 var ctx;
 
@@ -108,6 +148,16 @@ function startGame() {
 	updateTimerDisplay(true);
 	lastTimerTick = Date.now();
 	updateSidebarScore();
+
+	// Inicia sessió a MongoDB
+	fetch('/api/logs/start', {
+		method: 'POST',
+		headers: {'Content-Type': 'application/json'},
+		body: JSON.stringify({ game_id: 'trexpres' })
+	})
+	.then(function(r) { return r.json() })
+	.then(function(data) { if(data.success) mongoSessionId = data.session_id; })
+	.catch(function(e) { console.error(e) });
 
 	nextRound();
 }
@@ -273,10 +323,14 @@ function handleClick(x, y) {
 	var row = Math.floor((y - boardY) / cellSize);
 
 	if (row == correctRow && col == correctCol) {
+		playSound('success');
+		logEvent('click', { row: row, col: col, correct: true });
 		score++;
 		updateSidebarScore();
 		nextRound();
 	} else {
+		playSound('error');
+		logEvent('click', { row: row, col: col, correct: false });
 		endGame();
 	}
 }
@@ -318,6 +372,15 @@ function saveSession() {
 	}
 
 	sessionSaved = true;
+
+	// Tanca la sessió a MongoDB
+	if (mongoSessionId) {
+		fetch('/api/logs/end', {
+			method: 'POST',
+			headers: {'Content-Type': 'application/json'},
+			body: JSON.stringify({ game_id: 'trexpres', session_id: mongoSessionId, final_score: score })
+		}).catch(function(e) { console.error(e) });
+	}
 
 	fetch("/api/sessions", {
 		method: "POST",

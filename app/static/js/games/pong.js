@@ -56,6 +56,43 @@ let ball = {
 };
 
 // ===============================
+// AUDIO & MONGODB INTEGRATION
+// ===============================
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+function playSound(type) {
+	if (audioCtx.state === 'suspended') audioCtx.resume();
+	const osc = audioCtx.createOscillator();
+	const gainNode = audioCtx.createGain();
+	osc.connect(gainNode);
+	gainNode.connect(audioCtx.destination);
+	if (type === 'bounce') {
+		osc.type = 'square';
+		osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+		gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+		gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+		osc.start();
+		osc.stop(audioCtx.currentTime + 0.1);
+	} else if (type === 'score') {
+		osc.type = 'sine';
+		osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+		gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+		gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+		osc.start();
+		osc.stop(audioCtx.currentTime + 0.3);
+	}
+}
+
+let mongoSessionId = null;
+
+function logEvent(eventType, eventData) {
+	fetch('/api/events', {
+		method: 'POST',
+		headers: {'Content-Type': 'application/json'},
+		body: JSON.stringify({ game_id: 'pong', event_type: eventType, data: eventData })
+	}).catch(e => console.error("Error logging event", e));
+}
+
+// ===============================
 // SCORE VARIABLES
 // ===============================
 
@@ -135,6 +172,16 @@ function startGame() {
 		resetMatchVisualState();
 		sessionStartTime = Date.now();
 		hasSavedSession = false;
+		
+		// Inicia sessió a MongoDB
+		fetch('/api/logs/start', {
+			method: 'POST',
+			headers: {'Content-Type': 'application/json'},
+			body: JSON.stringify({ game_id: 'pong' })
+		})
+		.then(r => r.json())
+		.then(data => { if(data.success) mongoSessionId = data.session_id; })
+		.catch(e => console.error(e));
 	}
 	lastTimerTick = Date.now();
 	gameState = "running";
@@ -225,6 +272,16 @@ function saveSessionData() {
 	}
 
 	hasSavedSession = true;
+
+	// Tanca la sessió a MongoDB
+	if (mongoSessionId) {
+		fetch('/api/logs/end', {
+			method: 'POST',
+			headers: {'Content-Type': 'application/json'},
+			body: JSON.stringify({ game_id: 'pong', session_id: mongoSessionId, final_score: player1Score })
+		}).catch(e => console.error(e));
+	}
+
 	return fetch("/api/sessions", {
 		method: "POST",
 		body: JSON.stringify({
@@ -289,23 +346,31 @@ function update() {
 		if (detectCollision(ball, player1)) {
 			if (ball.x <= player1.x + player1.width) {
 				ball.velocityX *= -1;
+				playSound('bounce');
+				logEvent('collision', { target: 'player1', ball_x: ball.x, ball_y: ball.y });
 			}
 		} else if (detectCollision(ball, player2)) {
 			if (ball.x + ballWidth >= player2.x) {
 				ball.velocityX *= -1;
+				playSound('bounce');
+				logEvent('collision', { target: 'player2', ball_x: ball.x, ball_y: ball.y });
 			}
 		}
 
 		// score
 		if (ball.x < 0) {
+			playSound('score');
 			player2Score++;
+			logEvent('score', { player: 'player2', new_score: player2Score });
 			if (player2Score >= PLAYER2_GOALS_TO_END) {
 				finishByPlayer2Goals();
 				return;
 			}
 			resetGame(1);
 		} else if (ball.x + ballWidth > board.width) {
+			playSound('score');
 			player1Score++;
+			logEvent('score', { player: 'player1', new_score: player1Score });
 			document.getElementById("player1-score").textContent =
 				`La teua puntuacio: ${player1Score}`;
 			resetGame(-1);

@@ -83,5 +83,21 @@
         "end_time": 1777963280002.0,
         "score": 1,
         "duration_ms": 6382.0
+    },
+    {
+        "game_id": "pong",
+        "username": "hola123",
+        "start_time": 1777966647540.0,
+        "end_time": 1777966661105.0,
+        "score": 4,
+        "duration_ms": 13564.0
+    },
+    {
+        "game_id": "trexpres",
+        "username": "hola123",
+        "start_time": 1777967216308.0,
+        "end_time": 1777967228073.0,
+        "score": 6,
+        "duration_ms": 10482.0
     }
 ]

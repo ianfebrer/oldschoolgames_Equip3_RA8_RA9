@@ -1,5 +1,44 @@
 const gameboard = document.getElementById("board");
 
+// ===============================
+// AUDIO & MONGODB INTEGRATION
+// ===============================
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+function playSound(type) {
+	if (audioCtx.state === 'suspended') audioCtx.resume();
+	const osc = audioCtx.createOscillator();
+	const gainNode = audioCtx.createGain();
+	osc.connect(gainNode);
+	gainNode.connect(audioCtx.destination);
+	if (type === 'flip') {
+		osc.type = 'triangle';
+		osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+		osc.frequency.exponentialRampToValueAtTime(500, audioCtx.currentTime + 0.1);
+		gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+		gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+		osc.start();
+		osc.stop(audioCtx.currentTime + 0.1);
+	} else if (type === 'match') {
+		osc.type = 'sine';
+		osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+		osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.3);
+		gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+		gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+		osc.start();
+		osc.stop(audioCtx.currentTime + 0.3);
+	}
+}
+
+let mongoSessionId = null;
+
+function logEvent(eventType, eventData) {
+	fetch('/api/events', {
+		method: 'POST',
+		headers: {'Content-Type': 'application/json'},
+		body: JSON.stringify({ game_id: 'memory', event_type: eventType, data: eventData })
+	}).catch(e => console.error("Error logging event", e));
+}
+
 const EMOJIS = [
 	"🍎",
 	"🍌",
@@ -193,6 +232,9 @@ function flipCard() {
 	//Guardem a la variable les icones
 	this.textContent = this.dataset.value;
 
+	playSound('flip');
+	logEvent('flip_card', { card_value: this.dataset.value });
+
 	//Aqui comprovarem si la primera carta s'ha pegat la volta i quina
 	if (!hasFlippedCard) {
 		hasFlippedCard = true;
@@ -220,6 +262,8 @@ function disableCards() {
 	firstCard.dataset.matched = true;
 	secondCard.dataset.matched = true;
 	parsMatched += 1;
+	playSound('match');
+	logEvent('match', { card_value: firstCard.dataset.value });
 	resetBoard();
 
 	if (parsMatched >= totalPars) alFinalitzar();
@@ -260,6 +304,17 @@ function iniciarJoc() {
 	score = 0;
 	lastTimerTick = Date.now();
 	teSessioGuardada = false;
+
+	// Inicia sessió a MongoDB
+	fetch('/api/logs/start', {
+		method: 'POST',
+		headers: {'Content-Type': 'application/json'},
+		body: JSON.stringify({ game_id: 'memory' })
+	})
+	.then(r => r.json())
+	.then(data => { if(data.success) mongoSessionId = data.session_id; })
+	.catch(e => console.error(e));
+
 	començarNivell(0);
 }
 
@@ -320,6 +375,16 @@ function guardarSessio() {
 	}
 
 	teSessioGuardada = true;
+
+	// Tanca la sessió a MongoDB
+	if (mongoSessionId) {
+		fetch('/api/logs/end', {
+			method: 'POST',
+			headers: {'Content-Type': 'application/json'},
+			body: JSON.stringify({ game_id: 'memory', session_id: mongoSessionId, final_score: score })
+		}).catch(e => console.error(e));
+	}
+
 	return fetch("/api/sessions", {
 		method: "POST",
 		body: JSON.stringify({
