@@ -28,8 +28,6 @@ pip-wheel-metadata/
 htmlcov/
 
 # Environment / secrets
-.env
-.env.*
 !.env.example
 
 # IDE / editors

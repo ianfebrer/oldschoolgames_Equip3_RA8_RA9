@@ -1,0 +1,82 @@
+Aquest projecte és d'uns companys de classe i el professor ens ha demana que l'ampliem amb aquestes directrius:
+---
+Equip 3️⃣ - Old school games (objectiu lúdic)
+https://github.com/torturado/oldschoolgames?tab=readme-ov-file
+Adrià, Gabriel i Ian
+Millorar una aplicació web amb Python i Flask que permet implementar jocs retro d’estil clàssic (Pong, jocs d’habilitat, etc.), fent un ús de la programació orientada a objectes per modelar usuaris, jocs, sessions i puntuacions.
+Requisits obligatoris de disseny orientat a objectes
+L’aplicació haurà d’estar dissenyada utilitzant classes Python i no sols funcions o estructures senzilles per representar:
+Usuaris del sistema
+Jocs interactius
+Estats del joc (temps, intents, puntuació)
+Resultats obtinguts per cada usuari
+Tasques a realitzar:
+Millorar/canviar l’estètica del projecte
+MariaDB per a la gestió estructurada de:
+Usuaris
+Autenticació
+Jocs disponibles
+Puntuacions finals (fer un top 10)
+
+
+MongoDB per a:
+esdeveniments del joc (col·lisions, moviments…)  
+estats del joc en temps real  
+logs de partida 
+dades específiques de cada joc (molt variables)
+Sons i animacions  feedback visual
+Guardat de partides
+💫 Possibles ampliacions:
+API REST de puntuacions  /ranking /pong  /score 
+WebSocket (nivell alt)  temps real en Pong 
+---
+I el meu grup ho ha distribuït d'aquesta manera (jo sóc el membre 2):
+---
+Tenint en compte els requisits de l'enunciat i del document adjunt, he preparat una proposta de repartiment de tasques per a l'Equip 3 (Adrià, Gabriel i Ian). L'objectiu és que tots tres toqueu tant el frontend (disseny/vistes), el backend (Python/Flask/POO) com les bases de dades (MariaDB i MongoDB), i que us repartiu equitativament la documentació, el vídeo i la presentació.
+Aquí teniu una distribució estructurada per assolir amb èxit l'entrega abans del 21/05/2026 i la presentació del 22/05/2026:
+
+👤 Membre 1: Adrià - Sistema d'Usuaris, Autenticació i Fonaments SQL
+Focalitzat en la gestió dels usuaris i les dades relacionals crítiques.
+Backend (POO i Flask):
+Creació de les classes Python per representar els Usuaris del sistema.
+Lògica de registre, login i sessions (Autenticació).
+Bases de Dades (MariaDB):
+Disseny i creació de les taules per a Usuaris i Autenticació.
+Taula per al catàleg de Jocs disponibles.
+Frontend (UI/UX):
+Millorar l'estètica de les pantalles de login, registre i la pàgina d'inici (catàleg de jocs).
+Presentació i Documentació:
+Punts 1 i 2 del guió: Preparar la introducció de l'equip i explicar "El diagnòstic" (per què usar fitxers és un perill vs les bases de dades).
+👤 Membre 2: Gabriel - Lògica Core, MongoDB i Multimèdia
+Focalitzat en el motor dels jocs, dades dinàmiques i l'elaboració del vídeo-resum.
+Backend (POO i Flask):
+Creació de les classes Python per als Jocs interactius i els Estats del joc (temps, intents, etc.).
+Lògica de generació i control d'aquests estats mentre es juga.
+Bases de Dades (MongoDB):
+Estructurar les col·leccions per guardar esdeveniments del joc (col·lisions, moviments) i estats del joc en temps real.
+Registrar els logs de partida.
+Frontend (UI/UX):
+Implementar els Sons i animacions per al feedback visual dins dels jocs retro.
+Presentació i Documentació:
+Creació del Vídeo-resum: Enregistrament de la demo, muntatge a 720p horitzontal, música suau, subtítols i durada d'1 a 2 minuts.
+Punt 4 del guió: Explicar el "core" a la presentació (justificar per què s'ha usat Mongo per a dades de partides i MariaDB per a dades estructurades).
+👤 Membre 3: Ian - Puntuacions, Guardat de Partides i Ampliacions
+Focalitzat en els resultats, la integració final i les funcionalitats avançades.
+Backend (POO i Flask):
+Creació de les classes Python per als Resultats obtinguts per cada usuari.
+Lògica per al Guardat de partides.
+Opcional (Ampliació): Implementar l'API REST de puntuacions o els WebSockets per temps real al Pong.
+Bases de Dades (MariaDB i MongoDB):
+MariaDB: Gestionar les Puntuacions finals (fer un top 10).
+MongoDB: Emmagatzemar les dades específiques de cada joc (dinàmiques i molt variables).
+Frontend (UI/UX):
+Millorar l'estètica general del rànquing/Top 10 i la pantalla de final de partida.
+Presentació i Documentació:
+Punts 3, 5 i 6 del guió: Encarregar-se d'explicar la nova UI/UX, conduir la Demo en viu (inserint dades i mostrant-les a la DB) i fer la cloenda (proposta de deployment i conclusions).
+
+📝 Consells per treballar de forma conjunta:
+Repositori: Atès que el lliurament és via GitHub o .zip, feu servir GitHub de manera activa. Creeu branques (branches) per a cada funcionalitat (ex: auth-adria, mongo-gabriel, ranking-ian) per no xafar-vos el codi.
+Classes (POO): Posar-vos d'acord el primer dia sobre com estructurareu els arxius de les classes Python perquè la importació d'usuaris a les partides i a les puntuacions quadri bé. Cal que l'aplicació usi classes de debò i no només funcions.
+---
+
+Primer verifica que les tasques tal cual com les han distribuït els meus companys de grup coincideixen amb els requisits de la modificació del professor i després fes un pla d'implementació de les tasques que em toquen a mi (membre 2).

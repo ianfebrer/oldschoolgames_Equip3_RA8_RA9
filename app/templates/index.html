@@ -17,8 +17,8 @@
             <!-- 3 botones para filtrar leaderboard por juego -->
             <div class="flex gap-2">
                 {% for joc in jocs %}
-                <button onclick="window.location.href='?game={{ joc.nom }}'"
-                    class="px-4 py-2 {% if selected_game == joc.nom %}bg-arcade-lime text-arcade-black{% else %}bg-arcade-gray text-arcade-white{% endif %} font-bold uppercase tracking-wider text-sm hover:bg-arcade-white hover:text-arcade-black transition-colors text-center">
+                <button onclick="window.location.href='?game={{ joc.nom|lower }}'"
+                    class="px-4 py-2 {% if selected_game == joc.nom|lower %}bg-arcade-lime text-arcade-black{% else %}bg-arcade-gray text-arcade-white{% endif %} font-bold uppercase tracking-wider text-sm hover:bg-arcade-white hover:text-arcade-black transition-colors text-center">
                     {{ joc.nom }}
                 </button>
                 {% endfor %}
@@ -82,7 +82,7 @@
                     </div>
                     <div
                         class="absolute inset-0 bg-arcade-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
-                        <a href="/games/{{ joc.nom }}">
+                        <a href="/games/{{ joc.nom|lower }}">
                             <span class="bg-arcade-red text-arcade-white px-6 py-3 font-bold uppercase tracking-widest
                                 border-2 border-arcade-red shadow-brutal-white transform skew-x-12 group-hover:skew-x-0
                                 transition-transform cursor-pointer">

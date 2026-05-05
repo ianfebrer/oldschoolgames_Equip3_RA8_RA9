@@ -51,5 +51,37 @@
         "end_time": 1776757862312.0,
         "score": 2,
         "duration_ms": 58272.0
+    },
+    {
+        "game_id": "memory",
+        "username": "holahola",
+        "start_time": 1777360276159.0,
+        "end_time": 1777360276710.0,
+        "score": 1,
+        "duration_ms": 9494.0
+    },
+    {
+        "game_id": "trexpres",
+        "username": "holahola",
+        "start_time": 1777361180010.0,
+        "end_time": 1777361190550.0,
+        "score": 4,
+        "duration_ms": 8953.0
+    },
+    {
+        "game_id": "pong",
+        "username": "holahola",
+        "start_time": 1777361195917.0,
+        "end_time": 1777361226939.0,
+        "score": 7,
+        "duration_ms": 31022.0
+    },
+    {
+        "game_id": "memory",
+        "username": "hola123",
+        "start_time": 1777963280002.0,
+        "end_time": 1777963280002.0,
+        "score": 1,
+        "duration_ms": 6382.0
     }
 ]
