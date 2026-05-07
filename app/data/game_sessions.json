@@ -99,5 +99,13 @@
         "end_time": 1777967228073.0,
         "score": 6,
         "duration_ms": 10482.0
+    },
+    {
+        "game_id": "pong",
+        "username": "juanjo",
+        "start_time": 1778155697996.0,
+        "end_time": 1778155706176.0,
+        "score": 2,
+        "duration_ms": 8180.0
     }
 ]

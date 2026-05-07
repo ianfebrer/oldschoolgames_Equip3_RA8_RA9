@@ -221,7 +221,9 @@ function showEndAlert(reasonText, saveData) {
 		msg += "\n\nNo s'ha pogut guardar la puntuacio al servidor.";
 	}
 
-	alert(msg);
+	showRetroAlert(msg, function() {
+		prepareReadyToStartState();
+	});
 }
 
 function prepareReadyToStartState() {
@@ -245,7 +247,6 @@ function endGame() {
 	lastTimerTick = null;
 	saveSessionData().then((data) => {
 		showEndAlert("Partida parada manualment", data);
-		prepareReadyToStartState();
 	});
 }
 
@@ -261,7 +262,6 @@ function finishByPlayer2Goals() {
 			`Player 2 ha arribat a ${PLAYER2_GOALS_TO_END} gols`,
 			data,
 		);
-		prepareReadyToStartState();
 	});
 }
 

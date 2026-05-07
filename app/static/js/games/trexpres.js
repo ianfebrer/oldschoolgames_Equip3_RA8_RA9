@@ -71,6 +71,7 @@ var correctRow = 0;
 var correctCol = 0;
 
 var puzzles = [
+	// 1: X diagonal principal (0,0)-(1,1)-(2,2)
 	{
 		board: [
 			["X", "O", null],
@@ -81,15 +82,126 @@ var puzzles = [
 		winRow: 2,
 		winCol: 2,
 	},
+	// 2: X columna 0
 	{
 		board: [
 			["X", "O", null],
-			["X", null, null],
-			[null, "O", null],
+			["X", null, "O"],
+			[null, null, null],
 		],
 		piece: "X",
 		winRow: 2,
 		winCol: 0,
+	},
+	// 3: O columna 0
+	{
+		board: [
+			["O", "X", "O"],
+			["O", "X", null],
+			[null, null, null],
+		],
+		piece: "O",
+		winRow: 2,
+		winCol: 0,
+	},
+	// 4: X fila 2
+	{
+		board: [
+			["O", "O", "X"],
+			[null, "O", null],
+			["X", "X", null],
+		],
+		piece: "X",
+		winRow: 2,
+		winCol: 2,
+	},
+	// 5: X fila 0
+	{
+		board: [
+			["X", null, "X"],
+			["O", "O", null],
+			[null, "X", "O"],
+		],
+		piece: "X",
+		winRow: 0,
+		winCol: 1,
+	},
+	// 6: O anti-diagonal (0,2)-(1,1)-(2,0)
+	{
+		board: [
+			["X", "X", "O"],
+			[null, "O", null],
+			[null, null, "X"],
+		],
+		piece: "O",
+		winRow: 2,
+		winCol: 0,
+	},
+	// 7: X columna 1
+	{
+		board: [
+			["O", "X", null],
+			["O", "X", null],
+			[null, null, "O"],
+		],
+		piece: "X",
+		winRow: 2,
+		winCol: 1,
+	},
+	// 8: O fila 1
+	{
+		board: [
+			["X", "X", "O"],
+			["O", "O", null],
+			[null, "X", null],
+		],
+		piece: "O",
+		winRow: 1,
+		winCol: 2,
+	},
+	// 9: O fila 0
+	{
+		board: [
+			["O", null, "O"],
+			["X", "X", null],
+			[null, "O", "X"],
+		],
+		piece: "O",
+		winRow: 0,
+		winCol: 1,
+	},
+	// 10: X diagonal principal (0,0)-(1,1)-(2,2)
+	{
+		board: [
+			[null, "O", null],
+			["X", "X", "O"],
+			["O", null, "X"],
+		],
+		piece: "X",
+		winRow: 0,
+		winCol: 0,
+	},
+	// 11: O columna 2
+	{
+		board: [
+			["X", "X", "O"],
+			[null, "X", "O"],
+			["O", null, null],
+		],
+		piece: "O",
+		winRow: 2,
+		winCol: 2,
+	},
+	// 12: O fila 0
+	{
+		board: [
+			["O", "O", null],
+			[null, "X", "X"],
+			["X", null, "O"],
+		],
+		piece: "O",
+		winRow: 0,
+		winCol: 2,
 	},
 ];
 
@@ -187,14 +299,19 @@ function nextRound() {
 		clearTimeout(memorizeTimer);
 	}
 
+	// Dificultat dinàmica: el temps de memorització disminueix cada ronda
+	// Comença en 1000ms i baixa 50ms per ronda, fins a un mínim de 300ms.
+	var currentMemorizeTime = Math.max(300, 1000 - (round * 50));
+
 	memorizeTimer = setTimeout(function () {
 		if (phase == "memorize") {
 			phase = "place";
 			previousPhase = "place";
 			draw();
 		}
-	}, 900);
+	}, currentMemorizeTime);
 }
+
 
 function draw() {
 	if (!canvas || !ctx) {
@@ -345,13 +462,15 @@ function endGame() {
 		advanceTimer();
 	}
 
-	alert(
+	showRetroAlert(
 		"Partida finalitzada.\nPuntuació: " +
 			score +
 			"\nTemps: " +
 			formatTempsPartida(elapsedTimeMs),
+		function() {
+			saveSession();
+		}
 	);
-	saveSession();
 
 	phase = "idle";
 	score = 0;

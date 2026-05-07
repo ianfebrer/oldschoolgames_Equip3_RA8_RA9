@@ -353,7 +353,7 @@ function finalitzarJoc() {
 		if (data && !data.success && !data.skipped) {
 			msg += "\n\nNo s'ha pogut guardar la puntuació al servidor.";
 		}
-		alert(msg);
+		showRetroAlert(msg);
 	});
 
 	limpiarBoard();

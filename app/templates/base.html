@@ -4,10 +4,12 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% block title %}SYS.ARCADE // OLD SCHOOL GAMES{% endblock %}</title>
+    <title>{% block title %}OLD SCHOOL GAMES{% endblock %}</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/retro-alerts.css') }}">
+    <script src="{{ url_for('static', filename='js/retro-alerts.js') }}"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -200,15 +202,15 @@
                         class="font-display text-4xl sm:text-5xl uppercase tracking-widest text-arcade-white m-0 p-0 leading-[0.85]">
                         Old School <span class="text-arcade-lime">Games</span>
                     </h1>
-                    <span class="text-xs {{ header_status_class }} font-bold tracking-widest uppercase mt-1">{{ header_status }}</span>
+                    <span class="text-xs {{ header_status_class }} font-bold tracking-widest uppercase mt-1">{{
+                        header_status }}</span>
                 </div>
             </a>
 
             <div class="flex items-center gap-4 w-full sm:w-auto mt-2 sm:mt-0">
                 <a href="/"
                     class="flex-1 sm:flex-none px-6 py-2 border-2 border-arcade-gray text-arcade-gray font-bold uppercase tracking-wider text-sm hover:border-arcade-white hover:text-arcade-white transition-colors text-center">
-                    << RETURN_
-                </a>
+                    << RETURN_ </a>
             </div>
             {% else %}
             <a href="/" class="flex items-center gap-4 group cursor-pointer hover:opacity-80 transition-opacity">
@@ -262,9 +264,12 @@
     <footer
         class="relative z-10 w-full bg-arcade-lime text-arcade-black py-3 border-y-2 border-arcade-black overflow-hidden flex items-center font-bold text-sm tracking-widest mt-auto shadow-[0_-4px_20px_rgba(204,255,0,0.1)]">
         <div class="marquee-content uppercase flex">
-            <span>*** INSERT COIN TO CONTINUE *** OLD SCHOOL GAMES 2026 *** DEVELOPERS: ROY // MIGUEL // DEREK *** END OF LINE ***</span>
-            <span class="ml-8">*** INSERT COIN TO CONTINUE *** OLD SCHOOL GAMES 2026 *** DEVELOPERS: ROY // MIGUEL // DEREK *** END OF LINE ***</span>
-            <span class="ml-8">*** INSERT COIN TO CONTINUE *** OLD SCHOOL GAMES 2026 *** DEVELOPERS: ROY // MIGUEL // DEREK *** END OF LINE ***</span>
+            <span>*** INSERT COIN TO CONTINUE *** OLD SCHOOL GAMES 2026 *** DEVELOPERS: ROY // MIGUEL // DEREK *** END
+                OF LINE ***</span>
+            <span class="ml-8">*** INSERT COIN TO CONTINUE *** OLD SCHOOL GAMES 2026 *** DEVELOPERS: ROY // MIGUEL //
+                DEREK *** END OF LINE ***</span>
+            <span class="ml-8">*** INSERT COIN TO CONTINUE *** OLD SCHOOL GAMES 2026 *** DEVELOPERS: ROY // MIGUEL //
+                DEREK *** END OF LINE ***</span>
         </div>
     </footer>
     {% endblock %}
