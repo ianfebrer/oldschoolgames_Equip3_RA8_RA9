@@ -209,7 +209,7 @@ TRANSLATIONS = {
     'no_account': {
         'en': 'NO SYSTEM ACCESS?',
         'es': '¿SIN ACCESO AL SISTEMA?',
-        'ca': 'NO SYSTEM ACCESS?'
+        'ca': 'SENSE ACCÉS AL SISTEMA?'
     },
     'register_here_btn': {
         'en': 'REGISTER_',
@@ -229,7 +229,7 @@ TRANSLATIONS = {
     'have_account_prompt': {
         'en': 'ALREADY IN THE SYSTEM?',
         'es': '¿YA ESTÁS EN EL SISTEMA?',
-        'ca': 'ALREADY IN THE SYSTEM?'
+        'ca': 'JA ESTÀS AL SISTEMA?'
     },
     'login_here_btn': {
         'en': 'LOGIN_',
@@ -240,6 +240,21 @@ TRANSLATIONS = {
         'en': 'Level: ',
         'es': 'Nivel: ',
         'ca': 'Nivell: '
+    },
+    'online_status': {
+        'en': 'ONLINE',
+        'es': 'EN LÍNEA',
+        'ca': 'EN LÍNIA'
+    },
+    'auth_exe': {
+        'en': 'USER_PROFILE_AUTHENTICATION.EXE',
+        'es': 'AUTENTICACIÓN_PERFIL_USUARIO.EXE',
+        'ca': 'AUTENTICACIÓ_PERFIL_USUARI.EXE'
+    },
+    'setup_exe': {
+        'en': 'USER_PROFILE_SETUP.EXE',
+        'es': 'CONFIGURACIÓN_PERFIL_USUARIO.EXE',
+        'ca': 'CONFIGURACIÓ_PERFIL_USUARI.EXE'
     },
     # --- GAME DESCRIPTIONS ---
     'desc_pong': {
