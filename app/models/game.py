@@ -32,9 +32,10 @@ class Game(Base):
 
 			return [
 				{
-					'nom': game['slug'],
-					'descripcio': game['description'],
-					'imatge': game['image']
+					'nom': game.get('nom', game.get('slug')),
+					'descripcio': game.get('descripcio', game.get('description')),
+					'imatge': game.get('imatge', game.get('image')),
+					'tag': game.get('tag', 'REFLEX')
 				}
 				for game in raw_games
 			]

@@ -75,7 +75,7 @@
                 {% if not username %}
                 <div
                     class="bg-arcade-red text-arcade-white px-4 py-2 rounded-md text-sm font-bold uppercase tracking-widest">
-                    Has de loguear-te per poder jugar i participar al leaderboard</div>
+                    {{ t('login_req_game') }}</div>
                 {% else %}
                 <div
                     class="relative aspect-video bg-black flex items-center justify-center overflow-hidden border-b-2 border-arcade-gray">
@@ -97,7 +97,7 @@
 
                 <!-- Terminal Footer -->
                 <div
-                    class="px-4 py-2 bg-arcade-dark flex justify-between items-center text-[10px] uppercase font-bold text-arcade-gray">
+                    class="px-4 py-2 bg-arcade-dark flex justify-between items-center text-[10px] uppercase font-bold text-arcade-white">
                     <span>FPS: 60.0</span>
                     <span>MEM: 12MB / 64MB</span>
                 </div>
@@ -113,7 +113,7 @@
             <aside class="bg-arcade-dark border-2 border-arcade-gray shadow-brutal-cyan relative flex flex-col">
                 <div
                     class="absolute top-0 right-0 bg-arcade-cyan text-arcade-black px-3 py-1 text-xs font-bold z-10 border-b-2 border-l-2 border-arcade-gray">
-                    CONTROLS
+                    {{ t('controls') }}
                 </div>
 
                 <div class="p-6 border-b-2 border-arcade-gray">
@@ -123,28 +123,27 @@
                     </h3>
                 </div>
 
-                <!-- Controls -->
                 <div class="p-6 border-t-2 border-arcade-gray bg-arcade-black flex flex-col gap-4">
-                    <p class="mb-2" id="player1-score">La teua puntuació: 0</p>
-                    <p class="mb-2" id="game-timer">Temps de partida: 00:00</p>
+                    <p class="mb-2" id="player1-score">{{ t('your_score') }}</p>
+                    <p class="mb-2" id="game-timer">{{ t('session_time') }}</p>
                     <button id="start-game"
                         class="w-full py-3 bg-arcade-lime text-arcade-black font-bold uppercase tracking-widest text-sm border-2 border-arcade-lime hover:bg-arcade-black hover:text-arcade-lime transition-colors">
-                        [ INICIAR ]
+                        {{ t('start_btn') }}
                     </button>
                     <button id="pause-game"
                         class="w-full py-3 bg-transparent text-arcade-cyan font-bold uppercase tracking-widest text-sm border-2 border-arcade-cyan hover:bg-arcade-cyan hover:text-arcade-black transition-colors">
-                        [ PAUSAR ]
+                        {{ t('pause_btn') }}
                     </button>
                     <button id="end-game"
                         class="w-full py-3 bg-transparent text-arcade-red font-bold uppercase tracking-widest text-sm border-2 border-arcade-red hover:bg-arcade-red hover:text-arcade-black transition-colors">
-                        [ FINALIZAR ]
+                        {{ t('finish_btn') }}
                     </button>
                 </div>
             </aside>
             {% else %}
             <div
                 class="bg-arcade-red text-arcade-white px-4 py-2 rounded-md text-sm font-bold uppercase tracking-widest">
-                Has de loguear-te per poder jugar i participar al leaderboard</div>
+                {{ t('login_req_game') }}</div>
             {% endif %}
         </div>
     </div>

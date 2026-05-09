@@ -13,3 +13,10 @@ def index():
 	leaderboard = GameSession.get_leaderboard(selected_game)
 
 	return render_template('index.html', username=username, leaderboard=leaderboard, jocs=jocs, selected_game=selected_game)
+
+@main_bp.route('/lang/<lang>')
+def set_lang(lang):
+	from flask import redirect
+	if lang in ['es', 'ca', 'en']:
+		session['lang'] = lang
+	return redirect(request.referrer or '/')

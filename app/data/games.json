@@ -1,17 +1,20 @@
 [
 	{
 		"nom": "Pong",
-		"descripcio": "Juego de Pong",
-		"imatge": "pong.jpg"
+		"descripcio": "Classic arcade table tennis. Defeat your opponent in this legendary battle of reflexes.",
+		"imatge": "pong.gif",
+		"tag": "REFLEX"
 	},
 	{
 		"nom": "Trexpres",
-		"descripcio": "Juego de Trexpres",
-		"imatge": "trexpres.jpg"
+		"descripcio": "Analyze the board in a split second and place the winning piece to complete the line.",
+		"imatge": "trexpres.gif",
+		"tag": "SPEED"
 	},
 	{
 		"nom": "Memory",
-		"descripcio": "Juego de Memory",
-		"imatge": "joc-memoria.jpg"
+		"descripcio": "Test your visual memory. Find all matching pairs and clear the board in the fewest moves possible.",
+		"imatge": "joc-memoria.gif",
+		"tag": "BRAIN"
 	}
 ]

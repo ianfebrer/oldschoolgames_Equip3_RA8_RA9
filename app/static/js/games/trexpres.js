@@ -231,12 +231,12 @@ function updateTimerDisplay(force) {
 	lastRenderedSeconds = totalSeconds;
 	var minutes = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
 	var seconds = String(totalSeconds % 60).padStart(2, "0");
-	timerEl.textContent = "Temps de partida: " + minutes + ":" + seconds;
+	timerEl.textContent = window.I18N.session_time + minutes + ":" + seconds;
 }
 
 function updateSidebarScore() {
 	var el = document.getElementById("player1-score");
-	if (el) el.textContent = "La teua puntuació: " + score;
+	if (el) el.textContent = window.I18N.your_score + score;
 }
 
 function startGame() {
@@ -322,7 +322,7 @@ function draw() {
 
 	if (phase == "idle") {
 		drawHud();
-		drawMessage("PRESIONA INICIAR");
+		drawMessage(window.I18N.press_start);
 		return;
 	}
 
@@ -342,7 +342,7 @@ function draw() {
 		} else if (previousPhase == "place") {
 			drawPieceHint();
 		}
-		drawMessage("PAUSA");
+		drawMessage(window.I18N.paused);
 	}
 
 	drawHud();
@@ -396,7 +396,7 @@ function drawPieceHint() {
 	ctx.font = "bold 28px sans-serif";
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
-	ctx.fillText("Pieza: " + pieceToPlace, boardX + cellSize * 3 + 15, boardY);
+	ctx.fillText(window.I18N.piece + pieceToPlace, boardX + cellSize * 3 + 15, boardY);
 }
 
 function drawMessage(text) {
@@ -463,10 +463,9 @@ function endGame() {
 	}
 
 	showRetroAlert(
-		"Partida finalitzada.\nPuntuació: " +
-			score +
-			"\nTemps: " +
-			formatTempsPartida(elapsedTimeMs),
+		window.I18N.game_over + "\n\n" + 
+        window.I18N.total_score + score +
+		"\n" + window.I18N.time_elapsed + formatTempsPartida(elapsedTimeMs),
 		function() {
 			saveSession();
 		}

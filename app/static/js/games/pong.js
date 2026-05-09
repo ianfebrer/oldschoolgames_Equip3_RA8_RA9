@@ -119,7 +119,7 @@ window.onload = function () {
 	bindControlButtons();
 	setEndButtonDisabled(false);
 	document.getElementById("player1-score").textContent =
-		`La teua puntuacio: ${player1Score}`;
+		`${window.I18N.your_score}${player1Score}`;
 	updateTimerDisplay(true);
 	drawFrame();
 
@@ -205,20 +205,20 @@ function formatTempsPartida(ms) {
 
 function showEndAlert(reasonText, saveData) {
 	let msg =
-		"Partida finalitzada.\n" +
-		"Motiu: " +
+		`${window.I18N.game_over}\n\n` +
+		`${window.I18N.status}` +
 		reasonText +
-		"\nResultat final: " +
+		`\n${window.I18N.final_scoreboard}` +
 		player1Score +
 		" - " +
 		player2Score +
-		"\nPuntuacio: " +
+		`\n${window.I18N.points_earned}` +
 		player1Score +
-		"\nTemps: " +
+		`\n${window.I18N.total_duration}` +
 		formatTempsPartida(elapsedTimeMs);
 
 	if (saveData && !saveData.success && !saveData.skipped) {
-		msg += "\n\nNo s'ha pogut guardar la puntuacio al servidor.";
+		msg += `\n\n${window.I18N.warning_sync}`;
 	}
 
 	showRetroAlert(msg, function() {
@@ -246,7 +246,7 @@ function endGame() {
 	player2.velocityY = 0;
 	lastTimerTick = null;
 	saveSessionData().then((data) => {
-		showEndAlert("Partida parada manualment", data);
+		showEndAlert(window.I18N.session_term_man, data);
 	});
 }
 
@@ -259,7 +259,7 @@ function finishByPlayer2Goals() {
 	lastTimerTick = null;
 	saveSessionData().then((data) => {
 		showEndAlert(
-			`Player 2 ha arribat a ${PLAYER2_GOALS_TO_END} gols`,
+			`${window.I18N.opponent_reached} ${PLAYER2_GOALS_TO_END} ${window.I18N.goals}`,
 			data,
 		);
 	});
@@ -372,7 +372,7 @@ function update() {
 			player1Score++;
 			logEvent('score', { player: 'player1', new_score: player1Score });
 			document.getElementById("player1-score").textContent =
-				`La teua puntuacio: ${player1Score}`;
+				`${window.I18N.your_score}${player1Score}`;
 			resetGame(-1);
 		}
 	}
@@ -398,7 +398,7 @@ function updateTimerDisplay(force = false) {
 	lastRenderedSeconds = totalSeconds;
 	const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
 	const seconds = String(totalSeconds % 60).padStart(2, "0");
-	timerElement.textContent = `Temps de partida: ${minutes}:${seconds}`;
+	timerElement.textContent = `${window.I18N.session_time}${minutes}:${seconds}`;
 }
 
 function setEndButtonDisabled(isDisabled) {
@@ -419,7 +419,7 @@ function resetMatchVisualState() {
 	lastRenderedSeconds = -1;
 	updateTimerDisplay(true);
 	document.getElementById("player1-score").textContent =
-		`La teua puntuacio: ${player1Score}`;
+		`${window.I18N.your_score}${player1Score}`;
 	resetPlayersPosition();
 	resetGame(Math.random() > 0.5 ? 1 : -1);
 }
@@ -445,9 +445,9 @@ function drawFrame() {
 	}
 
 	if (gameState === "idle") {
-		drawCenterMessage("PRESIONA INICIAR");
+		drawCenterMessage(window.I18N.press_start);
 	} else if (gameState === "paused") {
-		drawCenterMessage("PAUSA");
+		drawCenterMessage(window.I18N.paused);
 	}
 }
 

@@ -10,6 +10,29 @@
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/retro-alerts.css') }}">
     <script src="{{ url_for('static', filename='js/retro-alerts.js') }}"></script>
+    
+    <script>
+        // Diccionario para que JavaScript use las traducciones del servidor
+        window.I18N = {
+            press_start: "{{ t('press_start') }}",
+            paused: "{{ t('paused') }}",
+            game_over: "{{ t('game_over') }}",
+            status: "{{ t('status') }}",
+            final_scoreboard: "{{ t('final_scoreboard') }}",
+            points_earned: "{{ t('points_earned') }}",
+            total_duration: "{{ t('total_duration') }}",
+            warning_sync: "{{ t('warning_sync') }}",
+            session_term_man: "{{ t('session_term_man') }}",
+            opponent_reached: "{{ t('opponent_reached') }}",
+            goals: "{{ t('goals') }}",
+            piece: "{{ t('piece') }}",
+            total_score: "{{ t('total_score') }}",
+            time_elapsed: "{{ t('time_elapsed') }}",
+            max_level_reached: "{{ t('max_level_reached') }}",
+            your_score: "{{ t('your_score') }}",
+            session_time: "{{ t('session_time') }}"
+        };
+    </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -208,9 +231,21 @@
             </a>
 
             <div class="flex items-center gap-4 w-full sm:w-auto mt-2 sm:mt-0">
+                <!-- Selector de Idiomas -->
+                <div class="flex items-center gap-3 mr-4 border-r-2 border-arcade-gray pr-4">
+                    <a href="/lang/es" class="hover:opacity-70 transition-opacity {% if current_lang == 'es' %}border-b-2 border-arcade-lime{% endif %}" title="Español">
+                        <img src="https://flagcdn.com/w40/es.png" class="w-6 h-auto pixelated" alt="ES">
+                    </a>
+                    <a href="/lang/ca" class="hover:opacity-70 transition-opacity {% if current_lang == 'ca' %}border-b-2 border-arcade-lime{% endif %}" title="Català">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/ce/Flag_of_Catalonia.svg" class="w-6 h-4 object-cover" alt="CA">
+                    </a>
+                    <a href="/lang/en" class="hover:opacity-70 transition-opacity {% if current_lang == 'en' %}border-b-2 border-arcade-lime{% endif %}" title="English">
+                        <img src="https://flagcdn.com/w40/gb.png" class="w-6 h-auto pixelated" alt="EN">
+                    </a>
+                </div>
                 <a href="/"
                     class="flex-1 sm:flex-none px-6 py-2 border-2 border-arcade-gray text-arcade-gray font-bold uppercase tracking-wider text-sm hover:border-arcade-white hover:text-arcade-white transition-colors text-center">
-                    << RETURN_ </a>
+                    {{ t('return_btn') }} </a>
             </div>
             {% else %}
             <a href="/" class="flex items-center gap-4 group cursor-pointer hover:opacity-80 transition-opacity">
@@ -229,6 +264,18 @@
             </a>
 
             <div class="flex items-center gap-4 w-full sm:w-auto mt-2 sm:mt-0">
+                <!-- Selector de Idiomas -->
+                <div class="flex items-center gap-3 mr-4 border-r-2 border-arcade-gray pr-4">
+                    <a href="/lang/es" class="hover:opacity-70 transition-opacity {% if current_lang == 'es' %}border-b-2 border-arcade-lime{% endif %}" title="Español">
+                        <img src="https://flagcdn.com/w40/es.png" class="w-6 h-auto pixelated" alt="ES">
+                    </a>
+                    <a href="/lang/ca" class="hover:opacity-70 transition-opacity {% if current_lang == 'ca' %}border-b-2 border-arcade-lime{% endif %}" title="Català">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/ce/Flag_of_Catalonia.svg" class="w-6 h-4 object-cover" alt="CA">
+                    </a>
+                    <a href="/lang/en" class="hover:opacity-70 transition-opacity {% if current_lang == 'en' %}border-b-2 border-arcade-lime{% endif %}" title="English">
+                        <img src="https://flagcdn.com/w40/gb.png" class="w-6 h-auto pixelated" alt="EN">
+                    </a>
+                </div>
                 {% if username %}
                 <div
                     class="flex-1 sm:flex-none px-4 py-2 border-2 border-arcade-gray text-arcade-cyan font-bold tracking-wider text-sm flex items-center justify-center gap-2">
@@ -241,16 +288,16 @@
                 </div>
                 <a href="/auth/logout"
                     class="flex-1 sm:flex-none px-6 py-2 border-2 border-arcade-white text-arcade-white font-bold uppercase tracking-wider text-sm hover:bg-arcade-white hover:text-arcade-black transition-colors text-center">
-                    [ LOGOUT ]
+                    {{ t('logout_btn') }}
                 </a>
                 {% else %}
                 <a href="/auth/login"
                     class="flex-1 sm:flex-none px-6 py-2 border-2 border-arcade-white text-arcade-white font-bold uppercase tracking-wider text-sm hover:bg-arcade-white hover:text-arcade-black transition-colors text-center">
-                    [ LOGIN ]
+                    {{ t('login_btn') }}
                 </a>
                 <a href="/auth/register"
                     class="flex-1 sm:flex-none px-6 py-2 bg-arcade-lime border-2 border-arcade-lime text-arcade-black font-bold uppercase tracking-wider text-sm shadow-brutal-white hover:shadow-brutal-active hover:translate-y-[2px] hover:translate-x-[2px] transition-all text-center">
-                    REGISTER_
+                    {{ t('register_btn') }}
                 </a>
                 {% endif %}
             </div>
@@ -264,10 +311,10 @@
     <footer
         class="relative z-10 w-full bg-arcade-lime text-arcade-black py-3 border-y-2 border-arcade-black overflow-hidden flex items-center font-bold text-sm tracking-widest mt-auto shadow-[0_-4px_20px_rgba(204,255,0,0.1)]">
         <div class="marquee-content uppercase flex">
-            <span>*** INSERT COIN TO CONTINUE *** OLD SCHOOL GAMES 2026 *** DEVELOPERS: ADRIÀ // IAN // GABRIEL *** END
-                OF LINE ***</span>
-            <span class="ml-8">*** INSERT COIN TO CONTINUE *** OLD SCHOOL GAMES 2026 *** DEVELOPERS: ADRIÀ // IAN //
-                GABRIEL *** END OF LINE ***</span>
+            <span>*** {{ t('insert_coin') }} *** OLD SCHOOL GAMES 2026 *** DEVELOPERS: ADRIÀ // IAN // GABRIEL ***
+                {{ t('status_ready') }} ***</span>
+            <span class="ml-8">*** {{ t('insert_coin') }} *** OLD SCHOOL GAMES 2026 *** DEVELOPERS: ADRIÀ // IAN //
+                GABRIEL *** {{ t('status_ready') }} ***</span>
         </div>
     </footer>
     {% endblock %}

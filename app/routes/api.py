@@ -15,11 +15,11 @@ JOCS_PERMESOS = ["pong", "trexpres", "memory"]
 def api_sessions():
 	data = request.get_json()
 	if data is None:
-		return jsonify({'success': False, 'message': 'No s\'ha rebut cap dada'}), 400
+		return jsonify({'success': False, 'message': 'No data received'}), 400
 
 	username = session.get('username')
 	if not username:
-		return jsonify({'success': False, 'message': 'Cal iniciar sessió per guardar la puntuació'}), 401
+		return jsonify({'success': False, 'message': 'Authentication required to save scores'}), 401
 
 	game_id = data.get('game_id')
 	start_time = data.get('start_time')
@@ -29,10 +29,10 @@ def api_sessions():
 
 	# score pot ser 0 (vàlid); comprovem explícitament None
 	if not game_id or start_time is None or end_time is None or score is None or duration_ms is None:
-		return jsonify({'success': False, 'message': 'Falten dades obligatòries (joc, temps, puntuació)'}), 400
+		return jsonify({'success': False, 'message': 'Missing required fields (game, time, score)'}), 400
 
 	if game_id not in JOCS_PERMESOS:
-		return jsonify({'success': False, 'message': 'Identificador de joc no permès'}), 400
+		return jsonify({'success': False, 'message': 'Invalid game identifier'}), 400
 
 	try:
 		start_time = int(start_time)
@@ -40,12 +40,12 @@ def api_sessions():
 		score = int(score)
 		duration_ms = int(duration_ms)
 	except (TypeError, ValueError):
-		return jsonify({'success': False, 'message': 'Els valors numèrics no són vàlids'}), 400
+		return jsonify({'success': False, 'message': 'Invalid numeric values'}), 400
 
 	if score < 0 or duration_ms < 0 or start_time < 0 or end_time < 0:
-		return jsonify({'success': False, 'message': 'Els valors no poden ser negatius'}), 400
+		return jsonify({'success': False, 'message': 'Values cannot be negative'}), 400
 	if end_time < start_time:
-		return jsonify({'success': False, 'message': 'El temps de fi ha de ser posterior al d\'inici'}), 400
+		return jsonify({'success': False, 'message': 'End time must be after start time'}), 400
 
 	try:
 		game_session = GameSession(game_id, username, start_time, end_time, score, duration_ms)
@@ -61,12 +61,12 @@ def api_sessions():
 def api_register():
 	data = request.get_json()
 	if data is None:
-		return jsonify({'success': False, 'message': 'No s\'ha rebut cap dada'}), 400
+		return jsonify({'success': False, 'message': 'No data received'}), 400
 
 	username = data.get('username')
 	password = data.get('password')
 	if not username or not password:
-		return jsonify({'success': False, 'message': 'L\'usuari i la contrasenya són obligatoris'}), 400
+		return jsonify({'success': False, 'message': 'Username and password are required'}), 400
 
 	try:
 		user = User(username, password)
@@ -82,12 +82,12 @@ def api_register():
 def api_login():
 	data = request.get_json()
 	if data is None:
-		return jsonify({'success': False, 'message': 'No s\'ha rebut cap dada'}), 400
+		return jsonify({'success': False, 'message': 'No data received'}), 400
 
 	username = data.get('username')
 	password = data.get('password')
 	if not username or not password:
-		return jsonify({'success': False, 'message': 'L\'usuari i la contrasenya són obligatoris'}), 400
+		return jsonify({'success': False, 'message': 'Username and password are required'}), 400
 
 	try:
 		user = User(username, password)

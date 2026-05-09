@@ -18,9 +18,9 @@ class Base(ABC):
 		try:
 			with open(f'{cls.DATA_DIR}/{cls.FILE_NAME}', 'w', encoding='utf-8') as f:
 				json.dump(items, f, ensure_ascii=False, indent=4)
-			return True, 'Items creados correctamente'
+			return True, 'Data saved successfully!'
 		except Exception as e:
-			return False, f'Error al guardar els items: {str(e)}'
+			return False, f'System Error: {str(e)}'
 
 	@abstractmethod
 	def to_dict(self):

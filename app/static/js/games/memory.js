@@ -168,7 +168,7 @@ function advançarTimer() {
 
 function actualitzarHud(force = false) {
 	const el = document.getElementById("player1-score");
-	if (el) el.textContent = `Nivell: ${nivellIndex + 1} · Puntuació: ${score}`;
+	if (el) el.textContent = `${window.I18N.level}${nivellIndex + 1} · ${window.I18N.score}${score}`;
 	const timerEl = document.getElementById("game-timer");
 	if (!timerEl) return;
 
@@ -178,7 +178,7 @@ function actualitzarHud(force = false) {
 	lastRenderedSeconds = totalSeconds;
 	const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
 	const seconds = String(totalSeconds % 60).padStart(2, "0");
-	timerEl.textContent = `Temps de partida: ${minutes}:${seconds}`;
+	timerEl.textContent = `${window.I18N.session_time}${minutes}:${seconds}`;
 }
 
 function limpiarBoard() {
@@ -343,15 +343,15 @@ function finalitzarJoc() {
 
 	guardarSessio().then((data) => {
 		let msg =
-			"Partida finalitzada.\n" +
-			"Nivell assolit: " +
+			window.I18N.game_over + "\n\n" +
+			window.I18N.max_level_reached +
 			nivellFinal +
-			"\nPuntuació: " +
+			"\n" + window.I18N.total_score +
 			scoreFinal +
-			"\nTemps: " +
+			"\n" + window.I18N.time_elapsed +
 			tempsText;
 		if (data && !data.success && !data.skipped) {
-			msg += "\n\nNo s'ha pogut guardar la puntuació al servidor.";
+			msg += "\n\n" + window.I18N.warning_sync;
 		}
 		showRetroAlert(msg);
 	});
@@ -363,7 +363,7 @@ function finalitzarJoc() {
 		gameboard.style.gridTemplateRows = "";
 	}
 	const el = document.getElementById("player1-score");
-	if (el) el.textContent = "La teua puntuació: 0";
+	if (el) el.textContent = window.I18N.your_score + "0";
 	elapsedTimeMs = 0;
 	lastRenderedSeconds = -1;
 	actualitzarHud(true);
