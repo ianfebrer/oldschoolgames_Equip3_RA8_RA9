@@ -402,7 +402,7 @@ function drawPieceHint() {
 function drawMessage(text) {
 	ctx.fillStyle = "rgba(0,0,0,0.65)";
 	ctx.fillRect(0, canvas.height / 2 - 35, canvas.width, 70);
-	ctx.fillStyle = "#CCFF00";
+	ctx.fillStyle = "#FF8A00";
 	ctx.font = "bold 28px sans-serif";
 	ctx.textAlign = "center";
 	ctx.textBaseline = "middle";
