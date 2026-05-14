@@ -6,9 +6,9 @@ USE oldschoolgames;
 -- ADRIA:
 -- - Jocs inicials del cataleg, si finalment es guarden a MariaDB.
 INSERT INTO games (slug, name, description, image) VALUES
-    ('pong', 'Pong', 'Juego de Pong', 'pong.jpg'),
-    ('trexpres', 'Trexpres', 'Juego de Trexpres', 'trexpres.jpg'),
-    ('memory', 'Memory', 'Juego de Memory', 'joc-memoria.jpg')
+    ('pong', 'Pong', 'Juego de Pong', 'pong.gif'),
+    ('trexpres', 'Trexpres', 'Juego de Trexpres', 'trexpres.gif'),
+    ('memory', 'Memory', 'Juego de Memory', 'joc-memoria.gif')
 ON DUPLICATE KEY UPDATE
     name = VALUES(name),
     description = VALUES(description),
