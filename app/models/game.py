@@ -1,9 +1,7 @@
 from app.database import get_connection
-from app.models.base import Base
 
-class Game(Base):
-	FILE_NAME = 'games.json'
 
+class Game:
 	def __init__(self, nom, descripcio, imatge=None):
 		self.nom = nom
 		self.descripcio = descripcio
@@ -18,21 +16,24 @@ class Game(Base):
 
 	@classmethod
 	def get_all_main(cls):
-		with get_connection() as conn:
-			with conn.cursor(dictionary=True) as cursor:
-				cursor.execute(
-					'SELECT slug, description, image FROM games ORDER BY id'
-				)
-				raw_games = cursor.fetchall()
+		try:
+			with get_connection() as conn:
+				with conn.cursor(dictionary=True) as cursor:
+					cursor.execute(
+						'SELECT slug, description, image FROM games ORDER BY id'
+					)
+					raw_games = cursor.fetchall()
 
-		return [
-			{
-				'nom': game['slug'],
-				'descripcio': game['description'],
-				'imatge': game['image']
-			}
-			for game in raw_games
-		]
+			return [
+				{
+					'nom': game['slug'],
+					'descripcio': game['description'],
+					'imatge': game['image']
+				}
+				for game in raw_games
+			]
+		except Exception:
+			return []
 
 	def save(self):
 		with get_connection() as conn:
@@ -45,4 +46,4 @@ class Game(Base):
 					(self.nom.lower(), self.nom, self.descripcio, self.imatge)
 				)
 				conn.commit()
-		return True, 'Juego creado correctamente'
+		return True, 'Joc creat correctament.'
