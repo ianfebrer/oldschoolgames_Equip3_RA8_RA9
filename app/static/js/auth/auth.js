@@ -34,19 +34,21 @@ function login(event) {
 
 function handleResponseRegister(response) {
 	if (response.success) {
-		alert(response.message);
-		window.location.href = "/auth/login";
+		showRetroAlert(response.message, function() {
+			window.location.href = "/auth/login";
+		});
 	} else {
-		alert(response.message);
+		showRetroAlert(response.message);
 	}
 }
 
 function handleResponseLogin(response) {
 	if (response.success) {
-		alert(response.message);
-		window.location.href = "/";
-		localStorage.setItem("username", response.username);
+		showRetroAlert(response.message, function() {
+			window.location.href = "/";
+			localStorage.setItem("username", response.username);
+		});
 	} else {
-		alert(response.message);
+		showRetroAlert(response.message);
 	}
 }

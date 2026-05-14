@@ -29,7 +29,6 @@ htmlcov/
 
 # Environment / secrets
 .env
-.env.*
 !.env.example
 
 # IDE / editors
@@ -45,3 +44,5 @@ Thumbs.db
 
 # Project local metadata
 .cursor/
+
+docker-compose.yml

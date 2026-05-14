@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}SYS.ARCADE // OLD SCHOOL GAMES{% endblock %}
+{% block title %}OLD SCHOOL GAMES{% endblock %}
 
 {% block main %}
 <main
@@ -11,14 +11,14 @@
         class="lg:col-span-3 border-b-2 lg:border-b-0 lg:border-r-2 border-arcade-gray bg-arcade-black flex flex-col">
         <div class="p-6 border-b-2 border-arcade-gray bg-arcade-dark">
             <h2 class="font-display text-4xl uppercase text-arcade-cyan flex items-center gap-2">
-                <span class="text-arcade-red">>></span> Leaderboard<span class="cursor-blink">|</span>
+                <span class="text-arcade-red">>></span> {{ t('leaderboard') }}<span class="cursor-blink">|</span>
             </h2>
-            <p class="text-xs text-arcade-gray font-bold tracking-widest mt-1">GLOBAL RANKING // TOP 5</p>
+            <p class="text-xs text-arcade-white font-bold tracking-widest mt-1 mb-4">{{ t('global_ranking') }}</p>
             <!-- 3 botones para filtrar leaderboard por juego -->
             <div class="flex gap-2">
                 {% for joc in jocs %}
-                <button onclick="window.location.href='?game={{ joc.nom }}'"
-                    class="px-4 py-2 {% if selected_game == joc.nom %}bg-arcade-lime text-arcade-black{% else %}bg-arcade-gray text-arcade-white{% endif %} font-bold uppercase tracking-wider text-sm hover:bg-arcade-white hover:text-arcade-black transition-colors text-center">
+                <button onclick="window.location.href='?game={{ joc.nom|lower }}'"
+                    class="px-4 py-2 {% if selected_game == joc.nom|lower %}bg-arcade-lime text-arcade-black{% else %}bg-arcade-gray text-arcade-white{% endif %} font-bold uppercase tracking-wider text-sm hover:bg-arcade-white hover:text-arcade-black transition-colors text-center">
                     {{ joc.nom }}
                 </button>
                 {% endfor %}
@@ -28,9 +28,9 @@
         <div class="flex-1 p-6 flex flex-col gap-4">
             <!-- Table Header -->
             <div
-                class="flex items-center justify-between text-xs text-arcade-gray border-b border-arcade-gray pb-2 mb-2">
-                <span>RANK // USER</span>
-                <span>SCORE</span>
+                class="flex items-center justify-between text-xs text-arcade-cyan border-b border-arcade-gray pb-2 mb-2">
+                <span>{{ t('rank_user') }}</span>
+                <span>{{ t('score') }}</span>
             </div>
 
             <!-- Leaderboard Items -->
@@ -52,19 +52,19 @@
     <section class="lg:col-span-9 bg-arcade-black p-4 sm:p-8">
         <div class="flex items-end justify-between mb-8 border-b-2 border-arcade-gray pb-4">
             <div>
-                <h2 class="font-display text-5xl sm:text-6xl uppercase tracking-wide m-0 leading-none">Select <span
-                        class="text-arcade-red">Game</span></h2>
-                <p class="text-arcade-gray text-sm mt-2">AVAILABLE MODULES: 3</p>
+                <h2 class="font-display text-5xl sm:text-6xl uppercase tracking-wide m-0 leading-none">{{ t('select') }} <span
+                        class="text-arcade-red">{{ t('game') }}</span></h2>
+                <p class="text-arcade-cyan text-sm mt-2">{{ t('available_modules') }}</p>
             </div>
             <div class="hidden sm:block text-right">
-                <div class="text-xs text-arcade-cyan">STATUS: READY</div>
-                <div class="text-xs text-arcade-gray">INSERT COIN</div>
+                <div class="text-xs text-arcade-cyan">{{ t('status_ready') }}</div>
+                <div class="text-xs text-arcade-red">{{ t('insert_coin') }}</div>
             </div>
         </div>
         <!-- Jocs -->
         {% if not username %}
         <div class="bg-arcade-red text-arcade-white px-4 py-2 rounded-md text-sm font-bold uppercase tracking-widest">
-            Has de loguear-te per poder jugar i participar al leaderboard
+            {{ t('login_req_index') }}
         </div>
         {% else %}
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -73,7 +73,7 @@
             <article
                 class="group relative bg-arcade-dark border-2 border-arcade-gray hover:border-arcade-red transition-colors duration-300 flex flex-col h-full hover:-translate-y-2 hover:shadow-brutal-red">
                 <div
-                    class="absolute top-0 right-0 bg-arcade-gray text-arcade-black px-2 py-1 text-xs font-bold z-10 group-hover:bg-arcade-red transition-colors">
+                    class="absolute top-0 right-0 bg-arcade-black text-arcade-white px-2 py-1 text-xs font-bold z-10 group-hover:bg-arcade-red transition-colors">
                     ID: {{ joc.nom }}</div>
 
                 <div class="w-full aspect-[4/3] border-b-2 border-arcade-gray overflow-hidden relative">
@@ -82,11 +82,11 @@
                     </div>
                     <div
                         class="absolute inset-0 bg-arcade-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
-                        <a href="/games/{{ joc.nom }}">
+                        <a href="/games/{{ joc.nom|lower }}">
                             <span class="bg-arcade-red text-arcade-white px-6 py-3 font-bold uppercase tracking-widest
                                 border-2 border-arcade-red shadow-brutal-white transform skew-x-12 group-hover:skew-x-0
                                 transition-transform cursor-pointer">
-                                START GAME
+                                {{ t('start_game_card') }}
                             </span>
                         </a>
                     </div>
@@ -98,10 +98,10 @@
                             class="font-display text-4xl uppercase leading-none m-0 group-hover:text-arcade-red transition-colors">
                             {{ joc.nom }}
                         </h3>
-                        <span
-                            class="text-[10px] bg-arcade-white text-arcade-black px-1.5 py-0.5 mt-1 font-bold">REFLEX</span>
+                        <span class="text-[10px] bg-arcade-white text-arcade-black px-1.5 py-0.5 mt-1 font-bold">{{
+                            joc.tag }}</span>
                     </div>
-                    <p class="text-xs text-arcade-gray mb-4 flex-1">{{ joc.descripcio }}</p>
+                    <p class="text-xs text-arcade-white mb-4 flex-1">{{ t('desc_' ~ joc.nom|lower) }}</p>
 
                     <div
                         class="border-t-2 border-dashed border-arcade-gray pt-3 flex justify-between items-center text-xs">

@@ -51,5 +51,77 @@
         "end_time": 1776757862312.0,
         "score": 2,
         "duration_ms": 58272.0
+    },
+    {
+        "game_id": "memory",
+        "username": "holahola",
+        "start_time": 1777360276159.0,
+        "end_time": 1777360276710.0,
+        "score": 1,
+        "duration_ms": 9494.0
+    },
+    {
+        "game_id": "trexpres",
+        "username": "holahola",
+        "start_time": 1777361180010.0,
+        "end_time": 1777361190550.0,
+        "score": 4,
+        "duration_ms": 8953.0
+    },
+    {
+        "game_id": "pong",
+        "username": "holahola",
+        "start_time": 1777361195917.0,
+        "end_time": 1777361226939.0,
+        "score": 7,
+        "duration_ms": 31022.0
+    },
+    {
+        "game_id": "memory",
+        "username": "hola123",
+        "start_time": 1777963280002.0,
+        "end_time": 1777963280002.0,
+        "score": 1,
+        "duration_ms": 6382.0
+    },
+    {
+        "game_id": "pong",
+        "username": "hola123",
+        "start_time": 1777966647540.0,
+        "end_time": 1777966661105.0,
+        "score": 4,
+        "duration_ms": 13564.0
+    },
+    {
+        "game_id": "trexpres",
+        "username": "hola123",
+        "start_time": 1777967216308.0,
+        "end_time": 1777967228073.0,
+        "score": 6,
+        "duration_ms": 10482.0
+    },
+    {
+        "game_id": "pong",
+        "username": "juanjo",
+        "start_time": 1778155697996.0,
+        "end_time": 1778318649256.0,
+        "score": 4,
+        "duration_ms": 23022.0
+    },
+    {
+        "game_id": "memory",
+        "username": "juanjo",
+        "start_time": 1778318725404.0,
+        "end_time": 1778318725404.0,
+        "score": 3,
+        "duration_ms": 40953.0
+    },
+    {
+        "game_id": "pong",
+        "username": "gemini",
+        "start_time": 1778340006889.0,
+        "end_time": 1778340035539.0,
+        "score": 3,
+        "duration_ms": 28649.0
     }
 ]

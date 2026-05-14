@@ -20,4 +20,12 @@ def create_app():
 	app.register_blueprint(games_bp)
 	app.register_blueprint(api_bp)
 
+	from app.translations import t
+	from flask import session
+
+	@app.context_processor
+	def inject_translations():
+		lang = session.get('lang', 'en')
+		return dict(t=lambda key: t(key, lang), current_lang=lang)
+
 	return app

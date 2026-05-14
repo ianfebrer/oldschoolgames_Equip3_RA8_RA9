@@ -1,5 +1,45 @@
 // version muy simple estilo principiante
 
+// ===============================
+// AUDIO & MONGODB INTEGRATION
+// ===============================
+var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+function playSound(type) {
+	if (audioCtx.state === 'suspended') audioCtx.resume();
+	var osc = audioCtx.createOscillator();
+	var gainNode = audioCtx.createGain();
+	osc.connect(gainNode);
+	gainNode.connect(audioCtx.destination);
+	if (type === 'success') {
+		osc.type = 'sine';
+		osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+		gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+		gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+	} else if (type === 'error') {
+		osc.type = 'sawtooth';
+		osc.frequency.setValueAtTime(200, audioCtx.currentTime);
+		gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+		gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+	} else if (type === 'click') {
+		osc.type = 'square';
+		osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+		gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime);
+		gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+	}
+	osc.start();
+	osc.stop(audioCtx.currentTime + 0.3);
+}
+
+var mongoSessionId = null;
+
+function logEvent(eventType, eventData) {
+	fetch('/api/events', {
+		method: 'POST',
+		headers: {'Content-Type': 'application/json'},
+		body: JSON.stringify({ game_id: 'trexpres', event_type: eventType, data: eventData })
+	}).catch(function(e) { console.error("Error logging event", e) });
+}
+
 var canvas;
 var ctx;
 
@@ -31,6 +71,7 @@ var correctRow = 0;
 var correctCol = 0;
 
 var puzzles = [
+	// 1: X diagonal principal (0,0)-(1,1)-(2,2)
 	{
 		board: [
 			["X", "O", null],
@@ -41,15 +82,126 @@ var puzzles = [
 		winRow: 2,
 		winCol: 2,
 	},
+	// 2: X columna 0
 	{
 		board: [
 			["X", "O", null],
-			["X", null, null],
-			[null, "O", null],
+			["X", null, "O"],
+			[null, null, null],
 		],
 		piece: "X",
 		winRow: 2,
 		winCol: 0,
+	},
+	// 3: O columna 0
+	{
+		board: [
+			["O", "X", "O"],
+			["O", "X", null],
+			[null, null, null],
+		],
+		piece: "O",
+		winRow: 2,
+		winCol: 0,
+	},
+	// 4: X fila 2
+	{
+		board: [
+			["O", "O", "X"],
+			[null, "O", null],
+			["X", "X", null],
+		],
+		piece: "X",
+		winRow: 2,
+		winCol: 2,
+	},
+	// 5: X fila 0
+	{
+		board: [
+			["X", null, "X"],
+			["O", "O", null],
+			[null, "X", "O"],
+		],
+		piece: "X",
+		winRow: 0,
+		winCol: 1,
+	},
+	// 6: O anti-diagonal (0,2)-(1,1)-(2,0)
+	{
+		board: [
+			["X", "X", "O"],
+			[null, "O", null],
+			[null, null, "X"],
+		],
+		piece: "O",
+		winRow: 2,
+		winCol: 0,
+	},
+	// 7: X columna 1
+	{
+		board: [
+			["O", "X", null],
+			["O", "X", null],
+			[null, null, "O"],
+		],
+		piece: "X",
+		winRow: 2,
+		winCol: 1,
+	},
+	// 8: O fila 1
+	{
+		board: [
+			["X", "X", "O"],
+			["O", "O", null],
+			[null, "X", null],
+		],
+		piece: "O",
+		winRow: 1,
+		winCol: 2,
+	},
+	// 9: O fila 0
+	{
+		board: [
+			["O", null, "O"],
+			["X", "X", null],
+			[null, "O", "X"],
+		],
+		piece: "O",
+		winRow: 0,
+		winCol: 1,
+	},
+	// 10: X diagonal principal (0,0)-(1,1)-(2,2)
+	{
+		board: [
+			[null, "O", null],
+			["X", "X", "O"],
+			["O", null, "X"],
+		],
+		piece: "X",
+		winRow: 0,
+		winCol: 0,
+	},
+	// 11: O columna 2
+	{
+		board: [
+			["X", "X", "O"],
+			[null, "X", "O"],
+			["O", null, null],
+		],
+		piece: "O",
+		winRow: 2,
+		winCol: 2,
+	},
+	// 12: O fila 0
+	{
+		board: [
+			["O", "O", null],
+			[null, "X", "X"],
+			["X", null, "O"],
+		],
+		piece: "O",
+		winRow: 0,
+		winCol: 2,
 	},
 ];
 
@@ -79,12 +231,12 @@ function updateTimerDisplay(force) {
 	lastRenderedSeconds = totalSeconds;
 	var minutes = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
 	var seconds = String(totalSeconds % 60).padStart(2, "0");
-	timerEl.textContent = "Temps de partida: " + minutes + ":" + seconds;
+	timerEl.textContent = window.I18N.session_time + minutes + ":" + seconds;
 }
 
 function updateSidebarScore() {
 	var el = document.getElementById("player1-score");
-	if (el) el.textContent = "La teua puntuació: " + score;
+	if (el) el.textContent = window.I18N.your_score + score;
 }
 
 function startGame() {
@@ -108,6 +260,16 @@ function startGame() {
 	updateTimerDisplay(true);
 	lastTimerTick = Date.now();
 	updateSidebarScore();
+
+	// Inicia sessió a MongoDB
+	fetch('/api/logs/start', {
+		method: 'POST',
+		headers: {'Content-Type': 'application/json'},
+		body: JSON.stringify({ game_id: 'trexpres' })
+	})
+	.then(function(r) { return r.json() })
+	.then(function(data) { if(data.success) mongoSessionId = data.session_id; })
+	.catch(function(e) { console.error(e) });
 
 	nextRound();
 }
@@ -137,14 +299,19 @@ function nextRound() {
 		clearTimeout(memorizeTimer);
 	}
 
+	// Dificultat dinàmica: el temps de memorització disminueix cada ronda
+	// Comença en 1000ms i baixa 50ms per ronda, fins a un mínim de 300ms.
+	var currentMemorizeTime = Math.max(300, 1000 - (round * 50));
+
 	memorizeTimer = setTimeout(function () {
 		if (phase == "memorize") {
 			phase = "place";
 			previousPhase = "place";
 			draw();
 		}
-	}, 900);
+	}, currentMemorizeTime);
 }
+
 
 function draw() {
 	if (!canvas || !ctx) {
@@ -155,7 +322,7 @@ function draw() {
 
 	if (phase == "idle") {
 		drawHud();
-		drawMessage("PRESIONA INICIAR");
+		drawMessage(window.I18N.press_start);
 		return;
 	}
 
@@ -175,7 +342,7 @@ function draw() {
 		} else if (previousPhase == "place") {
 			drawPieceHint();
 		}
-		drawMessage("PAUSA");
+		drawMessage(window.I18N.paused);
 	}
 
 	drawHud();
@@ -229,7 +396,7 @@ function drawPieceHint() {
 	ctx.font = "bold 28px sans-serif";
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
-	ctx.fillText("Pieza: " + pieceToPlace, boardX + cellSize * 3 + 15, boardY);
+	ctx.fillText(window.I18N.piece + pieceToPlace, boardX + cellSize * 3 + 15, boardY);
 }
 
 function drawMessage(text) {
@@ -273,10 +440,14 @@ function handleClick(x, y) {
 	var row = Math.floor((y - boardY) / cellSize);
 
 	if (row == correctRow && col == correctCol) {
+		playSound('success');
+		logEvent('click', { row: row, col: col, correct: true });
 		score++;
 		updateSidebarScore();
 		nextRound();
 	} else {
+		playSound('error');
+		logEvent('click', { row: row, col: col, correct: false });
 		endGame();
 	}
 }
@@ -291,13 +462,14 @@ function endGame() {
 		advanceTimer();
 	}
 
-	alert(
-		"Partida finalitzada.\nPuntuació: " +
-			score +
-			"\nTemps: " +
-			formatTempsPartida(elapsedTimeMs),
+	showRetroAlert(
+		window.I18N.game_over + "\n\n" + 
+        window.I18N.total_score + score +
+		"\n" + window.I18N.time_elapsed + formatTempsPartida(elapsedTimeMs),
+		function() {
+			saveSession();
+		}
 	);
-	saveSession();
 
 	phase = "idle";
 	score = 0;
@@ -318,6 +490,15 @@ function saveSession() {
 	}
 
 	sessionSaved = true;
+
+	// Tanca la sessió a MongoDB
+	if (mongoSessionId) {
+		fetch('/api/logs/end', {
+			method: 'POST',
+			headers: {'Content-Type': 'application/json'},
+			body: JSON.stringify({ game_id: 'trexpres', session_id: mongoSessionId, final_score: score })
+		}).catch(function(e) { console.error(e) });
+	}
 
 	fetch("/api/sessions", {
 		method: "POST",

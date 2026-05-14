@@ -56,6 +56,43 @@ let ball = {
 };
 
 // ===============================
+// AUDIO & MONGODB INTEGRATION
+// ===============================
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+function playSound(type) {
+	if (audioCtx.state === 'suspended') audioCtx.resume();
+	const osc = audioCtx.createOscillator();
+	const gainNode = audioCtx.createGain();
+	osc.connect(gainNode);
+	gainNode.connect(audioCtx.destination);
+	if (type === 'bounce') {
+		osc.type = 'square';
+		osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+		gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+		gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+		osc.start();
+		osc.stop(audioCtx.currentTime + 0.1);
+	} else if (type === 'score') {
+		osc.type = 'sine';
+		osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+		gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+		gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+		osc.start();
+		osc.stop(audioCtx.currentTime + 0.3);
+	}
+}
+
+let mongoSessionId = null;
+
+function logEvent(eventType, eventData) {
+	fetch('/api/events', {
+		method: 'POST',
+		headers: {'Content-Type': 'application/json'},
+		body: JSON.stringify({ game_id: 'pong', event_type: eventType, data: eventData })
+	}).catch(e => console.error("Error logging event", e));
+}
+
+// ===============================
 // SCORE VARIABLES
 // ===============================
 
@@ -82,7 +119,7 @@ window.onload = function () {
 	bindControlButtons();
 	setEndButtonDisabled(false);
 	document.getElementById("player1-score").textContent =
-		`La teua puntuacio: ${player1Score}`;
+		`${window.I18N.your_score}${player1Score}`;
 	updateTimerDisplay(true);
 	drawFrame();
 
@@ -135,6 +172,16 @@ function startGame() {
 		resetMatchVisualState();
 		sessionStartTime = Date.now();
 		hasSavedSession = false;
+		
+		// Inicia sessió a MongoDB
+		fetch('/api/logs/start', {
+			method: 'POST',
+			headers: {'Content-Type': 'application/json'},
+			body: JSON.stringify({ game_id: 'pong' })
+		})
+		.then(r => r.json())
+		.then(data => { if(data.success) mongoSessionId = data.session_id; })
+		.catch(e => console.error(e));
 	}
 	lastTimerTick = Date.now();
 	gameState = "running";
@@ -158,23 +205,25 @@ function formatTempsPartida(ms) {
 
 function showEndAlert(reasonText, saveData) {
 	let msg =
-		"Partida finalitzada.\n" +
-		"Motiu: " +
+		`${window.I18N.game_over}\n\n` +
+		`${window.I18N.status}` +
 		reasonText +
-		"\nResultat final: " +
+		`\n${window.I18N.final_scoreboard}` +
 		player1Score +
 		" - " +
 		player2Score +
-		"\nPuntuacio: " +
+		`\n${window.I18N.points_earned}` +
 		player1Score +
-		"\nTemps: " +
+		`\n${window.I18N.total_duration}` +
 		formatTempsPartida(elapsedTimeMs);
 
 	if (saveData && !saveData.success && !saveData.skipped) {
-		msg += "\n\nNo s'ha pogut guardar la puntuacio al servidor.";
+		msg += `\n\n${window.I18N.warning_sync}`;
 	}
 
-	alert(msg);
+	showRetroAlert(msg, function() {
+		prepareReadyToStartState();
+	});
 }
 
 function prepareReadyToStartState() {
@@ -197,8 +246,7 @@ function endGame() {
 	player2.velocityY = 0;
 	lastTimerTick = null;
 	saveSessionData().then((data) => {
-		showEndAlert("Partida parada manualment", data);
-		prepareReadyToStartState();
+		showEndAlert(window.I18N.session_term_man, data);
 	});
 }
 
@@ -211,10 +259,9 @@ function finishByPlayer2Goals() {
 	lastTimerTick = null;
 	saveSessionData().then((data) => {
 		showEndAlert(
-			`Player 2 ha arribat a ${PLAYER2_GOALS_TO_END} gols`,
+			`${window.I18N.opponent_reached} ${PLAYER2_GOALS_TO_END} ${window.I18N.goals}`,
 			data,
 		);
-		prepareReadyToStartState();
 	});
 }
 
@@ -225,6 +272,16 @@ function saveSessionData() {
 	}
 
 	hasSavedSession = true;
+
+	// Tanca la sessió a MongoDB
+	if (mongoSessionId) {
+		fetch('/api/logs/end', {
+			method: 'POST',
+			headers: {'Content-Type': 'application/json'},
+			body: JSON.stringify({ game_id: 'pong', session_id: mongoSessionId, final_score: player1Score })
+		}).catch(e => console.error(e));
+	}
+
 	return fetch("/api/sessions", {
 		method: "POST",
 		body: JSON.stringify({
@@ -289,25 +346,33 @@ function update() {
 		if (detectCollision(ball, player1)) {
 			if (ball.x <= player1.x + player1.width) {
 				ball.velocityX *= -1;
+				playSound('bounce');
+				logEvent('collision', { target: 'player1', ball_x: ball.x, ball_y: ball.y });
 			}
 		} else if (detectCollision(ball, player2)) {
 			if (ball.x + ballWidth >= player2.x) {
 				ball.velocityX *= -1;
+				playSound('bounce');
+				logEvent('collision', { target: 'player2', ball_x: ball.x, ball_y: ball.y });
 			}
 		}
 
 		// score
 		if (ball.x < 0) {
+			playSound('score');
 			player2Score++;
+			logEvent('score', { player: 'player2', new_score: player2Score });
 			if (player2Score >= PLAYER2_GOALS_TO_END) {
 				finishByPlayer2Goals();
 				return;
 			}
 			resetGame(1);
 		} else if (ball.x + ballWidth > board.width) {
+			playSound('score');
 			player1Score++;
+			logEvent('score', { player: 'player1', new_score: player1Score });
 			document.getElementById("player1-score").textContent =
-				`La teua puntuacio: ${player1Score}`;
+				`${window.I18N.your_score}${player1Score}`;
 			resetGame(-1);
 		}
 	}
@@ -333,7 +398,7 @@ function updateTimerDisplay(force = false) {
 	lastRenderedSeconds = totalSeconds;
 	const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
 	const seconds = String(totalSeconds % 60).padStart(2, "0");
-	timerElement.textContent = `Temps de partida: ${minutes}:${seconds}`;
+	timerElement.textContent = `${window.I18N.session_time}${minutes}:${seconds}`;
 }
 
 function setEndButtonDisabled(isDisabled) {
@@ -354,7 +419,7 @@ function resetMatchVisualState() {
 	lastRenderedSeconds = -1;
 	updateTimerDisplay(true);
 	document.getElementById("player1-score").textContent =
-		`La teua puntuacio: ${player1Score}`;
+		`${window.I18N.your_score}${player1Score}`;
 	resetPlayersPosition();
 	resetGame(Math.random() > 0.5 ? 1 : -1);
 }
@@ -380,9 +445,9 @@ function drawFrame() {
 	}
 
 	if (gameState === "idle") {
-		drawCenterMessage("PRESIONA INICIAR");
+		drawCenterMessage(window.I18N.press_start);
 	} else if (gameState === "paused") {
-		drawCenterMessage("PAUSA");
+		drawCenterMessage(window.I18N.paused);
 	}
 }
 

@@ -56,3 +56,28 @@ CREATE TABLE IF NOT EXISTS games (
 
 -- Pendent d'implementar per Ian:
 -- CREATE TABLE ...
+-- Taula de puntuacions
+CREATE TABLE IF NOT EXISTS scores (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    game_slug VARCHAR(50) NOT NULL, -- Canviat a VARCHAR per rebre "pong", "memory", etc.
+    score INT NOT NULL,
+    duration_ms INT DEFAULT 0, -- Recomanable per si hi ha empats de puntuació
+    played_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (game_slug) REFERENCES games(slug) ON DELETE CASCADE,
+    INDEX idx_leaderboard (game_slug, score DESC, duration_ms ASC)
+);
+
+-- Taula de partides guardades (opcional/ampliació)
+CREATE TABLE IF NOT EXISTS saved_games (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    game_slug VARCHAR(50) NOT NULL,
+    save_name VARCHAR(100),
+    saved_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (game_slug) REFERENCES games(slug) ON DELETE CASCADE
+);
