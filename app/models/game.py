@@ -32,15 +32,47 @@ class Game(Base):
 
 			return [
 				{
-					'nom': game['slug'],
-					'descripcio': game['description'],
-					'imatge': game['image']
+					'nom': game.get('nom', game.get('slug')),
+					'descripcio': game.get('descripcio', game.get('description')),
+					'imatge': game.get('imatge', game.get('image')),
+					'tag': game.get('tag', 'REFLEX')
 				}
 				for game in raw_games
 			]
 		except Exception:
 			# Fallback a JSON si no hi ha base de dades
 			return cls.get_all()
+
+	@classmethod
+	def get_by_slug(cls, slug):
+		try:
+			with get_connection() as conn:
+				with conn.cursor(dictionary=True) as cursor:
+					cursor.execute(
+						'SELECT slug, name, description, image FROM games WHERE slug = %s',
+						(slug,)
+					)
+					row = cursor.fetchone()
+					if row:
+						return cls(
+							slug=row['slug'],
+							name=row.get('name', row['slug']),
+							description=row['description'],
+							image=row['image']
+						)
+			return None
+		except Exception:
+			# Fallback a JSON
+			games = cls.get_all()
+			for g in games:
+				if g.get('slug') == slug or g.get('nom') == slug:
+					return cls(
+						slug=g.get('slug', g.get('nom')),
+						name=g.get('nom', g.get('slug')),
+						description=g.get('descripcio'),
+						image=g.get('imatge')
+					)
+			return None
 
 	def save(self):
 		with get_connection() as conn:

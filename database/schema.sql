@@ -66,7 +66,8 @@ CREATE TABLE IF NOT EXISTS scores (
     played_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (game_slug) REFERENCES games(slug) ON DELETE CASCADE
+    FOREIGN KEY (game_slug) REFERENCES games(slug) ON DELETE CASCADE,
+    INDEX idx_leaderboard (game_slug, score DESC, duration_ms ASC)
 );
 
 -- Taula de partides guardades (opcional/ampliació)
