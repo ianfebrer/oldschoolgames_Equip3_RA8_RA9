@@ -2,20 +2,12 @@ import mysql.connector
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from app.database import get_connection
-from app.models.base import Base
 
-class User(Base):
-	FILE_NAME = 'users.json'
 
+class User:
 	def __init__(self, username, password):
 		self.username = username.strip()
 		self.password = password
-
-	def to_dict(self):
-		return {
-			'username': self.username,
-			'password_hash': generate_password_hash(self.password)
-		}
 
 	def register(self):
 		try:
@@ -26,19 +18,11 @@ class User(Base):
 						(self.username, generate_password_hash(self.password))
 					)
 					conn.commit()
-			return True, 'User registered successfully!'
+			return True, 'Usuari registrat correctament.'
 		except mysql.connector.IntegrityError:
-			return False, 'Username already exists!'
+			return False, 'Aquest nom d\'usuari ja existeix.'
 		except Exception:
-			# Fallback a JSON
-			users = self.get_all()
-			if any(u['username'] == self.username for u in users):
-				return False, 'Username already exists!'
-			users.append({
-				'username': self.username,
-				'password': self.password # Guardem en pla com sembla estar el JSON original
-			})
-			return self.save_items(users)
+			return False, 'No s\'ha pogut connectar amb la base de dades.'
 
 	def login(self):
 		try:
@@ -50,14 +34,7 @@ class User(Base):
 					)
 					user = cursor.fetchone()
 			if user and check_password_hash(user['password_hash'], self.password):
-				return True, 'Login successful!'
+				return True, 'Login correcte.'
+			return False, 'Usuari o contrasenya incorrectes.'
 		except Exception:
-			# Fallback a JSON
-			users = self.get_all()
-			for u in users:
-				if u['username'] == self.username:
-					# Comprovem tant hashed com pla (pel format del JSON original)
-					if u.get('password') == self.password or \
-					   (u.get('password_hash') and check_password_hash(u['password_hash'], self.password)):
-						return True, 'Login successful!'
-		return False, 'Invalid username or password.'
+			return False, 'No s\'ha pogut connectar amb la base de dades.'

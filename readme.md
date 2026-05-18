@@ -1,27 +1,27 @@
 # Old School Games
 Projecte de classe DAW - Python Web Project 2026
 
-Aplicació web feta amb **Python + Flask** que inclou 3 jocs retro (Pong, Trexpres i Memory), autenticació d’usuaris i rànquing per joc.
+Aplicacio web feta amb **Python + Flask** que inclou 3 jocs retro (Pong, Trexpres i Memory), autenticacio d'usuaris i ranking per joc.
 
 ## Equip
-- Derek
-- Miguel
-- Roy
+- Adria
+- Gabriel
+- Ian
 
 ## Objectiu del projecte
-Aplicar arquitectura client-servidor amb Flask, frontend amb HTML/CSS/JS i programació orientada a objectes per gestionar usuaris, jocs i resultats.
+Aplicar arquitectura client-servidor amb Flask, frontend amb HTML/CSS/JS i programacio orientada a objectes per gestionar usuaris, jocs i resultats.
 
-## Funcionalitats
-- Registre i login d’usuaris
-- Selecció entre 3 jocs
-- Guardat de puntuació i temps
-- Rànquing per joc
-- Missatge final de partida
-- Interacció amb teclat i ratolí
+## Part d'Adria
+- Registre i login connectats a MariaDB.
+- Contrasenyes guardades amb hash.
+- Cataleg de jocs carregat des de la taula `games`.
+- Configuracio local amb `.env` i `.env.example`.
 
 ## Tecnologies
 - Python 3
 - Flask
+- MariaDB
+- MongoDB
 - HTML
 - CSS (Tailwind)
 - JavaScript
@@ -31,20 +31,23 @@ Aplicar arquitectura client-servidor amb Flask, frontend amb HTML/CSS/JS i progr
 - `app/routes`: rutes web i API
 - `app/templates`: vistes HTML
 - `app/static`: JS i imatges
-- `app/data`: fitxers JSON de dades
+- `database`: esquema SQL i dades inicials
+- `app/data`: fitxers JSON legacy o de suport
 
-## Instal·lació i execució (Windows PowerShell)
+## Instal.lacio i execucio (Windows PowerShell)
 1. `py -m venv .venv`
 2. `.\.venv\Scripts\Activate.ps1`
 3. `pip install -r requirements.txt`
-4. `python run.py`
-5. Obrir `http://127.0.0.1:5000`
+4. Crear un fitxer `.env` a partir de `.env.example`
+5. Importar `database/schema.sql` i `database/seed.sql` a MariaDB
+6. `python run.py`
+7. Obrir `http://127.0.0.1:5000`
 
 ## Rutes principals
-- `/` portada
-- `/auth/register` registre
-- `/auth/login` login
-- `/auth/logout` logout
+- `/`
+- `/auth/register`
+- `/auth/login`
+- `/auth/logout`
 - `/games/pong`
 - `/games/trexpres`
 - `/games/memory`
@@ -54,5 +57,5 @@ Aplicar arquitectura client-servidor amb Flask, frontend amb HTML/CSS/JS i progr
 - `POST /api/login`
 - `POST /api/sessions`
 
-## Manual d’usuari
-- [Manual d’usuari (PDF)](manual%20d%27usuari.pdf)
+## Manual d'usuari
+- [Manual d'usuari (PDF)](manual%20d%27usuari.pdf)

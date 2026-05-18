@@ -454,7 +454,7 @@ function drawFrame() {
 function drawCenterMessage(message) {
 	context.fillStyle = "rgba(0, 0, 0, 0.6)";
 	context.fillRect(0, board.height / 2 - 40, board.width, 80);
-	context.fillStyle = "#CCFF00";
+	context.fillStyle = "#FF8A00";
 	context.font = "28px sans-serif";
 	context.textAlign = "center";
 	context.fillText(message, board.width / 2, board.height / 2 + 10);

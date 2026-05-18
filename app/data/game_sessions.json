@@ -123,5 +123,13 @@
         "end_time": 1778340035539.0,
         "score": 3,
         "duration_ms": 28649.0
+    },
+    {
+        "game_id": "pong",
+        "username": "prova111",
+        "start_time": 1778758424958.0,
+        "end_time": 1778758443282.0,
+        "score": 3,
+        "duration_ms": 18323.0
     }
 ]
