@@ -368,7 +368,7 @@ function drawPieces() {
 	ctx.font = "36px sans-serif";
 	ctx.textAlign = "center";
 	ctx.textBaseline = "middle";
-	ctx.fillStyle = "#FF8A00";
+	ctx.fillStyle = "#EAEAEA";
 
 	for (var r = 0; r < 3; r++) {
 		for (var c = 0; c < 3; c++) {

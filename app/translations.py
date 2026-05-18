@@ -251,6 +251,16 @@ TRANSLATIONS = {
         'es': 'EN LÍNEA',
         'ca': 'EN LÍNIA'
     },
+    'new_user_instance': {
+        'en': 'NEW USER INSTANCE',
+        'es': 'NUEVA INSTANCIA DE USUARIO',
+        'ca': 'NOVA INSTÀNCIA D\'USUARI'
+    },
+    'protected_session': {
+        'en': 'PROTECTED SESSION',
+        'es': 'SESIÓN PROTEGIDA',
+        'ca': 'SESSIÓ PROTEGIDA'
+    },
     'auth_exe': {
         'en': 'USER_PROFILE_AUTHENTICATION.EXE',
         'es': 'AUTENTICACIÓN_PERFIL_USUARIO.EXE',
