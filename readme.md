@@ -87,9 +87,9 @@ Aquesta aplicació implementa una arquitectura client-servidor basada en **Progr
 
 ## 👥 Equip de Desenvolupament (Equip 3)
 
-- **Adrià**: Gestió de BBDD, Auth (Registre/Login), variables d'entorn i infraestructura.
-- **Gabriel**: Frontend, integracions, lògica de jocs.
-- **Ian**: Disseny, integració de jocs, rutes Flask.
+- **Adrià**: Sistema d'usuaris i autenticació (POO/Flask), base de dades relacional MariaDB i UI de login, registre i catàleg.
+- **Gabriel**: Lògica core de jocs (estats), integració amb MongoDB (esdeveniments/logs), sons/animacions i creació del vídeo-resum.
+- **Ian**: Resultats i guardat de partides, puntuacions (Top 10 MariaDB i dades Mongo), API REST/WebSockets i UI del rànquing.
 
 ---
 
