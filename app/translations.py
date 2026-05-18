@@ -15,9 +15,9 @@ TRANSLATIONS = {
         'ca': 'POSICIÓ // USUARI'
     },
     'score': {
-        'en': 'SCORE',
-        'es': 'PUNTUACIÓN',
-        'ca': 'PUNTUACIÓ'
+        'en': 'Score',
+        'es': 'Puntuación',
+        'ca': 'Puntuació'
     },
     'select': {
         'en': 'Select',
