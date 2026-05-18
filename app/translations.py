@@ -44,6 +44,11 @@ TRANSLATIONS = {
         'es': 'INSERTE MONEDA',
         'ca': 'INSEREIX MONEDA'
     },
+    'developers': {
+        'en': 'DEVELOPERS',
+        'es': 'DESARROLLADORES',
+        'ca': 'DESENVOLUPADORS'
+    },
     'login_req_index': {
         'en': 'Please login or register to play and participate in the leaderboard',
         'es': 'Inicia sesión o regístrate para jugar y participar en el ranking',
