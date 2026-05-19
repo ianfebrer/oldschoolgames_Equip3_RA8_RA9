@@ -8,7 +8,7 @@ def login():
 	return render_template(
 		'login.html',
 		header_variant='auth',
-		header_status='SYS.VER.2.0.26 // AUTH',
+		header_status='PYTHON 3.14.3 // AUTH',
 		header_status_class='text-arcade-cyan'
 	)
 
@@ -17,7 +17,7 @@ def register():
 	return render_template(
 		'register.html',
 		header_variant='auth',
-		header_status='SYS.VER.2.0.26 // REG',
+		header_status='PYTHON 3.14.3 // REG',
 		header_status_class='text-arcade-lime'
 	)
 

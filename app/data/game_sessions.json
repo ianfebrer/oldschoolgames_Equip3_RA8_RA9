@@ -126,26 +126,18 @@
     },
     {
         "game_id": "pong",
-        "username": "ianfebrer",
-        "start_time": 1778832246959.0,
-        "end_time": 1778832263390.0,
-        "score": 0,
-        "duration_ms": 16429.0
+        "username": "prova111",
+        "start_time": 1778758424958.0,
+        "end_time": 1778758443282.0,
+        "score": 3,
+        "duration_ms": 18323.0
     },
     {
-        "game_id": "memory",
-        "username": "ianfebrer",
-        "start_time": 1778832543612.0,
-        "end_time": 1778832543613.0,
-        "score": 7,
-        "duration_ms": 251679.0
-    },
-    {
-        "game_id": "memory",
-        "username": "ianfebrer",
-        "start_time": 1778841025052.0,
-        "end_time": 1778841025053.0,
-        "score": 8,
-        "duration_ms": 359149.0
+        "game_id": "pong",
+        "username": "carlos",
+        "start_time": 1779085037047.0,
+        "end_time": 1779085056819.0,
+        "score": 4,
+        "duration_ms": 19772.0
     }
 ]

@@ -26,19 +26,20 @@ class User(Base):
 						(self.username, generate_password_hash(self.password))
 					)
 					conn.commit()
-			return True, 'User registered successfully!'
+			return True, 'Usuari registrat correctament.'
 		except mysql.connector.IntegrityError:
-			return False, 'Username already exists!'
+			return False, 'Aquest nom d\'usuari ja existeix.'
 		except Exception:
 			# Fallback a JSON
 			users = self.get_all()
 			if any(u['username'] == self.username for u in users):
-				return False, 'Username already exists!'
+				return False, 'Aquest nom d\'usuari ja existeix.'
 			users.append({
 				'username': self.username,
 				'password': self.password # Guardem en pla com sembla estar el JSON original
 			})
-			return self.save_items(users)
+			self.save_items(users)
+			return True, 'Usuari registrat correctament. (Local)'
 
 	def login(self):
 		try:
@@ -50,7 +51,8 @@ class User(Base):
 					)
 					user = cursor.fetchone()
 			if user and check_password_hash(user['password_hash'], self.password):
-				return True, 'Login successful!'
+				return True, 'Login correcte.'
+			return False, 'Usuari o contrasenya incorrectes.'
 		except Exception:
 			# Fallback a JSON
 			users = self.get_all()
@@ -59,5 +61,5 @@ class User(Base):
 					# Comprovem tant hashed com pla (pel format del JSON original)
 					if u.get('password') == self.password or \
 					   (u.get('password_hash') and check_password_hash(u['password_hash'], self.password)):
-						return True, 'Login successful!'
-		return False, 'Invalid username or password.'
+						return True, 'Login correcte. (Local)'
+			return False, 'Usuari o contrasenya incorrectes.'

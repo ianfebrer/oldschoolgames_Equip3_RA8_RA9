@@ -168,7 +168,7 @@ function advançarTimer() {
 
 function actualitzarHud(force = false) {
 	const el = document.getElementById("player1-score");
-	if (el) el.textContent = `${window.I18N.level}${nivellIndex + 1} · ${window.I18N.score}${score}`;
+	if (el) el.textContent = (window.I18N.level || "Round: ") + (nivellIndex + 1) + " | " + (window.I18N.score || "Score: ") + score;
 	const timerEl = document.getElementById("game-timer");
 	if (!timerEl) return;
 
