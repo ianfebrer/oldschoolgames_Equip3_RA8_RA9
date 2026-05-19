@@ -29,27 +29,55 @@ class GameSession(Base):
         try:
             with get_connection() as conn:
                 with conn.cursor(dictionary=True) as cursor:
-                    # Millor puntuació per usuari en aquest joc
+                    # LÒGICA: Millor puntuació per usuari en aquest joc,
+                    # desfent empats per menor durada (duration_ms).
                     query = """
-                        SELECT u.username, MAX(s.score) as score, MIN(s.duration_ms) as duration_ms
+                        SELECT u.username, MAX(s.score) AS score, MIN(s.duration_ms) AS duration_ms
                         FROM scores s
                         JOIN users u ON s.user_id = u.id
                         WHERE s.game_slug = %s
-                        GROUP BY u.username
+                        GROUP BY u.id, u.username
                         ORDER BY score DESC, duration_ms ASC
                         LIMIT %s
                     """
                     cursor.execute(query, (game_id, limit))
                     return cursor.fetchall()
         except Exception as e:
-            print(f"❌ Error MariaDB Leaderboard: {e}")
-            # Fallback a JSON si la base de dades falla
-            all_sessions = cls.get_all()
-            game_sessions = [s for s in all_sessions if s.get('game_id') == game_id]
-            # Ordenar per score desc i duration asc
-            game_sessions.sort(key=lambda x: (-int(x['score']), float(x.get('duration_ms', 0))))
-            return game_sessions[:limit]
-
+            print(f"⚠️ Error obtenint leaderboard de MariaDB: {e}. Fent fallback a JSON.")
+            
+            # =========================================================
+            # FALLBACK A JSON (Manté la mateixa lògica exacta que el SQL)
+            # =========================================================
+            try:
+                all_sessions = cls.get_all()  # Mètode heretat de Base.py
+                # Filtrem les sessions que pertanyen a aquest joc
+                game_sessions = [s for s in all_sessions if s.get('game_id') == game_id]
+                
+                # Agrupem per usuari per agafar només la seva millor marca
+                user_best = {}
+                for s in game_sessions:
+                    user = s.get('username')
+                    score = int(s.get('score', 0))
+                    duration = float(s.get('duration_ms', float('inf')))
+                    
+                    if user not in user_best:
+                        user_best[user] = {'username': user, 'score': score, 'duration_ms': duration}
+                    else:
+                        # Si trobem una puntuació més alta, o mateixa puntuació en menys temps, la fitem
+                        if score > user_best[user]['score']:
+                            user_best[user]['score'] = score
+                            user_best[user]['duration_ms'] = duration
+                        elif score == user_best[user]['score'] and duration < user_best[user]['duration_ms']:
+                            user_best[user]['duration_ms'] = duration
+                
+                # Convertim el diccionari a llista i ordenem: Puntuació DESC, Durada ASC
+                leaderboard = list(user_best.values())
+                leaderboard.sort(key=lambda x: (-x['score'], x['duration_ms']))
+                
+                return leaderboard[:limit]
+            except Exception as json_err:
+                print(f"❌ Error crític en el fallback de JSON: {json_err}")
+                return []
     def save(self):
         """Guarda la sessió a MariaDB i manté el JSON com a còpia de seguretat."""
         success_sql = False

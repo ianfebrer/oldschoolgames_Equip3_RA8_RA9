@@ -77,8 +77,9 @@
                     ID: {{ joc.nom }}</div>
 
                 <div class="w-full aspect-[4/3] border-b-2 border-arcade-gray overflow-hidden relative">
-                    <div class="absolute inset-0 bg-cover bg-center game-img scale-105 group-hover:scale-100 duration-500"
-                        style="background-image: url('{{ url_for('static', filename='img/' ~ joc.imatge) }}');">
+                    <div 
+                        class="absolute inset-0 bg-cover bg-center game-img scale-105 group-hover:scale-100 duration-500"
+                        style="background-image: url('/static/img/{{ joc.imatge }}');">
                     </div>
                     <div
                         class="absolute inset-0 bg-arcade-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
