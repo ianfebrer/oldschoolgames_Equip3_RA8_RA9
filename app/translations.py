@@ -15,9 +15,9 @@ TRANSLATIONS = {
         'ca': 'POSICIÓ // USUARI'
     },
     'score': {
-        'en': 'SCORE',
-        'es': 'PUNTUACIÓN',
-        'ca': 'PUNTUACIÓ'
+        'en': 'Score',
+        'es': 'Puntuación',
+        'ca': 'Puntuació'
     },
     'select': {
         'en': 'Select',
@@ -43,6 +43,11 @@ TRANSLATIONS = {
         'en': 'INSERT COIN',
         'es': 'INSERTE MONEDA',
         'ca': 'INSEREIX MONEDA'
+    },
+    'developers': {
+        'en': 'DEVELOPERS',
+        'es': 'DESARROLLADORES',
+        'ca': 'DESENVOLUPADORS'
     },
     'login_req_index': {
         'en': 'Please login or register to play and participate in the leaderboard',
@@ -245,6 +250,16 @@ TRANSLATIONS = {
         'en': 'ONLINE',
         'es': 'EN LÍNEA',
         'ca': 'EN LÍNIA'
+    },
+    'new_user_instance': {
+        'en': 'NEW USER INSTANCE',
+        'es': 'NUEVA INSTANCIA DE USUARIO',
+        'ca': 'NOVA INSTÀNCIA D\'USUARI'
+    },
+    'protected_session': {
+        'en': 'PROTECTED SESSION',
+        'es': 'SESIÓN PROTEGIDA',
+        'ca': 'SESSIÓ PROTEGIDA'
     },
     'auth_exe': {
         'en': 'USER_PROFILE_AUTHENTICATION.EXE',

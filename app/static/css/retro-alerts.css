@@ -24,8 +24,8 @@
 /* Main window */
 .retro-modal-window {
     background: #121212;          /* arcade-dark */
-    border: 2px solid #CCFF00;    /* arcade-lime */
-    box-shadow: 6px 6px 0px 0px #CCFF00; /* brutal-lime */
+    border: 2px solid #FF8A00;    /* arcade-lime */
+    box-shadow: 6px 6px 0px 0px #FF8A00; /* brutal-lime */
     width: 90%;
     max-width: 480px;
     font-family: 'Space Mono', 'Courier New', monospace;
@@ -35,7 +35,7 @@
 
 /* Title bar */
 .retro-modal-header {
-    background: #CCFF00;          /* arcade-lime */
+    background: #FF8A00;          /* arcade-lime */
     color: #0a0a0a;               /* arcade-black */
     padding: 6px 12px;
     font-weight: 700;
@@ -67,9 +67,9 @@
 /* OK button — same style as the page's action buttons */
 .retro-btn {
     background: transparent;
-    border: 2px solid #CCFF00;
+    border: 2px solid #FF8A00;
     padding: 8px 28px;
-    color: #CCFF00;
+    color: #FF8A00;
     font-weight: 700;
     font-family: 'Space Mono', 'Courier New', monospace;
     font-size: 0.8rem;
@@ -77,16 +77,16 @@
     text-transform: uppercase;
     cursor: pointer;
     transition: background 0.1s, color 0.1s, box-shadow 0.1s, transform 0.1s;
-    box-shadow: 4px 4px 0px 0px #CCFF00;
+    box-shadow: 4px 4px 0px 0px #FF8A00;
 }
 
 .retro-btn:hover {
-    background: #CCFF00;
+    background: #FF8A00;
     color: #0a0a0a;
 }
 
 .retro-btn:active {
-    box-shadow: 2px 2px 0px 0px #CCFF00;
+    box-shadow: 2px 2px 0px 0px #FF8A00;
     transform: translate(2px, 2px);
 }
 
@@ -100,7 +100,7 @@
     display: inline-block;
     width: 9px;
     height: 1em;
-    background: #CCFF00;
+    background: #FF8A00;
     margin-left: 4px;
     vertical-align: text-bottom;
     animation: retro-blink 0.8s step-end infinite;

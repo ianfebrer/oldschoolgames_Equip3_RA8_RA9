@@ -126,7 +126,6 @@ window.onload = function () {
 	requestAnimationFrame(update);
 
 	// Controles
-	board.addEventListener("mousemove", movePlayerWithMouse);
 	document.addEventListener("keydown", keyDown);
 	document.addEventListener("keyup", keyUp);
 
@@ -454,7 +453,7 @@ function drawFrame() {
 function drawCenterMessage(message) {
 	context.fillStyle = "rgba(0, 0, 0, 0.6)";
 	context.fillRect(0, board.height / 2 - 40, board.width, 80);
-	context.fillStyle = "#CCFF00";
+	context.fillStyle = "#FF8A00";
 	context.font = "28px sans-serif";
 	context.textAlign = "center";
 	context.fillText(message, board.width / 2, board.height / 2 + 10);
@@ -505,25 +504,17 @@ function resetGame(direction) {
 // INPUT CONTROLS
 // ===============================
 
-function movePlayerWithMouse(e) {
-	if (gameState !== "running") return;
-
-	let rect = board.getBoundingClientRect();
-	let mouseY = e.clientY - rect.top;
-	player1.y = mouseY - playerHeight / 2;
-
-	if (player1.y < 0) player1.y = 0;
-	if (player1.y + playerHeight > board.height)
-		player1.y = board.height - playerHeight;
-}
-
 function keyDown(e) {
 	if (gameState !== "running") return;
 
 	if (e.code == "ArrowUp") player2.velocityY = -playerSpeed;
 	else if (e.code == "ArrowDown") player2.velocityY = playerSpeed;
+
+	if (e.code == "KeyW" || e.key == "w" || e.key == "W") player1.velocityY = -playerSpeed;
+	else if (e.code == "KeyS" || e.key == "s" || e.key == "S") player1.velocityY = playerSpeed;
 }
 
 function keyUp(e) {
 	if (e.code == "ArrowUp" || e.code == "ArrowDown") player2.velocityY = 0;
+	if (e.code == "KeyW" || e.code == "KeyS" || e.key == "w" || e.key == "W" || e.key == "s" || e.key == "S") player1.velocityY = 0;
 }

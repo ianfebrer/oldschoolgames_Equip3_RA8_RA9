@@ -10,7 +10,7 @@
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/retro-alerts.css') }}">
     <script src="{{ url_for('static', filename='js/retro-alerts.js') }}"></script>
-    
+
     <script>
         // Diccionario para que JavaScript use las traducciones del servidor
         window.I18N = {
@@ -30,7 +30,9 @@
             time_elapsed: "{{ t('time_elapsed') }}",
             max_level_reached: "{{ t('max_level_reached') }}",
             your_score: "{{ t('your_score') }}",
-            session_time: "{{ t('session_time') }}"
+            session_time: "{{ t('session_time') }}",
+            level: "{{ t('level') }}",
+            score: "{{ t('score') }}: "
         };
     </script>
 
@@ -55,18 +57,18 @@
                             black: '#0a0a0a',
                             dark: '#121212',
                             gray: '#2a2a2a',
-                            lime: '#CCFF00',
+                            lime: '#FF8A00',
                             red: '#FF2A2A',
                             cyan: '#00F0FF',
                             white: '#EAEAEA'
                         }
                     },
                     boxShadow: {
-                        'brutal-lime': '6px 6px 0px 0px #CCFF00',
+                        'brutal-lime': '6px 6px 0px 0px #FF8A00',
                         'brutal-red': '6px 6px 0px 0px #FF2A2A',
                         'brutal-cyan': '6px 6px 0px 0px #00F0FF',
                         'brutal-white': '4px 4px 0px 0px #EAEAEA',
-                        'brutal-active': '2px 2px 0px 0px #CCFF00',
+                        'brutal-active': '2px 2px 0px 0px #FF8A00',
                     },
                     backgroundImage: {
                         'noise': "url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')",
@@ -100,13 +102,13 @@
         }
 
         ::selection {
-            background-color: #CCFF00;
+            background-color: #FF8A00;
             color: #0a0a0a;
         }
 
         .glitch-hover:hover {
             animation: glitch-skew 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
-            color: #CCFF00;
+            color: #FF8A00;
         }
 
         @keyframes glitch-skew {
@@ -192,7 +194,7 @@
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #CCFF00;
+            background: #FF8A00;
         }
     </style>
 
@@ -207,7 +209,7 @@
 
     {% block header %}
     {% set header_variant = header_variant|default('main') %}
-    {% set header_status = header_status|default('SYS.VER.2.0.26 // ONLINE') %}
+    {% set header_status = header_status|default('PYTHON 3.14.3 // MADE WITH FLASK') %}
     {% set header_status_class = header_status_class|default('text-arcade-cyan') %}
 
     <header class="relative z-10 border-b-2 border-arcade-gray bg-arcade-dark/90 backdrop-blur-sm">
@@ -218,7 +220,7 @@
             <a href="/" class="flex items-center gap-4 group cursor-pointer hover:opacity-80 transition-opacity">
                 <div
                     class="w-12 h-12 bg-arcade-lime text-arcade-black flex items-center justify-center font-display text-4xl leading-none mt-1 shadow-brutal-white group-hover:shadow-brutal-active transition-shadow">
-                    JS
+                    PY
                 </div>
                 <div class="flex flex-col leading-none">
                     <h1
@@ -233,13 +235,20 @@
             <div class="flex items-center gap-4 w-full sm:w-auto mt-2 sm:mt-0">
                 <!-- Selector de Idiomas -->
                 <div class="flex items-center gap-3 mr-4 border-r-2 border-arcade-gray pr-4">
-                    <a href="/lang/es" class="hover:opacity-70 transition-opacity {% if current_lang == 'es' %}border-b-2 border-arcade-lime{% endif %}" title="Español">
+                    <a href="/lang/es"
+                        class="hover:opacity-70 transition-opacity {% if current_lang == 'es' %}border-b-2 border-arcade-lime{% endif %}"
+                        title="Español">
                         <img src="https://flagcdn.com/w40/es.png" class="w-6 h-auto pixelated" alt="ES">
                     </a>
-                    <a href="/lang/ca" class="hover:opacity-70 transition-opacity {% if current_lang == 'ca' %}border-b-2 border-arcade-lime{% endif %}" title="Català">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/ce/Flag_of_Catalonia.svg" class="w-6 h-4 object-cover" alt="CA">
+                    <a href="/lang/ca"
+                        class="hover:opacity-70 transition-opacity {% if current_lang == 'ca' %}border-b-2 border-arcade-lime{% endif %}"
+                        title="Català">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/ce/Flag_of_Catalonia.svg"
+                            class="w-6 h-4 object-cover" alt="CA">
                     </a>
-                    <a href="/lang/en" class="hover:opacity-70 transition-opacity {% if current_lang == 'en' %}border-b-2 border-arcade-lime{% endif %}" title="English">
+                    <a href="/lang/en"
+                        class="hover:opacity-70 transition-opacity {% if current_lang == 'en' %}border-b-2 border-arcade-lime{% endif %}"
+                        title="English">
                         <img src="https://flagcdn.com/w40/gb.png" class="w-6 h-auto pixelated" alt="EN">
                     </a>
                 </div>
@@ -251,28 +260,35 @@
             <a href="/" class="flex items-center gap-4 group cursor-pointer hover:opacity-80 transition-opacity">
                 <div
                     class="w-12 h-12 bg-arcade-lime text-arcade-black flex items-center justify-center font-display text-4xl leading-none mt-1 shadow-brutal-white group-hover:shadow-brutal-active transition-shadow">
-                    JS
+                    PY
                 </div>
                 <div class="flex flex-col leading-none">
                     <h1
                         class="font-display text-4xl sm:text-5xl uppercase tracking-widest text-arcade-white m-0 p-0 leading-[0.85]">
                         Old School <span class="text-arcade-lime">Games</span>
                     </h1>
-                    <span class="text-xs text-arcade-cyan font-bold tracking-widest uppercase mt-1">SYS.VER.2.0.26 //
-                        ONLINE</span>
+                    <span class="text-xs text-arcade-cyan font-bold tracking-widest uppercase mt-1">PYTHON 3.14.3 //
+                        MADE WITH FLASK </span>
                 </div>
             </a>
 
             <div class="flex items-center gap-4 w-full sm:w-auto mt-2 sm:mt-0">
                 <!-- Selector de Idiomas -->
                 <div class="flex items-center gap-3 mr-4 border-r-2 border-arcade-gray pr-4">
-                    <a href="/lang/es" class="hover:opacity-70 transition-opacity {% if current_lang == 'es' %}border-b-2 border-arcade-lime{% endif %}" title="Español">
+                    <a href="/lang/es"
+                        class="hover:opacity-70 transition-opacity {% if current_lang == 'es' %}border-b-2 border-arcade-lime{% endif %}"
+                        title="Español">
                         <img src="https://flagcdn.com/w40/es.png" class="w-6 h-auto pixelated" alt="ES">
                     </a>
-                    <a href="/lang/ca" class="hover:opacity-70 transition-opacity {% if current_lang == 'ca' %}border-b-2 border-arcade-lime{% endif %}" title="Català">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/ce/Flag_of_Catalonia.svg" class="w-6 h-4 object-cover" alt="CA">
+                    <a href="/lang/ca"
+                        class="hover:opacity-70 transition-opacity {% if current_lang == 'ca' %}border-b-2 border-arcade-lime{% endif %}"
+                        title="Català">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/ce/Flag_of_Catalonia.svg"
+                            class="w-6 h-4 object-cover" alt="CA">
                     </a>
-                    <a href="/lang/en" class="hover:opacity-70 transition-opacity {% if current_lang == 'en' %}border-b-2 border-arcade-lime{% endif %}" title="English">
+                    <a href="/lang/en"
+                        class="hover:opacity-70 transition-opacity {% if current_lang == 'en' %}border-b-2 border-arcade-lime{% endif %}"
+                        title="English">
                         <img src="https://flagcdn.com/w40/gb.png" class="w-6 h-auto pixelated" alt="EN">
                     </a>
                 </div>
@@ -309,12 +325,12 @@
     {% block main %}{% endblock %}
     {% block footer %}
     <footer
-        class="relative z-10 w-full bg-arcade-lime text-arcade-black py-3 border-y-2 border-arcade-black overflow-hidden flex items-center font-bold text-sm tracking-widest mt-auto shadow-[0_-4px_20px_rgba(204,255,0,0.1)]">
+        class="relative z-10 w-full bg-arcade-lime text-arcade-black py-3 border-y-2 border-arcade-black overflow-hidden flex items-center font-bold text-sm tracking-widest mt-auto shadow-[0_-4px_20px_rgba(255,138,0,0.18)]">
         <div class="marquee-content uppercase flex">
-            <span>*** {{ t('insert_coin') }} *** OLD SCHOOL GAMES 2026 *** DEVELOPERS: ADRIÀ // IAN // GABRIEL ***
-                {{ t('status_ready') }} ***</span>
-            <span class="ml-8">*** {{ t('insert_coin') }} *** OLD SCHOOL GAMES 2026 *** DEVELOPERS: ADRIÀ // IAN //
-                GABRIEL *** {{ t('status_ready') }} ***</span>
+            <span class="px-2"> // {{ t('insert_coin') }} // OLD SCHOOL GAMES 2026 // {{ t('developers') }}: ADRIÀ · IAN · GABRIEL // {{ t('status_ready') }} </span>
+            <span class="px-2"> // {{ t('insert_coin') }} // OLD SCHOOL GAMES 2026 // {{ t('developers') }}: ADRIÀ · IAN · GABRIEL // {{ t('status_ready') }} </span>
+            <span class="px-2"> // {{ t('insert_coin') }} // OLD SCHOOL GAMES 2026 // {{ t('developers') }}: ADRIÀ · IAN · GABRIEL // {{ t('status_ready') }} </span>
+            <span class="px-2"> // {{ t('insert_coin') }} // OLD SCHOOL GAMES 2026 // {{ t('developers') }}: ADRIÀ · IAN · GABRIEL // {{ t('status_ready') }} </span>
         </div>
     </footer>
     {% endblock %}
