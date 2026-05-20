@@ -286,6 +286,81 @@ TRANSLATIONS = {
         'en': 'Test your visual memory. Find all matching pairs and clear the board in the fewest moves possible.',
         'es': 'Pon a prueba tu memoria visual. Encuentra todas las parejas en la menor cantidad de movimientos.',
         'ca': 'Posa a prova la teua memòria visual. Troba totes les parelles en la menor quantitat de moviments.'
+    },
+    'register_success': {
+        'en': 'User registered successfully.',
+        'es': 'Usuario registrado correctamente.',
+        'ca': 'Usuari registrat correctament.'
+    },
+    'username_exists': {
+        'en': 'This username already exists.',
+        'es': 'Este nombre de usuario ya existe.',
+        'ca': "Aquest nom d'usuari ja existeix."
+    },
+    'register_success_local': {
+        'en': 'User registered successfully. (Local)',
+        'es': 'Usuario registrado correctamente. (Local)',
+        'ca': 'Usuari registrat correctament. (Local)'
+    },
+    'login_success': {
+        'en': 'Login successful.',
+        'es': 'Login correcto.',
+        'ca': 'Login correcte.'
+    },
+    'invalid_credentials': {
+        'en': 'Incorrect username or password.',
+        'es': 'Usuario o contraseña incorrectos.',
+        'ca': 'Usuari o contrasenya incorrectes.'
+    },
+    'login_success_local': {
+        'en': 'Login successful. (Local)',
+        'es': 'Login correcto. (Local)',
+        'ca': 'Login correcte. (Local)'
+    },
+    'no_data_received': {
+        'en': 'No data received.',
+        'es': 'No se han recibido datos.',
+        'ca': "No s'han rebut dades."
+    },
+    'username_password_required': {
+        'en': 'Username and password are required.',
+        'es': 'El usuario y la contraseña son obligatorios.',
+        'ca': "L'usuari i la contrasenya són obligatoris."
+    },
+    'auth_required_scores': {
+        'en': 'Authentication required to save scores.',
+        'es': 'Se requiere autenticación para guardar puntuaciones.',
+        'ca': 'Es requereix autenticació per guardar puntuacions.'
+    },
+    'missing_required_fields': {
+        'en': 'Missing required fields (game, time, score).',
+        'es': 'Faltan campos obligatorios (juego, tiempo, puntuación).',
+        'ca': 'Falten camps obligatoris (joc, temps, puntuació).'
+    },
+    'invalid_game_id': {
+        'en': 'Invalid game identifier.',
+        'es': 'Identificador de juego no válido.',
+        'ca': 'Identificador de joc no vàlid.'
+    },
+    'invalid_numeric_values': {
+        'en': 'Invalid numeric values.',
+        'es': 'Valores numéricos no válidos.',
+        'ca': 'Valors numèrics no vàlids.'
+    },
+    'negative_values_error': {
+        'en': 'Values cannot be negative.',
+        'es': 'Los valores no pueden ser negativos.',
+        'ca': 'Els valors no poden ser negatius.'
+    },
+    'end_time_error': {
+        'en': 'End time must be after start time.',
+        'es': 'El tiempo de finalización debe ser posterior al de inicio.',
+        'ca': "El temps de finalització ha de ser posterior al d'inici."
+    },
+    'session_id_required': {
+        'en': 'session_id is required.',
+        'es': 'session_id es obligatorio.',
+        'ca': 'El session_id és obligatori.'
     }
 }
 
