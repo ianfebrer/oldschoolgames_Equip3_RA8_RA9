@@ -236,7 +236,7 @@ function updateTimerDisplay(force) {
 
 function updateSidebarScore() {
 	var el = document.getElementById("player1-score");
-	if (el) el.textContent = window.I18N.your_score + score;
+	if (el) el.textContent = window.I18N.your_score + score + " | Round: " + round;
 }
 
 function startGame() {
@@ -368,6 +368,7 @@ function drawPieces() {
 	ctx.font = "36px sans-serif";
 	ctx.textAlign = "center";
 	ctx.textBaseline = "middle";
+	ctx.fillStyle = "#EAEAEA";
 
 	for (var r = 0; r < 3; r++) {
 		for (var c = 0; c < 3; c++) {
@@ -384,11 +385,7 @@ function drawPieces() {
 }
 
 function drawHud() {
-	ctx.fillStyle = "white";
-	ctx.font = "16px monospace";
-
-	ctx.fillText("Score: " + score, 10, 20);
-	ctx.fillText("Round: " + round, 10, 40);
+	// The HUD is now rendered in the HTML sidebar for responsiveness
 }
 
 function drawPieceHint() {

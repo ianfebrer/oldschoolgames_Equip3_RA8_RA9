@@ -8,6 +8,14 @@ def create_app():
 
 	app = Flask(__name__)
 	app.config['SECRET_KEY'] = os.getenv('FLASK_SECRET_KEY', 'canviar')
+	app.config['TEMPLATES_AUTO_RELOAD'] = True
+
+	@app.after_request
+	def add_header(response):
+		response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
+		response.headers['Pragma'] = 'no-cache'
+		response.headers['Expires'] = '-1'
+		return response
 
 	from app.routes.auth import auth_bp
 	from app.routes.main import main_bp
