@@ -186,6 +186,35 @@ function limpiarBoard() {
 	gameboard.replaceChildren();
 }
 
+function mostrarPressStart() {
+	if (!gameboard) return;
+	limpiarBoard();
+
+	gameboard.style.display = "flex";
+	gameboard.style.alignItems = "center";
+	gameboard.style.justifyContent = "center";
+	gameboard.style.width = "100%";
+	gameboard.style.height = "100%";
+
+	const container = document.createElement("div");
+	container.style.width = "100%";
+	container.style.backgroundColor = "rgba(0, 0, 0, 0.65)";
+	container.style.height = "70px";
+	container.style.display = "flex";
+	container.style.alignItems = "center";
+	container.style.justifyContent = "center";
+
+	const text = document.createElement("span");
+	text.textContent = window.I18N.press_start;
+	text.style.color = "#FF8A00";
+	text.style.fontFamily = "sans-serif";
+	text.style.fontSize = "28px";
+	text.style.fontWeight = "bold";
+
+	container.appendChild(text);
+	gameboard.appendChild(container);
+}
+
 function començarNivell(idx) {
 	if (!gameboard) return;
 
@@ -362,6 +391,7 @@ function finalitzarJoc() {
 		gameboard.style.gridTemplateColumns = "";
 		gameboard.style.gridTemplateRows = "";
 	}
+	mostrarPressStart();
 	const el = document.getElementById("player1-score");
 	if (el) el.textContent = window.I18N.your_score + "0";
 	elapsedTimeMs = 0;
@@ -432,5 +462,6 @@ function update() {
 
 if (gameboard) {
 	bindControls();
+	mostrarPressStart();
 	requestAnimationFrame(update);
 }
