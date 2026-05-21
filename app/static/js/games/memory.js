@@ -97,6 +97,7 @@ let secondCard = null;
 let lastTimerTick = null;
 let elapsedTimeMs = 0;
 let lastRenderedSeconds = -1;
+let teSessioGuardada = false;
 
 function getGridForLevel(idx) {
 	const i = Math.min(Math.max(0, idx), LEVEL_GRIDS.length - 1);
@@ -132,6 +133,8 @@ function buildDeckForLevel(idx, numPar) {
 function setGraellaBoard(files, columnes) {
 	if (!gameboard) return;
 	gameboard.style.display = "grid";
+	gameboard.style.alignItems = "";
+	gameboard.style.justifyContent = "";
 	gameboard.style.gridTemplateColumns = `repeat(${columnes}, minmax(0, 1fr))`;
 	gameboard.style.gridTemplateRows = `repeat(${files}, minmax(0, 1fr))`;
 	gameboard.style.gap = "10px";
