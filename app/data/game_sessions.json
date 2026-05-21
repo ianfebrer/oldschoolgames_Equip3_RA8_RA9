@@ -227,5 +227,29 @@
         "end_time": 1779347386483.0,
         "score": 1,
         "duration_ms": 45091.0
+    },
+    {
+        "game_id": "memory",
+        "username": "paco",
+        "start_time": 1779347858177.0,
+        "end_time": 1779347859675.0,
+        "score": 3,
+        "duration_ms": 20034.0
+    },
+    {
+        "game_id": "memory",
+        "username": "paco",
+        "start_time": 1779347873287.0,
+        "end_time": 1779347873288.0,
+        "score": 2,
+        "duration_ms": 10672.0
+    },
+    {
+        "game_id": "memory",
+        "username": "paco",
+        "start_time": 1779347924143.0,
+        "end_time": 1779347926132.0,
+        "score": 2,
+        "duration_ms": 9763.0
     }
 ]
