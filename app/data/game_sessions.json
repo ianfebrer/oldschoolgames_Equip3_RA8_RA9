@@ -219,5 +219,13 @@
         "end_time": 1779292456736.0,
         "score": 7,
         "duration_ms": 31395.0
+    },
+    {
+        "game_id": "memory",
+        "username": "paco",
+        "start_time": 1779347386482.0,
+        "end_time": 1779347386483.0,
+        "score": 1,
+        "duration_ms": 45091.0
     }
 ]

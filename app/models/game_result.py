@@ -36,7 +36,7 @@ class GameResult:
         """Guarda totes les dades variables (intents, moviments, etc.)."""
         try:
             # Connectem a MongoDB (pots posar la URI al .env)
-            client = pymongo.MongoClient(os.getenv("MONGO_URI", "mongodb://localhost:27017/"))
+            client = pymongo.MongoClient(os.getenv("MONGODB_URL", "mongodb://localhost:27017/"))
             db = client["oldschoolgames_logs"]
             collection = db["game_details"]
             
