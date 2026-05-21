@@ -83,6 +83,8 @@ function playSound(type) {
 }
 
 let mongoSessionId = null;
+let lastStateSaveAt = 0;
+const STATE_SAVE_INTERVAL_MS = 2000;
 
 function logEvent(eventType, eventData) {
 	fetch('/api/events', {
@@ -90,6 +92,46 @@ function logEvent(eventType, eventData) {
 		headers: {'Content-Type': 'application/json'},
 		body: JSON.stringify({ game_id: 'pong', event_type: eventType, data: eventData })
 	}).catch(e => console.error("Error logging event", e));
+}
+
+function getCurrentStateData() {
+	return {
+		game_state: gameState,
+		score: {
+			player1: player1Score,
+			player2: player2Score,
+		},
+		elapsed_time_ms: elapsedTimeMs,
+		ball: {
+			x: Math.round(ball.x),
+			y: Math.round(ball.y),
+			velocity_x: Number(ball.velocityX.toFixed(3)),
+			velocity_y: Number(ball.velocityY.toFixed(3)),
+		},
+		player1: {
+			y: Math.round(player1.y),
+			velocity_y: player1.velocityY,
+		},
+		player2: {
+			y: Math.round(player2.y),
+			velocity_y: player2.velocityY,
+		},
+	};
+}
+
+function saveGameState(force = false) {
+	if (!force && Date.now() - lastStateSaveAt < STATE_SAVE_INTERVAL_MS) return;
+
+	lastStateSaveAt = Date.now();
+
+	fetch('/api/states', {
+		method: 'POST',
+		headers: {'Content-Type': 'application/json'},
+		body: JSON.stringify({
+			game_id: 'pong',
+			state_data: getCurrentStateData(),
+		}),
+	}).catch(e => console.error("Error saving state", e));
 }
 
 // ===============================
@@ -171,6 +213,7 @@ function startGame() {
 		resetMatchVisualState();
 		sessionStartTime = Date.now();
 		hasSavedSession = false;
+		lastStateSaveAt = 0;
 		
 		// Inicia sessió a MongoDB
 		fetch('/api/logs/start', {
@@ -184,6 +227,7 @@ function startGame() {
 	}
 	lastTimerTick = Date.now();
 	gameState = "running";
+	saveGameState(true);
 }
 
 function pauseGame() {
@@ -193,6 +237,7 @@ function pauseGame() {
 	gameState = "paused";
 	player1.velocityY = 0;
 	player2.velocityY = 0;
+	saveGameState(true);
 }
 
 function formatTempsPartida(ms) {
@@ -247,6 +292,7 @@ function endGame() {
 	saveSessionData().then((data) => {
 		showEndAlert(window.I18N.session_term_man, data);
 	});
+	saveGameState(true);
 }
 
 // Final automatico cuando Player 2 llega al limite de goles
@@ -262,6 +308,7 @@ function finishByPlayer2Goals() {
 			data,
 		);
 	});
+	saveGameState(true);
 }
 
 function saveSessionData() {
@@ -339,6 +386,7 @@ function update() {
 
 		if (ball.y <= 0 || ball.y + ballHeight >= board.height) {
 			ball.velocityY *= -1;
+			saveGameState();
 		}
 
 		// bounce
@@ -347,12 +395,14 @@ function update() {
 				ball.velocityX *= -1;
 				playSound('bounce');
 				logEvent('collision', { target: 'player1', ball_x: ball.x, ball_y: ball.y });
+				saveGameState();
 			}
 		} else if (detectCollision(ball, player2)) {
 			if (ball.x + ballWidth >= player2.x) {
 				ball.velocityX *= -1;
 				playSound('bounce');
 				logEvent('collision', { target: 'player2', ball_x: ball.x, ball_y: ball.y });
+				saveGameState();
 			}
 		}
 
@@ -361,6 +411,7 @@ function update() {
 			playSound('score');
 			player2Score++;
 			logEvent('score', { player: 'player2', new_score: player2Score });
+			saveGameState(true);
 			if (player2Score >= PLAYER2_GOALS_TO_END) {
 				finishByPlayer2Goals();
 				return;
@@ -372,8 +423,11 @@ function update() {
 			logEvent('score', { player: 'player1', new_score: player1Score });
 			document.getElementById("player1-score").textContent =
 				`${window.I18N.your_score}${player1Score}`;
+			saveGameState(true);
 			resetGame(-1);
 		}
+
+		saveGameState();
 	}
 
 	drawFrame();

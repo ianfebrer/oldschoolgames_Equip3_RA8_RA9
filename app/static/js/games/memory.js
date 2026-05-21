@@ -30,6 +30,8 @@ function playSound(type) {
 }
 
 let mongoSessionId = null;
+let lastStateSaveAt = 0;
+const STATE_SAVE_INTERVAL_MS = 2000;
 
 function logEvent(eventType, eventData) {
 	fetch('/api/events', {
@@ -37,6 +39,35 @@ function logEvent(eventType, eventData) {
 		headers: {'Content-Type': 'application/json'},
 		body: JSON.stringify({ game_id: 'memory', event_type: eventType, data: eventData })
 	}).catch(e => console.error("Error logging event", e));
+}
+
+function getCurrentStateData() {
+	return {
+		game_state: estat,
+		level: nivellIndex + 1,
+		score: score,
+		pairs_matched: parsMatched,
+		total_pairs: totalPars,
+		elapsed_time_ms: elapsedTimeMs,
+		first_card: firstCard ? firstCard.dataset.value : null,
+		second_card: secondCard ? secondCard.dataset.value : null,
+		board_locked: bloquejarBoard,
+	};
+}
+
+function saveGameState(force = false) {
+	if (!force && Date.now() - lastStateSaveAt < STATE_SAVE_INTERVAL_MS) return;
+
+	lastStateSaveAt = Date.now();
+
+	fetch('/api/states', {
+		method: 'POST',
+		headers: {'Content-Type': 'application/json'},
+		body: JSON.stringify({
+			game_id: 'memory',
+			state_data: getCurrentStateData(),
+		}),
+	}).catch(e => console.error("Error saving state", e));
 }
 
 const EMOJIS = [
@@ -327,6 +358,7 @@ function resetBoard() {
 function iniciarJoc() {
 	if (estat === "paused") {
 		estat = "running";
+		saveGameState(true);
 		return;
 	}
 	if (estat === "running") return;
@@ -336,6 +368,7 @@ function iniciarJoc() {
 	score = 0;
 	lastTimerTick = Date.now();
 	teSessioGuardada = false;
+	lastStateSaveAt = 0;
 
 	// Inicia sessió a MongoDB
 	fetch('/api/logs/start', {
@@ -354,9 +387,11 @@ function pausarJoc() {
 	if (estat === "idle") return;
 	if (estat === "paused") {
 		estat = "running";
+		saveGameState(true);
 		return;
 	}
 	estat = "paused";
+	saveGameState(true);
 }
 
 function finalitzarJoc() {
@@ -387,6 +422,7 @@ function finalitzarJoc() {
 		}
 		showRetroAlert(msg);
 	});
+	saveGameState(true);
 
 	limpiarBoard();
 	if (gameboard) {
@@ -468,3 +504,45 @@ if (gameboard) {
 	mostrarPressStart();
 	requestAnimationFrame(update);
 }
+
+const originalMemoryFlipCard = flipCard;
+flipCard = function() {
+	const result = originalMemoryFlipCard.apply(this, arguments);
+	saveGameState();
+	return result;
+};
+
+const originalMemoryDisableCards = disableCards;
+disableCards = function() {
+	const result = originalMemoryDisableCards.apply(this, arguments);
+	saveGameState(true);
+	return result;
+};
+
+const originalMemoryIniciarJoc = iniciarJoc;
+iniciarJoc = function() {
+	lastStateSaveAt = 0;
+	const result = originalMemoryIniciarJoc.apply(this, arguments);
+	saveGameState(true);
+	return result;
+};
+
+const originalMemoryPausarJoc = pausarJoc;
+pausarJoc = function() {
+	const result = originalMemoryPausarJoc.apply(this, arguments);
+	saveGameState(true);
+	return result;
+};
+
+const originalMemoryFinalitzarJoc = finalitzarJoc;
+finalitzarJoc = function() {
+	const result = originalMemoryFinalitzarJoc.apply(this, arguments);
+	saveGameState(true);
+	return result;
+};
+
+setInterval(function() {
+	if (estat === "running") {
+		saveGameState();
+	}
+}, STATE_SAVE_INTERVAL_MS);

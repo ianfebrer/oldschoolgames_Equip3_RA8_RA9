@@ -31,6 +31,8 @@ function playSound(type) {
 }
 
 var mongoSessionId = null;
+var lastStateSaveAt = 0;
+var STATE_SAVE_INTERVAL_MS = 2000;
 
 function logEvent(eventType, eventData) {
 	fetch('/api/events', {
@@ -38,6 +40,40 @@ function logEvent(eventType, eventData) {
 		headers: {'Content-Type': 'application/json'},
 		body: JSON.stringify({ game_id: 'trexpres', event_type: eventType, data: eventData })
 	}).catch(function(e) { console.error("Error logging event", e) });
+}
+
+function getCurrentStateData() {
+	return {
+		game_state: phase,
+		previous_phase: previousPhase,
+		score: score,
+		round: round,
+		elapsed_time_ms: elapsedTimeMs,
+		piece_to_place: pieceToPlace,
+		correct_position: {
+			row: correctRow,
+			col: correctCol
+		},
+		board: board.map(function(row) {
+			return row.slice();
+		})
+	};
+}
+
+function saveGameState(force) {
+	force = force === true;
+	if (!force && Date.now() - lastStateSaveAt < STATE_SAVE_INTERVAL_MS) return;
+
+	lastStateSaveAt = Date.now();
+
+	fetch('/api/states', {
+		method: 'POST',
+		headers: {'Content-Type': 'application/json'},
+		body: JSON.stringify({
+			game_id: 'trexpres',
+			state_data: getCurrentStateData()
+		})
+	}).catch(function(e) { console.error("Error saving state", e) });
 }
 
 var canvas;
@@ -255,6 +291,7 @@ function startGame() {
 	round = 0;
 	startTime = Date.now();
 	sessionSaved = false;
+	lastStateSaveAt = 0;
 	elapsedTimeMs = 0;
 	lastRenderedSeconds = -1;
 	updateTimerDisplay(true);
@@ -272,6 +309,7 @@ function startGame() {
 	.catch(function(e) { console.error(e) });
 
 	nextRound();
+	saveGameState(true);
 }
 
 function nextRound() {
@@ -294,6 +332,7 @@ function nextRound() {
 	previousPhase = "memorize";
 
 	draw();
+	saveGameState(true);
 
 	if (memorizeTimer) {
 		clearTimeout(memorizeTimer);
@@ -308,6 +347,7 @@ function nextRound() {
 			phase = "place";
 			previousPhase = "place";
 			draw();
+			saveGameState(true);
 		}
 	}, currentMemorizeTime);
 }
@@ -415,6 +455,7 @@ function pauseGame() {
 		phase = previousPhase;
 		lastTimerTick = Date.now();
 		draw();
+		saveGameState(true);
 		return;
 	}
 
@@ -426,6 +467,7 @@ function pauseGame() {
 	previousPhase = phase;
 	phase = "paused";
 	draw();
+	saveGameState(true);
 }
 
 function handleClick(x, y) {
@@ -441,10 +483,12 @@ function handleClick(x, y) {
 		logEvent('click', { row: row, col: col, correct: true });
 		score++;
 		updateSidebarScore();
+		saveGameState(true);
 		nextRound();
 	} else {
 		playSound('error');
 		logEvent('click', { row: row, col: col, correct: false });
+		saveGameState(true);
 		endGame();
 	}
 }
@@ -479,6 +523,7 @@ function endGame() {
 	updateSidebarScore();
 
 	draw();
+	saveGameState(true);
 }
 
 function saveSession() {
@@ -534,6 +579,7 @@ function gameLoop() {
 	requestAnimationFrame(gameLoop);
 	if (phase === "memorize" || phase === "place") {
 		advanceTimer();
+		saveGameState();
 	}
 }
 
